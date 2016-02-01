@@ -1,0 +1,178 @@
+%% skript ze 2015-12-02 pro načítání CSV souborů do dat a systémovou kontrolu a výpočet střední vzorkovací frekvence z usec značky.
+%Kuba Marsalek  - jakub.marsalek@safibra.cz
+
+clc; 
+close all;
+clear;
+
+%% NAČTĚNÍ DAT
+set(0,'DefaulttextInterpreter','none')   % default nonTeX text interpreter - Graph title appearance
+%FBG
+  % INPUT DATA INTERACTIVE
+  
+                                                                            disp('Waiting for user choice - Choose a CSV file.') 
+                                                                             waitbar1 = waitbar(0.15, 'choose input file ', 'Units', 'normalized', 'Position', [0.4 0.2 0.22 0.06]); %position of waitbar
+    [filename,filepath]=uigetfile({'*.*','csv'},...
+                      'Select CSV Data File for sampling frequency check');
+                      cd(filepath);
+                                                                            close(waitbar1)
+                                                                            waitbar1 = waitbar(0.55, 'CVS file reading ', 'Units', 'normalized', 'Position', [0.4 0.2 0.22 0.06]); %position of waitbar
+                                                                            disp('Reading a CSV file - this operation usually takes a while (according to number of rows).') 
+                                                                            statusbar(0, ['Desktop status: processing  ', filename]);
+   out=delimread (filename,';','mixed')
+                                                                              
+ time=(out.mixed(3:end,1));                                                                   
+ data=(out.mixed(3:end,2));
+ data=cell2mat(data);
+%     pause();                                                                           close(waitbar1)                                                                           
+                                                                            disp('creating timestamp.') 
+                                                            
+%  pause()  
+ 
+i=1;
+ waitbar1 = waitbar((0), 'samples usec calculation ', 'Units', 'normalized', 'Position', [0.4 0.2 0.22 0.06]); %position of waitbar
+ format long % higher precision and possible saving of variables 
+ 
+ while i<=(length(data))
+      waitbar1 = waitbar (i/(length(data)));
+     
+                                                                             %waitbar1 = waitbar(k, 'samples usec calculation ', 'Units', 'normalized', 'Position', [0.4 0.2 0.22 0.06]); %position of waitbar
+                                                                              %close(waitbar1)
+   hh=(double(str2double(time{i} (12:13))*3.6e+9));
+%    pause;
+   mm=(double(str2double(time{i} (15:16))*6e+7));
+%    pause;
+   ss=(double(str2double(time{i} (18:19))*1e+6));
+%    pause;
+   usec=(double(str2double(time{i} (21:26))));
+%    pause;
+   time_In_usec= hh+mm+ss+usec;
+%    pause;
+   time_In_min(i,1) = time_In_usec*(1/6e+7);  %in minutes 
+   pause()
+   %cell2mat(time{i}(12:26));
+   i=i+1;
+ end
+                                close(waitbar1) 
+ sample_diff=(time_In_min(2:end,:)*60)-(time_In_min(1:end-1)*60);
+ timeStamp=mean(sample_diff);%TIME STAMP IN SEC
+ samp_freq=1/timeStamp%SAMPLING FERQUENCY IN Hz!
+ 
+                                                                                disp('Mean value of Timestamps is :')
+                                                                                timeStamp
+                                                                                disp('Mean value sampling frequency is :')
+                                                                                samp_freq
+%% Statistical calculations
+                      
+std_samples = std ((sample_diff)) % standard teviation in usec
+%% pictures generation 
+
+sample_diff = sample_diff*1000; %transfer into miliseconds.
+
+h1= figure('Name','Timestamp vs time', 'Units', 'normalized','Position', [0.01 0.3 0.98 0.61]); % position normalized to the screen dimensions);
+%         
+        hold on
+        
+        plot(sample_diff);
+        xlabel('samples [number]')
+        ylabel('time [ms]')
+          title(filename)
+          
+               legend('difference between samples')
+               annotation('textbox', [0.15 0.85 0.19 0.05], 'interpreter','none','FitBoxToText','on',  'String', [' Standard deviation:  ' num2str(std_samples*1000000) '[usec]']);
+                             
+        hold off
+        
+ h2= figure('Name','Timestamp vs time', 'Units', 'normalized','Position', [0.01 0.3 0.98 0.61]); % position normalized to the screen dimensions);
+%       
+        hold on
+        histogram(sample_diff);
+        stem((timeStamp*1000),(length(sample_diff))/2,'Color','r');
+        xlabel('samples difference [ms]')
+        ylabel('number of elements [au]')
+          title(filename)
+          
+               legend('number of elements for given difference','Calculated timeStamp')
+               annotation('textbox', [0.15 0.85 0.19 0.05], 'interpreter','none','FitBoxToText','on', 'String', [' mean Timestamp:  ' num2str((timeStamp*1000000)) ' [us]']);
+                             
+        hold off
+
+        %% SAVING PROCESS
+        
+filename = filename(1:length(filename)-11); % změna délky názvu pro ukládání
+        
+waitbar1 = waitbar(0, 'saving process ', 'Units', 'normalized', 'Position', [0.4 0.2 0.22 0.06]); %position of waitbar 
+saving_vector = numberAllocator();
+if saving_vector(1) == 1
+                        saveas(h1,['h1_frequency',filename],'png') % saves h plot (last calculated curve) as a png file. (the name is same as the original file - which CANNOT have the same_name.txt in the same folder!
+                       saveas(h1,['h1_frequency',filename],'fig')
+                       disp(' Figure 1 saved.') 
+        else    
+        end
+if saving_vector(2)== 1
+              waitbar(0.2)    
+       
+                         saveas(h2,['h2_frequency',filename],'png')
+                         saveas(h2,['h2_frequency',filename],'fig') 
+                            disp(' Figure 2 saved.') 
+        else    
+        end
+if saving_vector(3)==1
+              waitbar(0.4)           
+          
+                         saveas(h3,['h3_frequency',filename],'png')
+                         saveas(h3,['h3_frequency',filename],'fig')            
+                           disp(' Figure 3 saved.') 
+        else    
+        end
+if saving_vector(4)==1
+                        waitbar(0.8)    
+           
+                         saveas(h4,['h4_frequency',filename],'png')
+                         saveas(h4,['h4_frequency',filename],'fig')
+                          disp(' Figure 4 saved.') 
+        else    
+        end
+if saving_vector(5)==1
+                          waitbar(1)
+  
+                           saveas(h5,['h5_frequency',filename],'png')
+                         saveas(h5,['h5_frequency',filename],'fig')
+                                     disp(' Figure 5 saved.') 
+                                     close(waitbar1)
+                                     
+else
+               close(waitbar1) 
+        end
+
+if isnan(saving_vector)
+   disp('No figure has been saved...');
+   close(waitbar1)
+waitbar1 = waitbar(1, 'Realtion finished', 'Units', 'normalized', 'Position', [0.4 0.2 0.22 0.06]);
+                         pause(1);
+                         close(waitbar1)             
+else
+   waitbar1 = waitbar(1, 'Realtion finished', 'Units', 'normalized', 'Position', [0.4 0.2 0.22 0.06]);
+                         pause(1);
+                         close(waitbar1)
+end
+
+%%CLEARING AND CLOSING ALL
+
+% close all
+% clear all
+%% Variable saving
+
+                  waitbar1 = waitbar(0.85, 'Saving variables', 'Units', 'normalized', 'Position', [0.4 0.2 0.22 0.06]); %position of waitbar
+var_to_save = [samp_freq; timeStamp;std_samples;length(data) ] %ve stejném pořadí jsou uloženy proměnné v txt(shora)
+
+  save(['frequency_check_' filename '.txt'],'var_to_save','-ascii','-double') %saves sampling frequency, mean timeStamp , standard deviation of timeStamp and statistical number of samples into txt.file
+   disp('File containing sampling frequency has been saved in root folder.') 
+                                                                               close(waitbar1)
+                                                                               waitbar1 = waitbar(1.0, 'FINISH ', 'Units', 'normalized', 'Position', [0.4 0.2 0.22 0.06]); %position of waitbar
+                                                                            pause(1)
+                                                                               close(waitbar1)
+                                                                     
+                                                                            
+   %{
+ %}
