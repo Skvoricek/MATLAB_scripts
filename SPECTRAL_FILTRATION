@@ -1,0 +1,284 @@
+%% NAČTĚNÍ DAT
+clc; 
+close all;
+clear;
+    
+%% NAČTĚNÍ DAT
+%set(0,'DefaulttextInterpreter','none')   % default nonTeX text interpreter - Graph title appearance
+  set(groot, 'DefaultTextInterpreter', 'none')
+      set(groot, 'DefaultLegendInterpreter', 'none')
+
+    
+%FBG
+  % INPUT DATA INTERACTIVE
+   disp('Waiting for user choice - Choose a CSV file.') 
+                                                                             waitbar1 = waitbar(0.15, 'choose input file ', 'Units', 'normalized', 'Position', [0.4 0.2 0.22 0.06]); %position of waitbar
+    [filename,filepath]=uigetfile({'*.*','csv'},...
+                      'Select reference Data File ');
+                      cd(filepath);
+                                                                            close(waitbar1)
+
+                      
+     data = importdata(filename, ';' );
+data=data.data(:,1);
+                  
+  % out=delimread (filename,';','mixed')
+                                                                            waitbar1 = waitbar(1, 'CVS file reading ', 'Units', 'normalized', 'Position', [0.4 0.2 0.22 0.06]); %position of waitbar
+                                                                            disp('Reading a CSV file - this operation usually takes a while (according to number of rows).') 
+                                                                            statusbar(0, ['Desktop status: processing  ', filename]);
+                                                                            close(waitbar1)
+  % data=cell2mat(out.mixed(2:end,3));       
+  mean_data=mean(data);
+  data=data-mean_data;
+ 
+  %% NASTAVOVÁNÍ NÁZVŮ A ČASŮ
+  first_time= char(filename(1,21:length(filename)-11));%('testing-file-name)'
+  
+
+ %% ZADÁVÁNÍ PARAMETRŮ
+ 
+ 
+%{
+ %}
+%%{
+                                                                            waitbar1 = waitbar(1, 'Input correct values ', 'Units', 'normalized', 'Position', [0.4 0.2 0.22 0.06]);
+                                                                            disp('Input values into dialog window.') 
+   prompt = {'Spodní mezní frekvence [Hz]','Horní mezní frekvence [Hz]','Vzorkovací frekvence [Hz]','Šířka okna [samples]'};
+            dlg_title = 'Parameters input - all values in (abs)!';
+                    num_lines = 1;
+                    def = {'769 ','819','3921.56','256'};% inside default values
+                    options.Resize='on';
+                    options.WindowStyle='modal';
+                    options.Interpreter='tex';
+                    answer=inputdlg(prompt,dlg_title,num_lines,...
+                                    def);%related to point definition - careful when changed
+
+
+                                fml =answer(1,1); %aproximate position (optical length) of starting (left) evaluation point
+                                fmh =answer(2,1); %aproximate position (optical length) of ending (right) evaluation point
+                                    fmll=char(fml); %string type hold for plotting
+                                    fmhh=char(fmh);%string type hold for plotting
+                                fs = answer(3,1); %Threshold for peaks to be detected, minimum peak height
+                                wwidth = answer(4,1); %Minimum peak separation distance
+                                
+                                
+                                                    fs=(str2double(fs)) %cell to number convertion - polarity change
+                                                    wwidth=str2double(wwidth) %cell to number convertion
+                                                    fml=str2double(fml) %cell to number convertion
+                                                    fmh=str2double(fmh) %cell to number convertion
+                                                    
+                                                                          close(waitbar1)
+        %jednickovy_filter = 1 % logicka uroven spusteni nebo vypnuti filtru 1 zapnuto, else vypnuto 
+
+        win=hamming(wwidth); % použité okno
+        overlap=fix(wwidth/2); % překryv 
+        time_stamp=1/fs;
+        time_vector= (0:time_stamp:((length(data)-1)*(time_stamp)))';
+%}
+            h1=figure ('name','Reference', 'Units', 'normalized','Position', [0.01 0.3 0.98 0.61]); % position normalized to the screen dimensions
+                    set(0,'defaulttextinterpreter','none')   
+                    hold on
+                        plot(time_vector,data)
+                        xlabel('time [sec]')
+                        ylabel('signal [Au]')
+                        title(filename)
+                        
+                        legend('measured_signal')
+                         annotation('textbox', [0.15 0.85 0.19 0.05], 'interpreter','none','FitBoxToText','on', 'String', [' Start Time:  ' first_time '']);
+                              hold off
+                        %plot([output,recoat],[threshold_ref,threshold_ref],'m')
+                        %scatter(opticallength_ref(locsnew_ref),ERpeaknew_ref,'r')
+                        hold off
+                        
+                        
+ %% FFT COMPUTATION      
+      
+   t = 0:1/fs:1; % Time vector of 1 second 
+        %overlap=0;
+        X = fft(data,length(data));
+        absx = abs(X);
+        %X=absx;
+        f1 = (0:length(data)/2-1)*fs/length(data); 
+        
+        %absx = absx';save fft2.txt absx -ASCII; 
+        
+    h2= figure('Name','Spektrum', 'Units', 'normalized','Position', [0.01 0.3 0.98 0.61]); % position normalized to the screen dimensions);
+        init_plot_val=5;
+        hold on
+        plot(f1(init_plot_val:end),X(init_plot_val:(length(X)/2)));
+        xlabel('frequency [Hz]')
+        ylabel('spectral density [Au]')
+          title(filename)
+          
+               legend('FFT of the signal')
+               %annotation('textbox', [0.15 0.85 0.19 0.05], 'interpreter','none','FitBoxToText','on', 'String', [' Start Time:  ' first_time '']);
+                             
+        hold off
+        
+   %% GENERACE FILTRU     
+ init_plot_val=5;
+ filter = [(0:fs-1)]; % vytvorení vektoru pro filtraci
+ filter((1:fs),1) = [0]; % plnení vektoru pro filtraci
+%%{
+%scale filtru na prepocitani
+        delkafft = length(X);
+        f_prepocet = delkafft/fs; % prepoctova konstanta filtru
+        %figure('Name','prepocitanej filter')
+        %hold on
+        
+%PLNĚNÍ FILTRU DLE MEZNÍCH KMITOČTŮ
+        w1= [1:delkafft];
+        konst_spodni = floor((fml*f_prepocet))% prepoctova konstanta pro filtr v zavislosti na delce - zaokrouhleno
+        konst_horni = floor((fmh*f_prepocet))
+        filter2(1,(1:konst_spodni)) = [0]; %plnení filtru podle meznih mitoctu
+        filter2(1,((delkafft - (konst_spodni)):delkafft)) = [0]; 
+        filter2(1,(konst_spodni:konst_horni)) = [1];%plnení filtru podle meznih mitoctu (konst_spodni cannot be 0!)
+        filter2(1,((delkafft - (konst_horni)):delkafft - (konst_spodni))) = [1]; 
+        filter2(1,((delkafft -(konst_spodni)):delkafft)) = [0];
+      
+
+        
+        
+ %{        
+jednickovy_filter = 0
+  %Vypnutí/zapnutí filtru
+    if jednickovy_filter == 1;
+        filter2(1,(1:delkafft)) = [1];
+    else
+    end;
+    
+%}
+%% APLIKACE FILTRACE
+%%{ 
+filter2= (filter2)';
+final_spectrum = filter2.*abs(X); % filtrace (pro vykresleni spektra
+        final_signal = filter2.*X; % filtrace  pro vykresleni casoveho singalu
+        frequency_step_filter = fs/length(final_spectrum);
+        frekvencni_osa = ([0:frequency_step_filter:(frequency_step_filter*(length(final_spectrum)-1))])';
+     
+     h3=figure ('name','Final spectrum', 'Units', 'normalized','Position', [0.01 0.3 0.98 0.61]); % position normalized to the screen dimensions
+        xlabel('frequenacy [Hz]')
+        ylabel('Spectral density [Au]')
+        title(filename)
+        legend('filter mask for IFFT ')
+        hold on
+        %plot (X)
+        %plot (filter2, 'Color','r')
+        plot ((frekvencni_osa(1:(length(frekvencni_osa)/2))), final_spectrum(1:(length(final_spectrum)/2)), 'Color','k');
+        hold off
+
+%% ZPĚTNÁ REKONSTRUKCE SIGNÁLU
+%%{
+   
+       InverseFFT_data = ((real(ifft(final_signal)))); %realna slozka zpetne fft (odskalovani meritka, spravne zobrazeni)
+         
+        
+        h4=figure ('name','Reconstructed signal', 'Units', 'normalized','Position', [0.01 0.3 0.98 0.61]); % position normalized to the screen dimensions
+                      hold on
+                        plot(time_vector,InverseFFT_data, 'Color','r');
+                        xlabel('time [sec]')
+                        ylabel('IFFT signal [Au]')
+                        title(filename)
+                        
+                        legend(['Reconstructed_signal -> ' fmll ' to ' fmhh 'Hz'])
+                         annotation('textbox', [0.15 0.85 0.24 0.05], 'interpreter','none','FitBoxToText','on', 'String', [' Pass Filter: ' fmll '\leftrightarrow ' fmhh]);
+                         
+                     
+                       hold off
+        
+
+%NORMALIZACE
+        %Y = Y./max(Y);
+
+
+%% VYKRESLENÍ VÝSLEDKŮ
+%%{
+InverseFFT_data=InverseFFT_data+mean_data;
+data = data+mean_data;
+
+h5=figure('Name','Original vs Filtered time signal', 'Units', 'normalized','Position', [0.01 0.3 0.98 0.61]);
+        [AX,H1,H2] = plotyy(time_vector,data,time_vector,InverseFFT_data )
+        %set(AX(1),'YTick',[0:max(ywind)])
+        %set(AX(2),'YTick',[0:max(ywind)])
+        set(H1,'Color','b')
+        set(H2,'Color','r')
+        %set(gcf,'Color',[1,0.4,0.6])změna okolní figure barvy
+        set(AX(1),'XLim',[0 max(time_vector)])
+        set(AX(2),'XLim',[0 max(time_vector)])
+        set(AX(2),'XAxisLocation','bot')
+        ylabel('Original signal [Au]')
+        xlabel('Time [sec]')
+        %set(gca,'position',[0.13 0.3 0.775 0.815]) - posune graf v obrázku
+        set(get(AX(2),'Ylabel'),'string','Filtered signal [Au]')
+        set(get(AX(2),'Xlabel'),'string','time [sec]','Color','r')
+        legend ('Original signal','Filtered signal');
+        title(filename);
+        %%}
+        
+        
+        
+%%SAVING PROCESS
+filename = filename(1:length(filename)-11);%'testing_file_name' % zkrácení názvu o přípony a formáty
+
+waitbar1 = waitbar(0, 'saving process ', 'Units', 'normalized', 'Position', [0.4 0.2 0.22 0.06]); %position of waitbar 
+saving_vector = numberAllocator();
+if saving_vector(1) == 1
+                        saveas(h1,['h1_',filename],'png') % saves h plot (last calculated curve) as a png file. (the name is same as the original file - which CANNOT have the same_name.txt in the same folder!
+                       saveas(h1,['h1_',filename],'fig')
+                       disp(' Figure 1 saved.') 
+        else    
+        end
+if saving_vector(2)== 1
+              waitbar(0.2)    
+       
+                         saveas(h2,['h2_',filename],'png')
+                         saveas(h2,['h2_',filename],'fig') 
+                            disp(' Figure 2 saved.') 
+        else    
+        end
+if saving_vector(3)==1
+              waitbar(0.4)           
+          
+                         saveas(h3,['h3_',filename],'png')
+                         saveas(h3,['h3_',filename],'fig')            
+                           disp(' Figure 3 saved.') 
+        else    
+        end
+if saving_vector(4)==1
+                        waitbar(0.8)    
+           
+                         saveas(h4,['h4_',filename],'png')
+                         saveas(h4,['h4_',filename],'fig')
+                          disp(' Figure 4 saved.') 
+        else    
+        end
+if saving_vector(5)==1
+                          waitbar(1)
+  
+                           saveas(h5,['h5_',filename],'png')
+                         saveas(h5,['h5_',filename],'fig')
+                                     disp(' Figure 5 saved.') 
+                                     close(waitbar1)
+                                     
+else
+               close(waitbar1) 
+        end
+
+if isnan(saving_vector)
+   disp('No figure has been saved...');
+   close(waitbar1)
+waitbar1 = waitbar(1, 'Realtion finished', 'Units', 'normalized', 'Position', [0.4 0.2 0.22 0.06]);
+                         pause(1);
+                         close(waitbar1)             
+else
+   waitbar1 = waitbar(1, 'Realtion finished', 'Units', 'normalized', 'Position', [0.4 0.2 0.22 0.06]);
+                         pause(1);
+                         close(waitbar1)
+end
+
+%% CLEARING AND CLOSING ALL
+
+% close all
+% clear all
+
+
