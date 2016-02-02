@@ -37,5 +37,7 @@ CHANGELOG:
 
             MULTIPLE_CSV_PLOT - V cyklu vykreslí zadaný počet souborů vybraných interaktivně ze složky. Legendu je nutné dopsat přímo do kódu - zobrazuje se pouze stejný počet legend jako je křivek (další nejsou v rámečku). Ukládání grafu je pouze manuální  
 
+-------------------------
+2016-02-02	FREQUENCY_CHECK		- Odstraněny pauzy mezi výpočty
 
 Kuba Maršálek - jakub.marsalek@safibra.cz
