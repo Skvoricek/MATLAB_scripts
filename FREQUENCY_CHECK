@@ -24,10 +24,10 @@ set(0,'DefaulttextInterpreter','none')   % default nonTeX text interpreter - Gra
  time=(out.mixed(3:end,1));                                                                   
  data=(out.mixed(3:end,2));
  data=cell2mat(data);
-%     pause();                                                                           close(waitbar1)                                                                           
+                                                                           close(waitbar1)                                                                           
                                                                             disp('creating timestamp.') 
                                                             
-%  pause()  
+  
  
 i=1;
  waitbar1 = waitbar((0), 'samples usec calculation ', 'Units', 'normalized', 'Position', [0.4 0.2 0.22 0.06]); %position of waitbar
@@ -39,18 +39,18 @@ i=1;
                                                                              %waitbar1 = waitbar(k, 'samples usec calculation ', 'Units', 'normalized', 'Position', [0.4 0.2 0.22 0.06]); %position of waitbar
                                                                               %close(waitbar1)
    hh=(double(str2double(time{i} (12:13))*3.6e+9));
-%    pause;
+
    mm=(double(str2double(time{i} (15:16))*6e+7));
-%    pause;
+
    ss=(double(str2double(time{i} (18:19))*1e+6));
-%    pause;
+
    usec=(double(str2double(time{i} (21:26))));
-%    pause;
+
    time_In_usec= hh+mm+ss+usec;
-%    pause;
+
    time_In_min(i,1) = time_In_usec*(1/6e+7);  %in minutes 
-   pause()
-   %cell2mat(time{i}(12:26));
+    
+%cell2mat(time{i}(12:26));
    i=i+1;
  end
                                 close(waitbar1) 
