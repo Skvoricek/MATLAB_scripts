@@ -41,6 +41,15 @@ CHANGELOG:
 2016-02-02	FREQUENCY_CHECK		- Odstraněny pauzy mezi výpočty
 
 2016-02-15
+
+FILTERED_PEAKFINDER 
+ - updated first time calculation (taken backwards from last char)
+ - updated interpreter for annotation and figure description (tex vs none)
+ SPECTRAL_FILTRATION
+ - updated first time calculation (taken backwards from last char)
+ - updated interpreter for annotation and figure description (tex vs none)
+ 
+
 SIMPLE_PLOT 
  - added possibility to combine files (you have to state nuber of files in the begining of the cycle)
  - added to possibility to save figures at the end
