@@ -41,3 +41,8 @@ CHANGELOG:
 2016-02-02	FREQUENCY_CHECK		- Odstraněny pauzy mezi výpočty
 
 Kuba Maršálek - jakub.marsalek@safibra.cz
+
+2016-02-15
+SIMPLE_PLOT 
+ - added possibility to combine files (you have to state nuber of files in the begining of the cycle)
+ - 
