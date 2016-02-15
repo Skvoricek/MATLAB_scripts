@@ -10,8 +10,27 @@ clear;
   set(groot, 'DefaultTextInterpreter', 'none')
       set(groot, 'DefaultLegendInterpreter', 'none')
      
-     
+     data_total=nan;
+     i= 1;
+      % INPUT DATA INTERACTIVE
+   prompt = {'Počet souborů ke zpracování'};
+            dlg_title = 'Parameters input';
+                    num_lines = 1;
+                    def = {'1'};% inside default values
+                    options.Resize='on';
+                    options.WindowStyle='modal';
+                    options.Interpreter='tex';
+                    answer=inputdlg(prompt,dlg_title,num_lines,...
+                                    def);%related to point definition - careful when changed
+
+
+                                number_of_files =answer(1,1); %aproximate position (optical length) of starting (left) evaluation point
+                                number_of_files = str2double(number_of_files);
+                                
+                                
+                                
  %% INPUT DATA INTERACTIVE
+ while i<=(number_of_files)
  
    disp('Waiting for user choice - Choose a CSV file.') 
                                                                              waitbar1 = waitbar(0.15, 'choose input file ', 'Units', 'normalized', 'Position', [0.4 0.2 0.22 0.06]); %position of waitbar
@@ -20,25 +39,40 @@ clear;
                       cd(filepath);
                                                                             close(waitbar1)
 
-                      
+%                       pause();
      data = importdata(filename, ';' );
 data=data.data(:,1);
+
+plot(data);
                   
-  
+%  pause();  
+   if data_total == nan;                                                                       
+       data_total = data;
+   else
+%        data=data(2,1:end);
+       data_total = [data_total ;data];
+   end
                                                                             waitbar1 = waitbar(1, 'CVS file reading ', 'Units', 'normalized', 'Position', [0.4 0.2 0.22 0.06]); %position of waitbar
                                                                             disp('Reading a CSV file - this operation usually takes a while (according to number of rows).') 
                                                                             statusbar(0, ['Desktop status: processing  ', filename]);
                                                                             close(waitbar1)
                                                                             
+                                                                            
+                                                                            
 first_time= char(filename(1,21:length(filename)-11));%('testing-file-name)'
 
+ i = i+1;
+ 
+ end
 %% PLOT GENERATION
+
+
 
  h2=figure('Name','Selected peaks', 'Units', 'normalized','Position', [0.01 0.3 0.98 0.61]);
 
  disp([ ' ' ' ' ]) 
  hold on
- plot (data)
+ plot (data_total)
 
         legend ('Measured data');
         ylabel('Signal Intensity [Au]')
