@@ -80,4 +80,62 @@ first_time= char(filename(1,21:length(filename)-11));%('testing-file-name)'
         title(filename)
 %         annotation('textbox', [0.15 0.85 0.10 0.05], 'interpreter','none','FitBoxToText','on', 'String', [' Number of peaks:  ' num ' '],'Color', 'r');
   hold off
+  %%SAVING PROCESS
+filename = filename(1:length(filename)-11);%'testing_file_name' % zkrácení názvu o přípony a formáty
+
+waitbar1 = waitbar(0, 'saving process ', 'Units', 'normalized', 'Position', [0.4 0.2 0.22 0.06]); %position of waitbar 
+saving_vector = numberAllocator();
+if saving_vector(1) == 1
+                        saveas(h1,['h1_',filename],'png') % saves h plot (last calculated curve) as a png file. (the name is same as the original file - which CANNOT have the same_name.txt in the same folder!
+                       saveas(h1,['h1_',filename],'fig')
+                       disp(' Figure 1 saved.') 
+        else    
+        end
+if saving_vector(2)== 1
+              waitbar(0.2)    
+       
+                         saveas(h2,['h2_',filename],'png')
+                         saveas(h2,['h2_',filename],'fig') 
+                            disp(' Figure 2 saved.') 
+        else    
+        end
+if saving_vector(3)==1
+              waitbar(0.4)           
+          
+                         saveas(h3,['h3_',filename],'png')
+                         saveas(h3,['h3_',filename],'fig')            
+                           disp(' Figure 3 saved.') 
+        else    
+        end
+if saving_vector(4)==1
+                        waitbar(0.8)    
+           
+                         saveas(h4,['h4_',filename],'png')
+                         saveas(h4,['h4_',filename],'fig')
+                          disp(' Figure 4 saved.') 
+        else    
+        end
+if saving_vector(5)==1
+                          waitbar(1)
   
+                           saveas(h5,['h5_',filename],'png')
+                         saveas(h5,['h5_',filename],'fig')
+                                     disp(' Figure 5 saved.') 
+                                     close(waitbar1)
+                                     
+else
+               close(waitbar1) 
+        end
+
+if isnan(saving_vector)
+   disp('No figure has been saved...');
+   close(waitbar1)
+waitbar1 = waitbar(1, 'Realtion finished', 'Units', 'normalized', 'Position', [0.4 0.2 0.22 0.06]);
+                         pause(1);
+                         close(waitbar1)             
+else
+   waitbar1 = waitbar(1, 'Realtion finished', 'Units', 'normalized', 'Position', [0.4 0.2 0.22 0.06]);
+                         pause(1);
+                         close(waitbar1)
+end
+disp('Relation has been finished - go get a coffee ;) ');
