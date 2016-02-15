@@ -32,7 +32,7 @@ data=data.data(:,1);
   data=data-mean_data;
  
   %% NASTAVOVÁNÍ NÁZVŮ A ČASŮ
-  first_time= char(filename(1,21:length(filename)-11));%('testing-file-name)'
+   first_time= char(filename(length(filename)-29:length(filename)-11));%('testing-file-name)'
   
 
  %% ZADÁVÁNÍ PARAMETRŮ
@@ -46,7 +46,7 @@ data=data.data(:,1);
    prompt = {'Spodní mezní frekvence [Hz]','Horní mezní frekvence [Hz]','Vzorkovací frekvence [Hz]','Šířka okna [samples]'};
             dlg_title = 'Parameters input - all values in (abs)!';
                     num_lines = 1;
-                    def = {'769 ','819','3921.56','256'};% inside default values
+                    def = {'0.5 ','2000','3.9067876475869998e+03','256'};% inside default values
                     options.Resize='on';
                     options.WindowStyle='modal';
                     options.Interpreter='tex';
@@ -181,7 +181,7 @@ final_spectrum = filter2.*abs(X); % filtrace (pro vykresleni spektra
                         title(filename)
                         
                         legend(['Reconstructed_signal -> ' fmll ' to ' fmhh 'Hz'])
-                         annotation('textbox', [0.15 0.85 0.24 0.05], 'interpreter','none','FitBoxToText','on', 'String', [' Pass Filter: ' fmll '\leftrightarrow ' fmhh]);
+                         annotation('textbox', [0.15 0.85 0.24 0.05], 'interpreter','tex','FitBoxToText','on', 'String', [' Pass Filter: ' fmll '\leftrightarrow ' fmhh]);
                          
                      
                        hold off
