@@ -1,0 +1,49 @@
+% CREATED for simple verification of obtained signal
+
+%% NAČTĚNÍ DAT
+clc; 
+close all;
+clear;
+
+    
+%set(0,'DefaulttextInterpreter','none')   % default nonTeX text interpreter - Graph title appearance
+  set(groot, 'DefaultTextInterpreter', 'none')
+      set(groot, 'DefaultLegendInterpreter', 'none')
+     
+     
+ %% INPUT DATA INTERACTIVE
+ 
+   disp('Waiting for user choice - Choose a CSV file.') 
+                                                                             waitbar1 = waitbar(0.15, 'choose input file ', 'Units', 'normalized', 'Position', [0.4 0.2 0.22 0.06]); %position of waitbar
+    [filename,filepath]=uigetfile({'*.*','csv'},...
+                      'Select reference Data File ');
+                      cd(filepath);
+                                                                            close(waitbar1)
+
+                      
+     data = importdata(filename, ';' );
+data=data.data(:,1);
+                  
+  
+                                                                            waitbar1 = waitbar(1, 'CVS file reading ', 'Units', 'normalized', 'Position', [0.4 0.2 0.22 0.06]); %position of waitbar
+                                                                            disp('Reading a CSV file - this operation usually takes a while (according to number of rows).') 
+                                                                            statusbar(0, ['Desktop status: processing  ', filename]);
+                                                                            close(waitbar1)
+                                                                            
+first_time= char(filename(1,21:length(filename)-11));%('testing-file-name)'
+
+%% PLOT GENERATION
+
+ h2=figure('Name','Selected peaks', 'Units', 'normalized','Position', [0.01 0.3 0.98 0.61]);
+
+ disp([ ' ' ' ' ]) 
+ hold on
+ plot (data)
+
+        legend ('Measured data');
+        ylabel('Signal Intensity [Au]')
+        xlabel('Samples')
+        title(filename)
+%         annotation('textbox', [0.15 0.85 0.10 0.05], 'interpreter','none','FitBoxToText','on', 'String', [' Number of peaks:  ' num ' '],'Color', 'r');
+  hold off
+  
