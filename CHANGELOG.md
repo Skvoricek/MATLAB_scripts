@@ -44,8 +44,8 @@ CHANGELOG:
 
 FILTERED_PEAKFINDER 
  - updated first time calculation (taken backwards from last char)
- - updated interpreter for annotation and figure description (tex vs none)
- SPECTRAL_FILTRATION
+ 
+SPECTRAL_FILTRATION
  - updated first time calculation (taken backwards from last char)
  - updated interpreter for annotation and figure description (tex vs none)
  
