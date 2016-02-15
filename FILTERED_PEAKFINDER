@@ -34,7 +34,7 @@ data=data.data(:,1);
   mean_data=mean(data);
   data=data-mean_data;
   
- first_time= char(filename(1,21:length(filename)-11));%('testing-file-name)'
+ first_time= char(filename(length(filename)-29:length(filename)-11));%('testing-file-name)'
 
  
  
