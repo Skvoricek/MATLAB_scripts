@@ -54,6 +54,17 @@ SIMPLE_PLOT
  - added possibility to combine files (you have to state nuber of files in the begining of the cycle)
  - added to possibility to save figures at the end
  - changed figure name prefix (hx_plot_***)
- 
+************************************
+2016-02-24 
 
+FILTERED_PEAKFINDER
+ - updatet for multiple CSV file choice
+ - fixed the first_time in graphs
+SPECTRAL_FILTRATION
+ - updatet for multiple CSV file choice
+ - fixed the first_time in graphs
+SIMPLE_PLOT
+ - fixed the first_time in graphs
+ -
+ 
  Kuba Maršálek - jakub.marsalek@safibra.cz
