@@ -11,7 +11,7 @@ clear;
       set(groot, 'DefaultLegendInterpreter', 'none')
      
      data_total=nan;
-     i= 1;
+     i_files= 1;
       % INPUT DATA INTERACTIVE
    prompt = {'Počet souborů ke zpracování'};
             dlg_title = 'Parameters input';
@@ -30,7 +30,7 @@ clear;
                                 
                                 
  %% INPUT DATA INTERACTIVE
- while i<=(number_of_files)
+ while i_files<=(number_of_files)
  
    disp('Waiting for user choice - Choose a CSV file.') 
                                                                              waitbar1 = waitbar(0.15, 'choose input file ', 'Units', 'normalized', 'Position', [0.4 0.2 0.22 0.06]); %position of waitbar
@@ -61,7 +61,7 @@ plot(data);
                                                                             
 first_time= char(filename(1,21:length(filename)-11));%('testing-file-name)'
 
- i = i+1;
+ i_files = i_files+1;
  
  end
 %% PLOT GENERATION
