@@ -7,10 +7,32 @@ clear;
 %set(0,'DefaulttextInterpreter','none')   % default nonTeX text interpreter - Graph title appearance
   set(groot, 'DefaultTextInterpreter', 'none')
       set(groot, 'DefaultLegendInterpreter', 'none')
-
-    
-%FBG
+       absOn = NaN;
+       
+       data_total=nan;
+     i_files= 1; 
+       %absOn = 1;% IF NOT COMENTED - PEAK CALCULATION IS PERFORMED FROM
+%       ABS VALUES OF SIGNAL
+      
+      
   % INPUT DATA INTERACTIVE
+   prompt = {'Počet souborů ke zpracování'};
+            dlg_title = 'Parameters input';
+                    num_lines = 1;
+                    def = {'1'};% inside default values
+                    options.Resize='on';
+                    options.WindowStyle='modal';
+                    options.Interpreter='tex';
+                    answer=inputdlg(prompt,dlg_title,num_lines,...
+                                    def);%related to point definition - careful when changed
+
+
+                                number_of_files =answer(1,1); %aproximate position (optical length) of starting (left) evaluation point
+                                number_of_files = str2double(number_of_files);
+% %       Soubory  ke zpracování                        
+  
+  while i_files<=(number_of_files)
+ 
    disp('Waiting for user choice - Choose a CSV file.') 
                                                                              waitbar1 = waitbar(0.15, 'choose input file ', 'Units', 'normalized', 'Position', [0.4 0.2 0.22 0.06]); %position of waitbar
     [filename,filepath]=uigetfile({'*.*','csv'},...
@@ -18,21 +40,39 @@ clear;
                       cd(filepath);
                                                                             close(waitbar1)
 
-                      
+%                       pause();
      data = importdata(filename, ';' );
 data=data.data(:,1);
+
+% plot(data);
                   
-  % out=delimread (filename,';','mixed')
+%  pause();  
+   if data_total == nan;                                                                       
+       data_total = data;
+   else
+%        data=data(2,1:end);
+       data_total = [data_total ;data];
+   end
                                                                             waitbar1 = waitbar(1, 'CVS file reading ', 'Units', 'normalized', 'Position', [0.4 0.2 0.22 0.06]); %position of waitbar
                                                                             disp('Reading a CSV file - this operation usually takes a while (according to number of rows).') 
                                                                             statusbar(0, ['Desktop status: processing  ', filename]);
                                                                             close(waitbar1)
-  % data=cell2mat(out.mixed(2:end,3));       
-  mean_data=mean(data);
+                                                                            
+                                                                            
+          if i_files ==1                                                                  
+first_time= char(filename(length(filename)-29:length(filename)-11));%('testing-file-name)'
+          else
+          end
+ i_files = i_files+1;
+ 
+  end
+  %% combined signal processing
+  data=data_total(2:end); % return to original script after "multiple files change" 
+   mean_data=mean(data);
   data=data-mean_data;
  
   %% NASTAVOVÁNÍ NÁZVŮ A ČASŮ
-   first_time= char(filename(length(filename)-29:length(filename)-11));%('testing-file-name)'
+%    first_time= char(filename(length(filename)-29:length(filename)-11));%('testing-file-name)'
   
 
  %% ZADÁVÁNÍ PARAMETRŮ
