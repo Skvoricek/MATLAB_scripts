@@ -65,6 +65,15 @@ SPECTRAL_FILTRATION
  - fixed the first_time in graphs
 SIMPLE_PLOT
  - fixed the first_time in graphs
- -
+************************************
+2016-03-03
+SPECTRAL_FILTRATION
+- added a spectrogram plot as figure6
+- created export for fig6 as well 
+
+NUMBER_ALLOCATOR
+- Added 6th choice for export (button 6)
+- changed proportions of command figure
+ 
  
  Kuba Maršálek - jakub.marsalek@safibra.cz
