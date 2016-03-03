@@ -257,7 +257,8 @@ h5=figure('Name','Original vs Filtered time signal', 'Units', 'normalized','Posi
 
    h6=figure ('name','Spectrogram', 'Units', 'normalized','Position', [0.01 0.3 0.98 0.61]); % position normalized to the screen dimensions
            hold on
-                    spectrogram(data,win,overlap,wwidth,fs,'yaxis'); 
+                    spectrogram(data,hamming(1024),overlap,wwidth,fs,'yaxis'); 
+                    colormap(bone);
 %                     xlabel('time [sec]')
 %                     ylabel('IFFT signal [Au]')
                     title(filename)
@@ -300,7 +301,7 @@ if saving_vector(3)==1
         else    
         end
 if saving_vector(4)==1
-                        waitbar(0.8)    
+                        waitbar(0.6)    
            
                          saveas(h4,['h4_',filename],'png')
                          saveas(h4,['h4_',filename],'fig')
@@ -308,21 +309,22 @@ if saving_vector(4)==1
         else    
         end
 if saving_vector(5)==1
-                          waitbar(1)
+                          waitbar(0.8)
   
                            saveas(h5,['h5_',filename],'png')
                          saveas(h5,['h5_',filename],'fig')
                                      disp(' Figure 5 saved.') 
-                                     close(waitbar1)
+                                     
                                      
                 else                               
                 end
 if saving_vector(6)==1
-                        waitbar(0.8)    
+                        waitbar(1)    
            
                          saveas(h6,['h6_',filename],'png')
                          saveas(h6,['h6_',filename],'fig')
-                          disp(' Figure 6 saved.') 
+                          disp(' Figure 6 saved.')
+                          close(waitbar1)
         else    
             close(waitbar1) 
         end        
