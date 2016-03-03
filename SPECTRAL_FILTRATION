@@ -254,8 +254,23 @@ h5=figure('Name','Original vs Filtered time signal', 'Units', 'normalized','Posi
         legend ('Original signal','Filtered signal');
         title(filename);
         %%}
+
+   h6=figure ('name','Spectrogram', 'Units', 'normalized','Position', [0.01 0.3 0.98 0.61]); % position normalized to the screen dimensions
+           hold on
+                    spectrogram(data,win,overlap,wwidth,fs,'yaxis'); 
+%                     xlabel('time [sec]')
+%                     ylabel('IFFT signal [Au]')
+                    title(filename)
+                        
+%                      legend(['Spectrogram of ' filename '  '  ''])
+%                      annotation('textbox', [0.15 0.85 0.24 0.05], 'interpreter','tex','FitBoxToText','on', 'String', [' Pass Filter: ' fmll '\leftrightarrow ' fmhh]);
+                         
+                     
+            hold off
         
         
+       
+     
         
 %%SAVING PROCESS
 filename = filename(1:length(filename)-11);%'testing_file_name' % zkrácení názvu o přípony a formáty
@@ -300,9 +315,18 @@ if saving_vector(5)==1
                                      disp(' Figure 5 saved.') 
                                      close(waitbar1)
                                      
-else
-               close(waitbar1) 
-        end
+                else                               
+                end
+if saving_vector(6)==1
+                        waitbar(0.8)    
+           
+                         saveas(h6,['h6_',filename],'png')
+                         saveas(h6,['h6_',filename],'fig')
+                          disp(' Figure 6 saved.') 
+        else    
+            close(waitbar1) 
+        end        
+        
 
 if isnan(saving_vector)
    disp('No figure has been saved...');
