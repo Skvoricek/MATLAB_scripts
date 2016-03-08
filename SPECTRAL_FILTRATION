@@ -86,7 +86,10 @@ first_time= char(filename(length(filename)-29:length(filename)-11));%('testing-f
    prompt = {'Spodní mezní frekvence [Hz]','Horní mezní frekvence [Hz]','Vzorkovací frekvence [Hz]','Šířka okna [samples]'};
             dlg_title = 'Parameters input - all values in (abs)!';
                     num_lines = 1;
-                    def = {'0.5 ','2000','3.9067876475869998e+03','256'};% inside default values
+                    % 16 KHZ SAMPLING
+%                             def = {'0.5 ','7500','1.562721904628683e+04','256'};% inside default values
+                    % 4KHZ SAMPLING 
+                            def = {'0.5 ','1500','3.906790075824176e+03','256'};% inside default values
                     options.Resize='on';
                     options.WindowStyle='modal';
                     options.Interpreter='tex';
@@ -344,7 +347,7 @@ end
 
 %% CLEARING AND CLOSING ALL
 
-% close all
+close all
 % clear all
 
 
