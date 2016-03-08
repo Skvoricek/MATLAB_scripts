@@ -75,5 +75,13 @@ NUMBER_ALLOCATOR
 - Added 6th choice for export (button 6)
 - changed proportions of command figure
  
+**************************
+2016-03-08
+FILTERED_PEAKFINDER
+ - added fig_cescription (h1_peaks_*)
+ - commented choice of sampling frequency for 4kHz and 16kHz
+ 
+ SPECTRAL_FILTRATION
+ - commented choice of sampling frequency for 4kHz and 16kHz
  
  Kuba Maršálek - jakub.marsalek@safibra.cz
