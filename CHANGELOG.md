@@ -83,5 +83,10 @@ FILTERED_PEAKFINDER
  
  SPECTRAL_FILTRATION
  - commented choice of sampling frequency for 4kHz and 16kHz
+
+************************
+2016-03-10
+FILTERED_PEAKFINDER
+ - added starting time for noise level calculation (for automatic threshold  decision process)
  
  Kuba Maršálek - jakub.marsalek@safibra.cz
