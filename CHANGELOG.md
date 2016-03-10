@@ -88,5 +88,6 @@ FILTERED_PEAKFINDER
 2016-03-10
 FILTERED_PEAKFINDER
  - added starting time for noise level calculation (for automatic threshold  decision process)
+ - repaired separation (time distance of peaks) saving (previous versions were saved as "char" (transfered from ascii to double)
  
  Kuba Maršálek - jakub.marsalek@safibra.cz
