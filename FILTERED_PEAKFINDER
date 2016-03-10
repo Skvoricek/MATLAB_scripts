@@ -242,7 +242,7 @@ hold on
    prompt = {'Noise extablishment start time [sec]','Noise extablishment end time [sec]','separation [sec]','Threshold [x noise]','ABSolutní hodnoty signálu?'};
             dlg_title = 'Parameters input - all values in (abs)!';
                     num_lines = 1;
-                    def = {'10 ','60 ','25','3','1'};% inside default values
+                    def = {'10 ','60 ','20','7','1'};% inside default values
                     options.Resize='on';
                     options.WindowStyle='modal';
                     options.Interpreter='tex';
@@ -253,6 +253,7 @@ hold on
                                 noise_end_time =answer(2,1); 
                                 separation =answer(3,1); 
                                     noisee=char(noise_end_time); %string type hold for plotting
+                                    sep_num=separation;
                                     separationn=char(separation);%string type hold for plotting
                                  Threshold = answer(4,1); %Minimum peak separation distance
                                  absOn =answer(5,1); %dotaz na metodu zpracování ("1" - bere signál v ABS hodnitě, "jiný" - počítá ze zdroje po filtraci
@@ -417,7 +418,7 @@ end
         num_double=str2double (num); % transfer to number (implement into matrix
         SNR_tot= (meanSigP_tot/data_threshold);
         SNR_tot_DB = 10*log10(SNR_tot);
-    save_variables = [meanSigP_tot,stdev_SigP_tot,num_double,threshold_ref,SNR_tot_DB,Threshold,noise_end_time,separationn,absOn,fs,wwidth ,fml,fmh];
+    save_variables = [meanSigP_tot,stdev_SigP_tot,num_double,threshold_ref,SNR_tot_DB,Threshold,noise_start_time,noise_end_time,separationn,absOn,fs,wwidth ,fml,fmh];
     
 waitbar1 = waitbar(1, 'Results saving', 'Units', 'normalized', 'Position', [0.4 0.2 0.22 0.06]);
  
@@ -433,6 +434,6 @@ waitbar1 = waitbar(1, 'Results saving', 'Units', 'normalized', 'Position', [0.4 
 
 %%CLEARING AND CLOSING ALL
 
-% close all
+close all
 % clear all
 
