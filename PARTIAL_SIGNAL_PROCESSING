@@ -436,7 +436,7 @@ save_statistics= [max,min,mean,std,var,fs,wwidth ,fml,fmh];
     
 waitbar1 = waitbar(0, 'Results saving', 'Units', 'normalized', 'Position', [0.4 0.2 0.22 0.06]);
  
- save(['saved_statistics' filename '.txt'],'save_statistics','-ascii','-double') %saves peak positions and amplitudes into txt.file
+ save(['saved_statistics_' filename '.txt'],'save_statistics','-ascii','-double') %saves peak positions and amplitudes into txt.file
                        disp('statistics and results has been successfully saved...');  
  
                          pause(0.2);
