@@ -114,7 +114,7 @@ first_time= char(filename(length(filename)-29:length(filename)-11));%('testing-f
                                 filename=strcat(filename,'_',filename_ext)% filename correction and summation of original name and user input
                                 
        %%result plotting       
-       close figure clo1;
+       close figure 1;
       
     h1=figure ('name','Manualy Brushed signal data', 'Units', 'normalized','Position', [0.01 0.3 0.98 0.61]); % position normalized to the screen dimensions
                     set(0,'defaulttextinterpreter','none')   
