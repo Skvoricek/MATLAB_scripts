@@ -90,4 +90,10 @@ FILTERED_PEAKFINDER
  - added starting time for noise level calculation (for automatic threshold  decision process)
  - repaired separation (time distance of peaks) saving (previous versions were saved as "char" (transfered from ascii to double)
  
+**********************
+2016-03-16
+PARTIAL SIGNAL PROCESSING	
+added new matlab script - combining previous multiple file support and partial filtration (reconstructed signal)
+Allowes to perform spectral filtration and statistical characteristics calculation above brushed part of original part of signal. 
+
  Kuba Maršálek - jakub.marsalek@safibra.cz
