@@ -1,0 +1,460 @@
+%% CREATED 2016-03-31 - jakub.marsalek@safibra.cz
+
+%% NAČTĚNÍ DAT
+clc; 
+close all;
+clear;
+
+    
+%% NAČTĚNÍ DAT
+%set(0,'DefaulttextInterpreter','none')   % default nonTeX text interpreter - Graph title appearance
+  set(groot, 'DefaultTextInterpreter', 'none')
+      set(groot, 'DefaultLegendInterpreter', 'none')
+       absOn = NaN;
+       
+       data_total=nan;
+         i= 1; 
+       %absOn = 1;% IF NOT COMENTED - PEAK CALCULATION IS PERFORMED FROM
+%       ABS VALUES OF SIGNAL
+      
+      
+  % INPUT DATA INTERACTIVE
+   prompt = {'Počet souborů ke zpracování'};
+            dlg_title = 'Parameters input';
+                    num_lines = 1;
+                    def = {'1'};% inside default values
+                    options.Resize='on';
+                    options.WindowStyle='modal';
+                    options.Interpreter='tex';
+                    answer=inputdlg(prompt,dlg_title,num_lines,...
+                                    def);%related to point definition - careful when changed
+
+
+                                number_of_files =answer(1,1); %aproximate position (optical length) of starting (left) evaluation point
+                                number_of_files = str2double(number_of_files);
+
+ prompt = {'File name', 'Figure name','offset value'};
+            dlg_title = 'Parameters input',;
+                    num_lines = 1;
+                    def = {'File_name','figure_name','1e6'};% inside default values
+                    options.Resize='on';
+                    options.WindowStyle='modal';
+                    options.Interpreter='tex';
+                    answer=inputdlg(prompt,dlg_title,num_lines,...
+                                    def);%related to point definition - careful when changed
+ 
+                               filename =answer(1,1); 
+                               filename = char(filename);
+                               figurename = answer(2,1); 
+                               figurename = char(figurename);
+                               offset = answer(3,1); 
+                               offset = str2double(offset);
+h1=figure('Name',filename, 'Units', 'normalized','Position', [0.01 0.3 0.98 0.61]);
+hold on
+  while i<=(number_of_files)
+
+  
+                                                                            disp('Waiting for user choice - Choose a CSV file.') 
+                                                                             waitbar1 = waitbar(0.15, 'choose input file ', 'Units', 'normalized', 'Position', [0.4 0.2 0.22 0.06]); %position of waitbar
+    [filename,filepath]=uigetfile({'*.*','csv'},...
+                      'Select CSV Data File for sampling frequency check');
+                      cd(filepath);
+                                                                            close(waitbar1)
+                                                                            waitbar1 = waitbar(0.55, 'CVS file reading ', 'Units', 'normalized', 'Position', [0.4 0.2 0.22 0.06]); %position of waitbar
+                                                                            disp('Reading a CSV file - this operation usually takes a while (according to number of rows).') 
+                                                                            %statusbar(0, ['Desktop status: processing  ', filename]);
+    
+data = importdata(filename, ';' );
+data=data.data(:,1);
+data_o = data + (i*offset);
+
+
+%% sampling frequency estimation
+ prompt = {'Sampling frequency of chosen file'};
+            dlg_title = 'Parameters input';
+                    num_lines = 1;
+                    def = {'2000'};% inside default values
+                    options.Resize='on';
+                    options.WindowStyle='modal';
+                    options.Interpreter='tex';
+                    answer=inputdlg(prompt,dlg_title,num_lines,...
+                                    def);%related to point definition - careful when changed
+
+
+                                fs =answer(1,1); %aproximate position (optical length) of starting (left) evaluation point
+%                                 pause();
+                                fs = str2double(fs);
+
+                                
+time_stamp=1/fs;
+time_vector = (0:time_stamp:((length(data)-1)*(time_stamp)))';
+           
+eval(sprintf('time_vector%d = (time_vector);', i));   %dynamická tvorba proměnné v cyklu
+eval(sprintf('signal_%d = (data);', i));    %dynamická tvorba proměnné v cyklu
+time{i}=time_vector;%alokace do proměnných                                                           
+signal_o{i}=(data_o);%alokace do proměnných
+signal{i}=(data);%alokace do proměnných
+%  
+          
+           
+           close(waitbar1)                                                                           
+        	
+    
+ 
+   plot (time{i}, signal_o{i});
+   
+     i = i+1;
+  end
+  ylabel('Light intensity [au]')
+        xlabel('Wavelength [nm]')
+%         xlim([1541 1554]) % změna měřítka osy
+        %set(gca,'position',[0.13 0.3 0.775 0.815]) - posune graf v obrázku
+        legend (...           
+'CH1',...
+'CH2',...
+'CH3',...
+'CH4',...
+'CH5',...
+'CH6',...
+'CH7',...
+'CH8',...
+'CH9',...
+'CH10',...
+'CH11',...
+'CH12',...
+'CH13',...
+'CH14',...
+'CH15',...
+'CH16'...
+);
+% '27 059m',...
+% '27 161m',...
+% '27 263m',...
+% '27 365m',...
+% '27 467m',...
+% '27 569m'...
+% );
+
+        title(figurename);
+        
+         %annotation('textbox', [0.15 0.85 0.24 0.05], 'interpreter','tex','FitBoxToText','on','String', [' Pass Filter: ' fmll '\leftrightarrow ' fmhh],'Color', 'r');
+         
+   hold off
+  
+   %%VARIABLE SUBPLOT GENERATION
+   saving_vector = numberAllocator_subplot();
+   num_of_subplot=sum(saving_vector);
+ 
+   
+   %% PLOTTING SUBPLOT
+   h2=figure('Name',filename, 'Units', 'normalized','Position', [0.01 0.3 0.98 0.61]);
+sequence = 0;
+    hold on
+  
+    %1  
+if saving_vector(1) == 1
+     sequence=sequence+1;
+     waitbar(1-(sequence/num_of_subplot));
+     ah(1)= subplot(num_of_subplot,1,sequence);
+     plot (time{1}, signal{1}); 
+     linkaxes(ah,'x');
+%    legend(['CH_',num2str(i)])
+     
+     ylabel(['CH_1']); %',num2str(i)]);
+        xlabel('Time [sec]')
+                       disp(' Signal 1 plotted.') 
+        else    
+end
+        %2
+if saving_vector(2)== 1
+         
+    sequence=sequence+1;
+     waitbar(1-(sequence/num_of_subplot));
+     ah(2)= subplot(num_of_subplot,1,sequence);
+     plot (time{2}, signal{2}); 
+     linkaxes(ah,'x');
+%    legend(['CH_',num2str(i)])
+     
+        ylabel(['CH_2']); %',num2str(i)]);
+        xlabel('Time [sec]')
+                       disp(' Signal 2 plotted.') 
+        else    
+end
+%3
+   if saving_vector(3) == 1
+    
+    sequence=sequence+1;
+     waitbar(1-(sequence/num_of_subplot));
+     ah(3)= subplot(num_of_subplot,1,sequence);
+     plot (time{3}, signal{3}); 
+     linkaxes(ah,'x');
+%    legend(['CH_',num2str(i)])
+     
+        ylabel(['CH_3']); %',num2str(i)]);
+        xlabel('Time [sec]')
+                       disp(' Signal 3 plotted.') 
+        else    
+   end
+   %4
+   if saving_vector(4) == 1
+    
+    sequence=sequence+1;
+     waitbar(1-(sequence/num_of_subplot));
+     ah(4)= subplot(num_of_subplot,1,sequence);
+     plot (time{4}, signal{4}); 
+     linkaxes(ah,'x');
+%    legend(['CH_',num2str(i)])
+     
+        ylabel(['CH_4']); %',num2str(i)]);
+        xlabel('Time [sec]')
+                       disp(' Signal 4 plotted.') 
+        else    
+   end
+   
+   %5
+   if saving_vector(5) == 1
+    
+    sequence=sequence+1;
+     waitbar(1-(sequence/num_of_subplot));
+     ah(5)= subplot(num_of_subplot,1,sequence);
+     plot (time{1}, signal{1}); 
+     linkaxes(ah,'x');
+%    legend(['CH_',num2str(i)])
+     
+        ylabel(['CH_1',num2str(i)]);
+        xlabel('Time [sec]')
+                       disp(' Signal 5 plotted.') 
+   else
+       
+   end
+  %6
+   if saving_vector(6) == 1
+    
+    sequence=sequence+1;
+     waitbar(1-(sequence/num_of_subplot));
+     ah(6)= subplot(num_of_subplot,1,sequence);
+     plot (time{6}, signal{6}); 
+     linkaxes(ah,'x');
+%    legend(['CH_',num2str(i)])
+     
+        ylabel(['CH_6']); %',num2str(i)]);
+        xlabel('Time [sec]')
+                       disp(' Signal 6 plotted.') 
+        else    
+   end
+          %7
+   if saving_vector(7) == 1
+    
+    sequence=sequence+1;
+     waitbar(1-(sequence/num_of_subplot));
+     ah(7)= subplot(num_of_subplot,1,sequence);
+     plot (time{7}, signal{7}); 
+     linkaxes(ah,'x');
+%    legend(['CH_',num2str(i)])
+     
+        ylabel(['CH_7']); %',num2str(i)]);
+        xlabel('Time [sec]')
+                       disp(' Signal 7 plotted.') 
+        else    
+   end
+          %8
+   if saving_vector(8) == 1
+     sequence=sequence+1;
+     waitbar(1-(sequence/num_of_subplot));
+     ah(8)= subplot(num_of_subplot,1,sequence);
+     plot (time{8}, signal{7}); 
+     linkaxes(ah,'x');
+%    legend(['CH_',num2str(i)])
+     
+        ylabel(['CH_8']); %',num2str(i)]);
+        xlabel('Time [sec]')
+                       disp(' Signal 8 plotted.') 
+        else    
+   end
+          %9
+   if saving_vector(9) == 1
+   
+    sequence=sequence+1;
+     waitbar(1-(sequence/num_of_subplot));
+     ah(9)= subplot(num_of_subplot,1,sequence);
+     plot (time{9}, signal{9}); 
+     linkaxes(ah,'x');
+%    legend(['CH_',num2str(i)])
+     
+        ylabel(['CH_9']); %',num2str(i)]);
+        xlabel('Time [sec]')
+                       disp(' Signal 6 plotted.') 
+        else    
+   end
+          %10
+   if saving_vector(10) == 1
+  
+    sequence=sequence+1;
+    waitbar(1-(sequence/num_of_subplot));
+     ah(10)= subplot(num_of_subplot,1,sequence);
+     plot (time{10}, signal{10}); 
+     linkaxes(ah,'x');
+%    legend(['CH_',num2str(i)])
+     
+        ylabel(['CH_6']); %',num2str(i)]);
+        xlabel('Time [sec]')
+                       disp(' Signal 6 plotted.') 
+        else    
+   end
+          %11
+   if saving_vector(11) == 1
+    
+    sequence=sequence+1;
+     waitbar(1-(sequence/num_of_subplot));
+     ah(11)= subplot(num_of_subplot,1,sequence);
+     plot (time{11}, signal{11}); 
+     linkaxes(ah,'x');
+%    legend(['CH_',num2str(i)])
+     
+        ylabel(['CH_11']); %',num2str(i)]);
+        xlabel('Time [sec]')
+                       disp(' Signal 11 plotted.') 
+        else    
+   end
+          %12
+   if saving_vector(12) == 1
+    
+    sequence=sequence+1;
+     waitbar(1-(sequence/num_of_subplot));
+     ah(12)= subplot(num_of_subplot,1,sequence);
+     plot (time{12}, signal{12}); 
+     linkaxes(ah,'x');
+%    legend(['CH_',num2str(i)])
+     
+        ylabel(['CH_12']); %',num2str(i)]);
+        xlabel('Time [sec]')
+                       disp(' Signal 12 plotted.') 
+        else    
+   end
+        
+     %13
+   if saving_vector(13) == 1
+    
+    sequence=sequence+1;
+     waitbar(1-(sequence/num_of_subplot));
+     ah(13)= subplot(num_of_subplot,1,sequence);
+     plot (time{13}, signal{13}); 
+     linkaxes(ah,'x');
+%    legend(['CH_',num2str(i)])
+     
+        ylabel(['CH_13']); %',num2str(i)]);
+        xlabel('Time [sec]')
+                       disp(' Signal 13 plotted.') 
+        else    
+   end
+          %14
+   if saving_vector(14) == 1
+     sequence=sequence+1;
+     wwaitbar(1-(sequence/num_of_subplot));
+     ah(14)= subplot(num_of_subplot,1,sequence);
+     plot (time{14}, signal{14}); 
+     linkaxes(ah,'x');
+%    legend(['CH_',num2str(i)])
+     
+        ylabel(['CH_14']); %',num2str(i)]);
+        xlabel('Time [sec]')
+                       disp(' Signal 14 plotted.') 
+        else    
+   end
+          %15
+   if saving_vector(6) == 1
+    
+    sequence=sequence+1;
+     waitbar(1-(sequence/num_of_subplot));
+     ah(15)= subplot(num_of_subplot,1,sequence);
+     plot (time{6}, signal{6}); 
+     linkaxes(ah,'x');
+%    legend(['CH_',num2str(i)])
+     
+        ylabel(['CH_6']); %',num2str(i)]);
+        xlabel('Time [sec]')
+                       disp(' Signal 6 plotted.') 
+        else    
+   end
+          %16
+   if saving_vector(16) == 1
+    sequence=sequence+1;
+     waitbar(1-(sequence/num_of_subplot));
+     ah(16)= subplot(num_of_subplot,1,sequence);
+     plot (time{16}, signal{16}); 
+     
+%    legend(['CH_',num2str(i)])
+     
+        ylabel(['CH_16']); %',num2str(i)]);
+        xlabel('Time [sec]')
+                       disp(' Signal 16 plotted.') 
+   else
+      
+   end
+   if (num_of_subplot == 0)
+                        disp(' No Signal plotted. ') 
+   end
+ close (waitbar);
+            
+
+
+  
+%   h2=figure('Name',filename, 'Units', 'normalized','Position', [0.01 0.3 0.98 0.61]);
+
+%     hold on
+hold off
+    %     
+% while i<=(number_of_files)
+%  
+% 
+% %     plot (time{i}, signal{i});
+% 
+%    set(0,'CurrentFigure',h2);
+%    ah(i)= subplot(number_of_files,1,i);
+%      plot (time{i}, signal{i}); 
+%      linkaxes(ah,'x');
+% %      legend(['CH_',num2str(i)])
+%      
+%     ylabel(['CH_',num2str(i)]);
+%         xlabel('Time [sec]')
+% %         xlim([1541 1554]) % změna měřítka osy
+%         %set(gca,'position',[0.13 0.3 0.775 0.815]) - posune graf v obrázku
+% %  title(['CH_',num2str(i)]);
+%         
+%          %annotation('textbox', [0.15 0.85 0.24 0.05], 'interpreter','tex','FitBoxToText','on','String', [' Pass Filter: ' fmll '\leftrightarrow ' fmhh],'Color', 'r');
+%          
+%         %         legend (...  
+%    i=i+1;
+% end
+%     ylabel('Light intensity [au]')
+%         xlabel('Wavelength [nm]')
+% %         xlim([1541 1554]) % změna měřítka osy
+%         %set(gca,'position',[0.13 0.3 0.775 0.815]) - posune graf v obrázku
+%         legend (...           
+% 'CH1',...
+% 'CH2',...
+% 'CH3',...
+% 'CH4',...
+% 'CH5',...
+% 'CH6',...
+% 'CH7',...
+% 'CH8',...
+% 'CH9',...
+% 'CH10',...
+% 'CH11',...
+% 'CH12',...
+% 'CH13',...
+% 'CH14',...
+% 'CH15',...
+% 'CH16'...
+% );
+% % '27 059m',...
+% % '27 161m',...
+% % '27 263m',...
+% % '27 365m',...
+% % '27 467m',...
+% % '27 569m'...
+% % );
+
+       
+   
