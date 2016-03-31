@@ -1,11 +1,8 @@
-%% CREATED 2016-03-31 - jakub.marsalek@safibra.cz
-
 %% NAČTĚNÍ DAT
 clc; 
 close all;
 clear;
 
-    
 %% NAČTĚNÍ DAT
 %set(0,'DefaulttextInterpreter','none')   % default nonTeX text interpreter - Graph title appearance
   set(groot, 'DefaultTextInterpreter', 'none')
@@ -67,7 +64,7 @@ hold on
 data = importdata(filename, ';' );
 data=data.data(:,1);
 data_o = data + (i*offset);
-
+close(waitbar1)   
 
 %% sampling frequency estimation
  prompt = {'Sampling frequency of chosen file'};
@@ -96,9 +93,9 @@ signal_o{i}=(data_o);%alokace do proměnných
 signal{i}=(data);%alokace do proměnných
 %  
           
-           
-           close(waitbar1)                                                                           
-        	
+%            waitbar1 = waitbar(0.15, 'choose sinput file ', 'Units', 'normalized', 'Position', [0.4 0.2 0.22 0.06]); %position of waitbar
+%            close(waitbar1)                                                                           
+%         	
     
  
    plot (time{i}, signal_o{i});
@@ -141,20 +138,23 @@ signal{i}=(data);%alokace do proměnných
          
    hold off
   
+   num_of_subplot=nan;
+   while (num_of_subplot~=0) 
    %%VARIABLE SUBPLOT GENERATION
    saving_vector = numberAllocator_subplot();
    num_of_subplot=sum(saving_vector);
  
    
    %% PLOTTING SUBPLOT
+  
    h2=figure('Name',filename, 'Units', 'normalized','Position', [0.01 0.3 0.98 0.61]);
 sequence = 0;
     hold on
-  
+  waitbar(0.001);
     %1  
 if saving_vector(1) == 1
      sequence=sequence+1;
-     waitbar(1-(sequence/num_of_subplot));
+%        waitbar1((int8(sequence/num_of_subplot)));
      ah(1)= subplot(num_of_subplot,1,sequence);
      plot (time{1}, signal{1}); 
      linkaxes(ah,'x');
@@ -169,7 +169,7 @@ end
 if saving_vector(2)== 1
          
     sequence=sequence+1;
-     waitbar(1-(sequence/num_of_subplot));
+%      waitbar1((int8(sequence/num_of_subplot)));
      ah(2)= subplot(num_of_subplot,1,sequence);
      plot (time{2}, signal{2}); 
      linkaxes(ah,'x');
@@ -184,7 +184,7 @@ end
    if saving_vector(3) == 1
     
     sequence=sequence+1;
-     waitbar(1-(sequence/num_of_subplot));
+%      waitbar1((int8(sequence/num_of_subplot)));
      ah(3)= subplot(num_of_subplot,1,sequence);
      plot (time{3}, signal{3}); 
      linkaxes(ah,'x');
@@ -199,7 +199,7 @@ end
    if saving_vector(4) == 1
     
     sequence=sequence+1;
-     waitbar(1-(sequence/num_of_subplot));
+%      waitbar1((int8(sequence/num_of_subplot)));
      ah(4)= subplot(num_of_subplot,1,sequence);
      plot (time{4}, signal{4}); 
      linkaxes(ah,'x');
@@ -215,7 +215,7 @@ end
    if saving_vector(5) == 1
     
     sequence=sequence+1;
-     waitbar(1-(sequence/num_of_subplot));
+%      waitbar1((int8(sequence/num_of_subplot)));
      ah(5)= subplot(num_of_subplot,1,sequence);
      plot (time{1}, signal{1}); 
      linkaxes(ah,'x');
@@ -231,7 +231,7 @@ end
    if saving_vector(6) == 1
     
     sequence=sequence+1;
-     waitbar(1-(sequence/num_of_subplot));
+%      waitbar1((int8(sequence/num_of_subplot)));
      ah(6)= subplot(num_of_subplot,1,sequence);
      plot (time{6}, signal{6}); 
      linkaxes(ah,'x');
@@ -246,7 +246,7 @@ end
    if saving_vector(7) == 1
     
     sequence=sequence+1;
-     waitbar(1-(sequence/num_of_subplot));
+%      waitbar1((int8(sequence/num_of_subplot)));
      ah(7)= subplot(num_of_subplot,1,sequence);
      plot (time{7}, signal{7}); 
      linkaxes(ah,'x');
@@ -260,7 +260,7 @@ end
           %8
    if saving_vector(8) == 1
      sequence=sequence+1;
-     waitbar(1-(sequence/num_of_subplot));
+%      waitbar1((int8(sequence/num_of_subplot)));
      ah(8)= subplot(num_of_subplot,1,sequence);
      plot (time{8}, signal{7}); 
      linkaxes(ah,'x');
@@ -275,7 +275,7 @@ end
    if saving_vector(9) == 1
    
     sequence=sequence+1;
-     waitbar(1-(sequence/num_of_subplot));
+%     waitbar1((int8(sequence/num_of_subplot)));
      ah(9)= subplot(num_of_subplot,1,sequence);
      plot (time{9}, signal{9}); 
      linkaxes(ah,'x');
@@ -290,7 +290,7 @@ end
    if saving_vector(10) == 1
   
     sequence=sequence+1;
-    waitbar(1-(sequence/num_of_subplot));
+%     waitbar1((int8(sequence/num_of_subplot)));
      ah(10)= subplot(num_of_subplot,1,sequence);
      plot (time{10}, signal{10}); 
      linkaxes(ah,'x');
@@ -305,7 +305,7 @@ end
    if saving_vector(11) == 1
     
     sequence=sequence+1;
-     waitbar(1-(sequence/num_of_subplot));
+%      waitbar1((int8(sequence/num_of_subplot)));
      ah(11)= subplot(num_of_subplot,1,sequence);
      plot (time{11}, signal{11}); 
      linkaxes(ah,'x');
@@ -320,7 +320,7 @@ end
    if saving_vector(12) == 1
     
     sequence=sequence+1;
-     waitbar(1-(sequence/num_of_subplot));
+%      waitbar1((int8(sequence/num_of_subplot)));
      ah(12)= subplot(num_of_subplot,1,sequence);
      plot (time{12}, signal{12}); 
      linkaxes(ah,'x');
@@ -336,7 +336,7 @@ end
    if saving_vector(13) == 1
     
     sequence=sequence+1;
-     waitbar(1-(sequence/num_of_subplot));
+%      waitbar1((int8(sequence/num_of_subplot)));
      ah(13)= subplot(num_of_subplot,1,sequence);
      plot (time{13}, signal{13}); 
      linkaxes(ah,'x');
@@ -350,8 +350,8 @@ end
           %14
    if saving_vector(14) == 1
      sequence=sequence+1;
-     wwaitbar(1-(sequence/num_of_subplot));
-     ah(14)= subplot(num_of_subplot,1,sequence);
+%    waitbar1((int8(sequence/num_of_subplot)));
+   ah(14)= subplot(num_of_subplot,1,sequence);
      plot (time{14}, signal{14}); 
      linkaxes(ah,'x');
 %    legend(['CH_',num2str(i)])
@@ -365,7 +365,7 @@ end
    if saving_vector(6) == 1
     
     sequence=sequence+1;
-     waitbar(1-(sequence/num_of_subplot));
+%      waitbar1((int8(sequence/num_of_subplot)));
      ah(15)= subplot(num_of_subplot,1,sequence);
      plot (time{6}, signal{6}); 
      linkaxes(ah,'x');
@@ -379,7 +379,7 @@ end
           %16
    if saving_vector(16) == 1
     sequence=sequence+1;
-     waitbar(1-(sequence/num_of_subplot));
+%      waitbar1((int8(sequence/num_of_subplot)));
      ah(16)= subplot(num_of_subplot,1,sequence);
      plot (time{16}, signal{16}); 
      
@@ -392,69 +392,17 @@ end
       
    end
    if (num_of_subplot == 0)
-                        disp(' No Signal plotted. ') 
-   end
- close (waitbar);
+        close(h2);                 
+%        break
             
-
+   end
 
   
-%   h2=figure('Name',filename, 'Units', 'normalized','Position', [0.01 0.3 0.98 0.61]);
-
-%     hold on
 hold off
-    %     
-% while i<=(number_of_files)
-%  
-% 
-% %     plot (time{i}, signal{i});
-% 
-%    set(0,'CurrentFigure',h2);
-%    ah(i)= subplot(number_of_files,1,i);
-%      plot (time{i}, signal{i}); 
-%      linkaxes(ah,'x');
-% %      legend(['CH_',num2str(i)])
-%      
-%     ylabel(['CH_',num2str(i)]);
-%         xlabel('Time [sec]')
-% %         xlim([1541 1554]) % změna měřítka osy
-%         %set(gca,'position',[0.13 0.3 0.775 0.815]) - posune graf v obrázku
-% %  title(['CH_',num2str(i)]);
-%         
-%          %annotation('textbox', [0.15 0.85 0.24 0.05], 'interpreter','tex','FitBoxToText','on','String', [' Pass Filter: ' fmll '\leftrightarrow ' fmhh],'Color', 'r');
-%          
-%         %         legend (...  
-%    i=i+1;
-% end
-%     ylabel('Light intensity [au]')
-%         xlabel('Wavelength [nm]')
-% %         xlim([1541 1554]) % změna měřítka osy
-%         %set(gca,'position',[0.13 0.3 0.775 0.815]) - posune graf v obrázku
-%         legend (...           
-% 'CH1',...
-% 'CH2',...
-% 'CH3',...
-% 'CH4',...
-% 'CH5',...
-% 'CH6',...
-% 'CH7',...
-% 'CH8',...
-% 'CH9',...
-% 'CH10',...
-% 'CH11',...
-% 'CH12',...
-% 'CH13',...
-% 'CH14',...
-% 'CH15',...
-% 'CH16'...
-% );
-% % '27 059m',...
-% % '27 161m',...
-% % '27 263m',...
-% % '27 365m',...
-% % '27 467m',...
-% % '27 569m'...
-% % );
+pause();
+
+ end
+   
 
        
    
