@@ -84,6 +84,7 @@ close(waitbar1)
 
                                 
 time_stamp=1/fs;
+time_stamp= time_stamp/60; %recalculated to minutes
 time_vector = (0:time_stamp:((length(data)-1)*(time_stamp)))';
            
 eval(sprintf('time_vector%d = (time_vector);', i));   %dynamická tvorba proměnné v cyklu
@@ -103,7 +104,7 @@ signal{i}=(data);%alokace do proměnných
      i = i+1;
   end
   ylabel('Light intensity [au]')
-        xlabel('Wavelength [nm]')
+        xlabel('Time [min]')
 %         xlim([1541 1554]) % změna měřítka osy
         %set(gca,'position',[0.13 0.3 0.775 0.815]) - posune graf v obrázku
         legend (...           
@@ -150,7 +151,7 @@ signal{i}=(data);%alokace do proměnných
    h2=figure('Name',filename, 'Units', 'normalized','Position', [0.01 0.3 0.98 0.61]);
 sequence = 0;
     hold on
-  waitbar(0.001);
+%   waitbar(0.001);
     %1  
 if saving_vector(1) == 1
      sequence=sequence+1;
@@ -161,7 +162,7 @@ if saving_vector(1) == 1
 %    legend(['CH_',num2str(i)])
      
      ylabel(['CH_1']); %',num2str(i)]);
-        xlabel('Time [sec]')
+        xlabel('Time [min]')
                        disp(' Signal 1 plotted.') 
         else    
 end
@@ -176,7 +177,7 @@ if saving_vector(2)== 1
 %    legend(['CH_',num2str(i)])
      
         ylabel(['CH_2']); %',num2str(i)]);
-        xlabel('Time [sec]')
+        xlabel('Time [min]')
                        disp(' Signal 2 plotted.') 
         else    
 end
@@ -191,7 +192,7 @@ end
 %    legend(['CH_',num2str(i)])
      
         ylabel(['CH_3']); %',num2str(i)]);
-        xlabel('Time [sec]')
+        xlabel('Time [min]')
                        disp(' Signal 3 plotted.') 
         else    
    end
@@ -206,7 +207,7 @@ end
 %    legend(['CH_',num2str(i)])
      
         ylabel(['CH_4']); %',num2str(i)]);
-        xlabel('Time [sec]')
+        xlabel('Time [min]')
                        disp(' Signal 4 plotted.') 
         else    
    end
@@ -222,7 +223,7 @@ end
 %    legend(['CH_',num2str(i)])
      
         ylabel(['CH_1',num2str(i)]);
-        xlabel('Time [sec]')
+        xlabel('Time [min]')
                        disp(' Signal 5 plotted.') 
    else
        
@@ -238,7 +239,7 @@ end
 %    legend(['CH_',num2str(i)])
      
         ylabel(['CH_6']); %',num2str(i)]);
-        xlabel('Time [sec]')
+        xlabel('Time [min]')
                        disp(' Signal 6 plotted.') 
         else    
    end
@@ -253,7 +254,7 @@ end
 %    legend(['CH_',num2str(i)])
      
         ylabel(['CH_7']); %',num2str(i)]);
-        xlabel('Time [sec]')
+        xlabel('Time [min]')
                        disp(' Signal 7 plotted.') 
         else    
    end
@@ -267,7 +268,7 @@ end
 %    legend(['CH_',num2str(i)])
      
         ylabel(['CH_8']); %',num2str(i)]);
-        xlabel('Time [sec]')
+        xlabel('Time [min]')
                        disp(' Signal 8 plotted.') 
         else    
    end
@@ -282,7 +283,7 @@ end
 %    legend(['CH_',num2str(i)])
      
         ylabel(['CH_9']); %',num2str(i)]);
-        xlabel('Time [sec]')
+        xlabel('Time [min]')
                        disp(' Signal 6 plotted.') 
         else    
    end
@@ -297,7 +298,7 @@ end
 %    legend(['CH_',num2str(i)])
      
         ylabel(['CH_6']); %',num2str(i)]);
-        xlabel('Time [sec]')
+        xlabel('Time [min]')
                        disp(' Signal 6 plotted.') 
         else    
    end
@@ -312,7 +313,7 @@ end
 %    legend(['CH_',num2str(i)])
      
         ylabel(['CH_11']); %',num2str(i)]);
-        xlabel('Time [sec]')
+        xlabel('Time [min]')
                        disp(' Signal 11 plotted.') 
         else    
    end
@@ -327,7 +328,7 @@ end
 %    legend(['CH_',num2str(i)])
      
         ylabel(['CH_12']); %',num2str(i)]);
-        xlabel('Time [sec]')
+        xlabel('Time [min]')
                        disp(' Signal 12 plotted.') 
         else    
    end
@@ -343,7 +344,7 @@ end
 %    legend(['CH_',num2str(i)])
      
         ylabel(['CH_13']); %',num2str(i)]);
-        xlabel('Time [sec]')
+        xlabel('Time [min]')
                        disp(' Signal 13 plotted.') 
         else    
    end
@@ -357,7 +358,7 @@ end
 %    legend(['CH_',num2str(i)])
      
         ylabel(['CH_14']); %',num2str(i)]);
-        xlabel('Time [sec]')
+        xlabel('Time [min]')
                        disp(' Signal 14 plotted.') 
         else    
    end
@@ -372,7 +373,7 @@ end
 %    legend(['CH_',num2str(i)])
      
         ylabel(['CH_6']); %',num2str(i)]);
-        xlabel('Time [sec]')
+        xlabel('Time [min]')
                        disp(' Signal 6 plotted.') 
         else    
    end
@@ -386,7 +387,7 @@ end
 %    legend(['CH_',num2str(i)])
      
         ylabel(['CH_16']); %',num2str(i)]);
-        xlabel('Time [sec]')
+        xlabel('Time [min]')
                        disp(' Signal 16 plotted.') 
    else
       
