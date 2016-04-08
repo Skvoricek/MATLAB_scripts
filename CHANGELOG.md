@@ -99,7 +99,8 @@ Allowes to perform spectral filtration and statistical characteristics calculati
 2016-04-08
 FILTERED_PEAKFINDER &  SPECTRAL_FILTRATION
  - added commented choice for 32kHz processing
-
+FILTERED_PEAKFINDER 
+ - repaired saved_variable (computed characteristics and calculation variablses) saving into ascii txt file
 
 
  Kuba Maršálek - jakub.marsalek@safibra.cz
