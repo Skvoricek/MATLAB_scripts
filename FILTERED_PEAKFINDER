@@ -256,7 +256,7 @@ hold on
                                 noise_end_time =answer(2,1); 
                                 separation =answer(3,1); 
                                     noisee=char(noise_end_time); %string type hold for plotting
-                                    sep_num=separation;
+                                    
                                     separationn=char(separation);%string type hold for plotting
                                  Threshold = answer(4,1); %Minimum peak separation distance
                                  absOn =answer(5,1); %dotaz na metodu zpracování ("1" - bere signál v ABS hodnitě, "jiný" - počítá ze zdroje po filtraci
@@ -268,6 +268,8 @@ hold on
                                                     noise_end_time=str2double(noise_end_time) %cell to number convertion
                                                     separation=str2double(separation) %cell to number convertion
                                                     absOn =str2double (absOn);
+                                                    
+                                                    sep_num=separation;
                                                                           close(waitbar1)
         %jednickovy_filter = 1 % logicka uroven spusteni nebo vypnuti filtru 1 zapnuto, else vypnuto 
 
