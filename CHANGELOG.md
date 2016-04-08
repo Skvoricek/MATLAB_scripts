@@ -95,5 +95,11 @@ FILTERED_PEAKFINDER
 PARTIAL SIGNAL PROCESSING	
 added new matlab script - combining previous multiple file support and partial filtration (reconstructed signal)
 Allowes to perform spectral filtration and statistical characteristics calculation above brushed part of original part of signal. 
+**********************
+2016-04-08
+FILTERED_PEAKFINDER &  SPECTRAL_FILTRATION
+ - added commented choice for 32kHz processing
+
+
 
  Kuba Maršálek - jakub.marsalek@safibra.cz
