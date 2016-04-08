@@ -145,8 +145,8 @@ first_time= char(filename(length(filename)-29:length(filename)-11));%('testing-f
         
    %% GENERACE FILTRU     
  init_plot_val=5;
- filter = [(0:fs-1)]; % vytvorení vektoru pro filtraci
- filter((1:fs),1) = [0]; % plnení vektoru pro filtraci
+%  filter = [(0:fs-1)]; % vytvorení vektoru pro filtraci
+%  filter((1:fs),1) = [0]; % plnení vektoru pro filtraci
 %%{
 %scale filtru na prepocitani
         delkafft = length(X);
