@@ -2,7 +2,6 @@
 clc; 
 close all;
 clear;
-
     
 %% NAČTĚNÍ DAT
 %set(0,'DefaulttextInterpreter','none')   % default nonTeX text interpreter - Graph title appearance
@@ -68,12 +67,15 @@ first_time= char(filename(length(filename)-29:length(filename)-11));%('testing-f
  
   end
   %% combined signal processing
- 
   data=data_total(2:end); % return to original script after "multiple files change" 
- first_time= char(filename(length(filename)-29:length(filename)-11));%('testing-file-name)'
-
    mean_data=mean(data);
   data=data-mean_data;
+ 
+  %% NASTAVOVÁNÍ NÁZVŮ A ČASŮ
+%    first_time= char(filename(length(filename)-29:length(filename)-11));%('testing-file-name)'
+  
+
+ %% ZADÁVÁNÍ PARAMETRŮ
  
  
 %{
@@ -85,12 +87,13 @@ first_time= char(filename(length(filename)-29:length(filename)-11));%('testing-f
             dlg_title = 'Parameters input - all values in (abs)!';
                     num_lines = 1;
                     % 32 kHz SAMPLING
-%                             def = {'0.5 ','15000','3.1253618438178957e+04','256'};% inside default values
-                       
-                    % 16 kHz SAMPLING
+                            def = {'0.5 ','15000','3.1253618438178957e+04','256'};% inside default values
+                    % 16 KHZ SAMPLING
 %                             def = {'0.5 ','7500','1.562721904628683e+04','256'};% inside default values
-                    % 4kHz SAMPLING 
-                            def = {'0.5 ','1500','3.906790075824176e+03','256'};% inside default values
+                    % 4KHZ SAMPLING 
+%                             def = {'0.5 ','1500','3.906790075824176e+03','256'};% inside default values
+                    % 2kHz SAMPLING 
+                            def = {'0.5 ','950','1.9532775389462327e+03','256'};% inside default values
                     options.Resize='on';
                     options.WindowStyle='modal';
                     options.Interpreter='tex';
@@ -118,40 +121,58 @@ first_time= char(filename(length(filename)-29:length(filename)-11));%('testing-f
         overlap=fix(wwidth/2); % překryv 
         time_stamp=1/fs;
         time_vector= (0:time_stamp:((length(data)-1)*(time_stamp)))';
-
+%}
+            h1=figure ('name','Reference', 'Units', 'normalized','Position', [0.01 0.3 0.98 0.61]); % position normalized to the screen dimensions
+                    set(0,'defaulttextinterpreter','none')   
+                    hold on
+                        plot(time_vector,data)
+                        xlabel('time [sec]')
+                        ylabel('signal [Au]')
+                        title(filename)
+                        
+                        legend('measured_signal')
+                         annotation('textbox', [0.15 0.85 0.19 0.05], 'interpreter','none','FitBoxToText','on', 'String', [' Start Time:  ' first_time '']);
+                              hold off
+                        %plot([output,recoat],[threshold_ref,threshold_ref],'m')
+                        %scatter(opticallength_ref(locsnew_ref),ERpeaknew_ref,'r')
+                        hold off
+                        
+                        
  %% FFT COMPUTATION      
       
    t = 0:1/fs:1; % Time vector of 1 second 
         %overlap=0;
         X = fft(data,length(data));
         absx = abs(X);
+        %X=absx;
         f1 = (0:length(data)/2-1)*fs/length(data); 
         
-   
-  %{       
-%     h2= figure('Name','Spektrum');
-%         init_plot_val=5;
-%         hold on
-%         plot(f1(init_plot_val:end),X(init_plot_val:(length(X)/2)));
-%         xlabel('frequency [Hz]')
-%         ylabel('spectral density [Au]')
-%           title(filename)
-%           
-%                legend('FFT of the signal')
-%                %annotation('textbox', [0.15 0.85 0.19 0.05], 'String', [' Start Time:  ' first_time '']);
-%                              
-%         hold off
-        %}
+        %absx = absx';save fft2.txt absx -ASCII; 
+        
+    h2= figure('Name','Spektrum', 'Units', 'normalized','Position', [0.01 0.3 0.98 0.61]); % position normalized to the screen dimensions);
+        init_plot_val=5;
+        hold on
+        plot(f1(init_plot_val:end),X(init_plot_val:(length(X)/2)));
+        xlabel('frequency [Hz]')
+        ylabel('spectral density [Au]')
+          title(filename)
+          
+               legend('FFT of the signal')
+               %annotation('textbox', [0.15 0.85 0.19 0.05], 'interpreter','none','FitBoxToText','on', 'String', [' Start Time:  ' first_time '']);
+                             
+        hold off
         
    %% GENERACE FILTRU     
  init_plot_val=5;
 %  filter = [(0:fs-1)]; % vytvorení vektoru pro filtraci
+%  filter = filter';
 %  filter((1:fs),1) = [0]; % plnení vektoru pro filtraci
-%%{
+% %%{
 %scale filtru na prepocitani
         delkafft = length(X);
         f_prepocet = delkafft/fs; % prepoctova konstanta filtru
-      
+        %figure('Name','prepocitanej filter')
+        %hold on
         
 %PLNĚNÍ FILTRU DLE MEZNÍCH KMITOČTŮ
         w1= [1:delkafft];
@@ -163,6 +184,8 @@ first_time= char(filename(length(filename)-29:length(filename)-11));%('testing-f
         filter2(1,((delkafft - (konst_horni)):delkafft - (konst_spodni))) = [1]; 
         filter2(1,((delkafft -(konst_spodni)):delkafft)) = [0];
       
+
+        
         
  %{        
 jednickovy_filter = 0
@@ -180,35 +203,48 @@ final_spectrum = filter2.*abs(X); % filtrace (pro vykresleni spektra
         final_signal = filter2.*X; % filtrace  pro vykresleni casoveho singalu
         frequency_step_filter = fs/length(final_spectrum);
         frekvencni_osa = ([0:frequency_step_filter:(frequency_step_filter*(length(final_spectrum)-1))])';
-     %{ 
-%      h3=figure ('name','Final spectrum', 'Units', 'normalized','Position', [0.01 0.3 0.98 0.61]); % position normalized to the screen dimensions
-%         xlabel('frequenacy [Hz]')
-%         ylabel('Spectral density [Au]')
-%         title(filename)
-%         legend('filter mask for IFFT ')
-%         hold on
-%         %plot (X)
-%         %plot (filter2, 'Color','r')
-%         plot ((frekvencni_osa(1:(length(frekvencni_osa)/2))), final_spectrum(1:(length(final_spectrum)/2)), 'Color','k');
-%         hold off
-%}
+     
+     h3=figure ('name','Final spectrum', 'Units', 'normalized','Position', [0.01 0.3 0.98 0.61]); % position normalized to the screen dimensions
+        xlabel('frequenacy [Hz]')
+        ylabel('Spectral density [Au]')
+        title(filename)
+        legend('filter mask for IFFT ')
+        hold on
+        %plot (X)
+        %plot (filter2, 'Color','r')
+        plot ((frekvencni_osa(1:(length(frekvencni_osa)/2))), final_spectrum(1:(length(final_spectrum)/2)), 'Color','k');
+        hold off
+
 %% ZPĚTNÁ REKONSTRUKCE SIGNÁLU
 %%{
    
        InverseFFT_data = ((real(ifft(final_signal)))); %realna slozka zpetne fft (odskalovani meritka, spravne zobrazeni)
+         
+        
+        h4=figure ('name','Reconstructed signal', 'Units', 'normalized','Position', [0.01 0.3 0.98 0.61]); % position normalized to the screen dimensions
+                      hold on
+                        plot(time_vector,InverseFFT_data, 'Color','r');
+                        xlabel('time [sec]')
+                        ylabel('IFFT signal [Au]')
+                        title(filename)
+                        
+                        legend(['Reconstructed_signal -> ' fmll ' to ' fmhh 'Hz'])
+                         annotation('textbox', [0.15 0.85 0.24 0.05], 'interpreter','tex','FitBoxToText','on', 'String', [' Pass Filter: ' fmll '\leftrightarrow ' fmhh]);
+                         
+                     
+                       hold off
+        
+
+%NORMALIZACE
+        %Y = Y./max(Y);
 
 
 %% VYKRESLENÍ VÝSLEDKŮ
 %%{
 InverseFFT_data=InverseFFT_data+mean_data;
+data = data+mean_data;
 
-data = data (41:end,1);
-time_vector = time_vector (41:end,1);
-InverseFFT_data = InverseFFT_data (41:end,1);
-
-h1=figure('Name','Original vs Filtered time signal', 'Units', 'normalized','Position', [0.01 0.3 0.98 0.61]);
-        
-hold on
+h5=figure('Name','Original vs Filtered time signal', 'Units', 'normalized','Position', [0.01 0.3 0.98 0.61]);
         [AX,H1,H2] = plotyy(time_vector,data,time_vector,InverseFFT_data )
         %set(AX(1),'YTick',[0:max(ywind)])
         %set(AX(2),'YTick',[0:max(ywind)])
@@ -225,220 +261,98 @@ hold on
         set(get(AX(2),'Xlabel'),'string','time [sec]','Color','r')
         legend ('Original signal','Filtered signal');
         title(filename);
-        
-         annotation('textbox', [0.15 0.85 0.24 0.05], 'interpreter','tex','FitBoxToText','on','String', [' Pass Filter: ' fmll '\leftrightarrow ' fmhh],'Color', 'r');
-         
-   hold off
         %%}
+
+   h6=figure ('name','Spectrogram', 'Units', 'normalized','Position', [0.01 0.3 0.98 0.61]); % position normalized to the screen dimensions
+           hold on
+                    spectrogram(data,hamming(1024),overlap,wwidth,fs,'yaxis'); 
+                    colormap(bone);
+%                     xlabel('time [sec]')
+%                     ylabel('IFFT signal [Au]')
+                    title(filename)
+                        
+%                      legend(['Spectrogram of ' filename '  '  ''])
+%                      annotation('textbox', [0.15 0.85 0.24 0.05], 'interpreter','tex','FitBoxToText','on', 'String', [' Pass Filter: ' fmll '\leftrightarrow ' fmhh]);
+                         
+                     
+            hold off
         
         
-        
-
- 
-
- data=InverseFFT_data - (mean(InverseFFT_data));
- data=data(41:end,1);
- %data=abs(data);
- 
-                                                                            waitbar1 = waitbar(1, 'Input correct values ', 'Units', 'normalized', 'Position', [0.4 0.2 0.22 0.06]);
-                                                                            disp('Input values into dialog window.') 
-   prompt = {'Noise extablishment start time [sec]','Noise extablishment end time [sec]','separation [sec]','Threshold [x noise]','ABSolutní hodnoty signálu?'};
-            dlg_title = 'Parameters input - all values in (abs)!';
-                    num_lines = 1;
-                    def = {'10 ','60 ','20','7','1'};% inside default values
-                    options.Resize='on';
-                    options.WindowStyle='modal';
-                    options.Interpreter='tex';
-                    answer=inputdlg(prompt,dlg_title,num_lines,...
-                                    def);%related to point definition - careful when changed
-
-                                noise_start_time =answer(1,1); 
-                                noise_end_time =answer(2,1); 
-                                separation =answer(3,1); 
-                                    noisee=char(noise_end_time); %string type hold for plotting
-                                    
-                                    separationn=char(separation);%string type hold for plotting
-                                 Threshold = answer(4,1); %Minimum peak separation distance
-                                 absOn =answer(5,1); %dotaz na metodu zpracování ("1" - bere signál v ABS hodnitě, "jiný" - počítá ze zdroje po filtraci
-                                
-                                
-                                                 
-                                                    Threshold=str2double(Threshold) %cell to number convertion
-                                                    noise_start_time=str2double(noise_start_time) %cell to number convertion
-                                                    noise_end_time=str2double(noise_end_time) %cell to number convertion
-                                                    separation=str2double(separation) %cell to number convertion
-                                                    absOn =str2double (absOn);
-                                                    
-                                                    sep_num=separation;
-                                                                          close(waitbar1)
-        %jednickovy_filter = 1 % logicka uroven spusteni nebo vypnuti filtru 1 zapnuto, else vypnuto 
-
+       
      
-        time_stamp=1/fs;
-        time_vector= (0:time_stamp:((length(data)-1)*(time_stamp)))';
         
-        mean_data=mean(data(1:(noise_end_time/time_stamp)));
-        data=data-mean_data;
-      %
-      %% ABS VALUE COUNTING
-      
-                                  
-      if absOn == 1
-          
-      data=abs(data);
-      else
-      end
-      startEval_peak = 4*fs % eliminace chyby filtrací při počítání peaků (přebuzený max thresholdu (4 vteřiny od začátku))
-      endEvalpeak = 2*fs % eliminace posledního peaku vzniklého filtrací - (2 vteřiny od z od konce)
-      data = data(startEval_peak:(length(data)-endEvalpeak));
-      time_vector=time_vector(startEval_peak:(length(time_vector)-endEvalpeak));
-      
-        data_threshold=max(data((noise_start_time/time_stamp):(noise_end_time/time_stamp)));
-        threshold_ref= (abs((data_threshold))*Threshold);
-        
-         separation = separation*fs;
-        
-
-        %% PEAK FINDER FUNCTION
-                                                 
-                       close(figure(8));                        
-                      [SIG_peak,locs]  = findpeaks(data,'MinPeakHeight',threshold_ref,'MinPeakDistance',separation);
-                      [SIG_peak_neg,locs_neg]  = findpeaks(-data,'MinPeakHeight',threshold_ref,'MinPeakDistance',separation);
-
- h2=figure('Name','Selected peaks', 'Units', 'normalized','Position', [0.01 0.3 0.98 0.61]);
-            threshold_line (1:length(time_vector))= [threshold_ref]';
-            threshold_line_neg (1:length(time_vector))= [-threshold_ref]';
-            SIG_peak_neg = -SIG_peak_neg;
-  
- locations=(locs/fs) + (startEval_peak/fs); % přidáno posunutí vykrelených bodů pro případ vynechání části signálu pro výpočty - (startEval_peak/fs))
- locations_neg=(locs_neg/fs)+(startEval_peak/fs);% přidáno posunutí vykrelených bodů pro případ vynechání části signálu pro výpočty - (startEval_peak/fs))
- save_peaks = [SIG_peak ,locations;SIG_peak_neg ,locations_neg];
- num=num2str(length(save_peaks));
- disp([ ' '  num '  peaks had been found.' ]) 
- hold on
- 
- 
- plot(time_vector,data)
-  scatter (locations,SIG_peak, 'r')
-  scatter (locations_neg,SIG_peak_neg, 'r')
-  plot (time_vector,threshold_line)
-  plot (time_vector,threshold_line_neg)
-
-  
-        legend ('Reconstructed Data','Peak locations','Peak locations','Upper threshold','Lower threshold');
-        ylabel('Signal Intensity [Au]')
-        xlabel('Time [sec]')
-        title(filename)
-        annotation('textbox', [0.15 0.85 0.10 0.05], 'interpreter','none','FitBoxToText','on', 'String', [' Number of peaks:  ' num ' '],'Color', 'r');
-  hold off
-  
-
-   %% SAVING PROCESS
- filename = filename(1:length(filename)-11);%'testing_file_name'
+%%SAVING PROCESS
+filename = filename(1:length(filename)-11);%'testing_file_name' % zkrácení názvu o přípony a formáty
 
 waitbar1 = waitbar(0, 'saving process ', 'Units', 'normalized', 'Position', [0.4 0.2 0.22 0.06]); %position of waitbar 
 saving_vector = numberAllocator();
 if saving_vector(1) == 1
-                        saveas(h1,['h1_peaks',filename],'png') % saves h plot (last calculated curve) as a png file. (the name is same as the original file - which CANNOT have the same_name.txt in the same folder!
-                       saveas(h1,['h1_peaks',filename],'fig')
+                        saveas(h1,['h1_',filename],'png') % saves h plot (last calculated curve) as a png file. (the name is same as the original file - which CANNOT have the same_name.txt in the same folder!
+                       saveas(h1,['h1_',filename],'fig')
                        disp(' Figure 1 saved.') 
         else    
         end
 if saving_vector(2)== 1
               waitbar(0.2)    
        
-                         saveas(h2,['h2_peaks',filename],'png')
-                         saveas(h2,['h2_peaks',filename],'fig') 
+                         saveas(h2,['h2_',filename],'png')
+                         saveas(h2,['h2_',filename],'fig') 
                             disp(' Figure 2 saved.') 
         else    
         end
-% if saving_vector(3)==1
-%               waitbar(0.4)           
-%           
-%                          saveas(h3,['h3_',filename],'png')
-%                          saveas(h3,['h3_',filename],'fig')            
-%                            disp(' Figure 3 saved.') 
-%         else    
-%         end
-% if saving_vector(4)==1
-%                         waitbar(0.8)    
-%            
-%                          saveas(h4,['h4_',filename],'png')
-%                          saveas(h4,['h4_',filename],'fig')
-%                           disp(' Figure 4 saved.') 
-%         else    
-%         end
-% if saving_vector(5)==1
-%                           waitbar(1)
-%   
-%                            saveas(h5,['h5_',filename],'png')
-%                          saveas(h5,['h5_',filename],'fig')
-%                                      disp(' Figure 5 saved.') 
-%                                      close(waitbar1)
-%                                      
-%             else
-             close(waitbar1) 
-%         end
+if saving_vector(3)==1
+              waitbar(0.4)           
+          
+                         saveas(h3,['h3_',filename],'png')
+                         saveas(h3,['h3_',filename],'fig')            
+                           disp(' Figure 3 saved.') 
+        else    
+        end
+if saving_vector(4)==1
+                        waitbar(0.6)    
+           
+                         saveas(h4,['h4_',filename],'png')
+                         saveas(h4,['h4_',filename],'fig')
+                          disp(' Figure 4 saved.') 
+        else    
+        end
+if saving_vector(5)==1
+                          waitbar(0.8)
+  
+                           saveas(h5,['h5_',filename],'png')
+                         saveas(h5,['h5_',filename],'fig')
+                                     disp(' Figure 5 saved.') 
+                                     
+                                     
+                else                               
+                end
+if saving_vector(6)==1
+                        waitbar(1)    
+           
+                         saveas(h6,['h6_',filename],'png')
+                         saveas(h6,['h6_',filename],'fig')
+                          disp(' Figure 6 saved.')
+                          close(waitbar1)
+        else    
+            close(waitbar1) 
+        end        
+        
 
 if isnan(saving_vector)
    disp('No figure has been saved...');
    close(waitbar1)
-
-    
-   
-waitbar1 = waitbar(1, ' Fig saving finished', 'Units', 'normalized', 'Position', [0.4 0.2 0.22 0.06]);
+waitbar1 = waitbar(1, 'Realtion finished', 'Units', 'normalized', 'Position', [0.4 0.2 0.22 0.06]);
                          pause(1);
                          close(waitbar1)             
 else
-   waitbar1 = waitbar(1, 'Fig saving finished', 'Units', 'normalized', 'Position', [0.4 0.2 0.22 0.06]);
+   waitbar1 = waitbar(1, 'Realtion finished', 'Units', 'normalized', 'Position', [0.4 0.2 0.22 0.06]);
                          pause(1);
                          close(waitbar1)
 end
-%% statistical and test varibale creation
-if num == 0;
-        waitbar1 = waitbar(1, 'No peaks has been fonud', 'Units', 'normalized', 'Position', [0.4 0.2 0.22 0.06]);
-        disp('No peaks hes been found');                     
-        pause(1);
-     meanSigP_tot = nan; % proměnná k uložení v případě nenalezení peaku
-     stdev_SigP_tot = nan; % proměnná k uložení v případě nenalezení peaku
 
-        close(waitbar1)
-    else
-    meanSigP = mean(SIG_peak);
-    meanSigP_neg = abs(mean(SIG_peak_neg));
-    stdevSigP = std(SIG_peak); %standardní odchylka
-    stdevSigP_neg = std(SIG_peak_neg); %standardní odchylka
-           LOC_Test=isempty(locations_neg);%test na prázdnost matice obsahující poyice negativních peaků
-        if LOC_Test == 1;
-                meanSigP_tot = mean (meanSigP);
-                stdev_SigP_tot = mean(stdevSigP);
-            else     
-                meanSigP_tot = mean (meanSigP+meanSigP_neg);
-                stdev_SigP_tot = mean(stdevSigP+stdevSigP_neg);
-                end
-end    
-
-  
-    save_peaks = [SIG_peak ,locations;SIG_peak_neg ,locations_neg];
-        num_double=str2double (num); % transfer to number (implement into matrix
-        SNR_tot= (meanSigP_tot/data_threshold);
-        SNR_tot_DB = 10*log10(SNR_tot);
-    save_variables = [meanSigP_tot,stdev_SigP_tot,num_double,threshold_ref,SNR_tot_DB,Threshold,noise_start_time,noise_end_time,sep_num,absOn,fs,wwidth ,fml,fmh];
-    
-waitbar1 = waitbar(1, 'Results saving', 'Units', 'normalized', 'Position', [0.4 0.2 0.22 0.06]);
- 
- save(['saved_peaks_' filename '.txt'],'save_peaks','-ascii','-double') %saves peak positions and amplitudes into txt.file
- save(['comp_variables_' filename '.txt'],'save_variables','-ascii','-double') %saves peak positions and amplitudes into txt.file                       
-                        disp('Peak values and its positions has been successfully saved...'); 
-                         disp('Variables and results has been successfully saved...');  
- 
-                         pause(0.2);
-                         close(waitbar1)
-                         waitbar1 = waitbar(1, 'RELATION IS FINISHED  - get a coffee ;) ', 'Units', 'normalized', 'Position', [0.4 0.2 0.22 0.06]);
-                         close(waitbar1)
-
-%%CLEARING AND CLOSING ALL
+%% CLEARING AND CLOSING ALL
 
 close all
-% clear all
+  clear all
+
 
