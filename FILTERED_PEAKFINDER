@@ -30,20 +30,41 @@ clear;
                                 number_of_files =answer(1,1); %aproximate position (optical length) of starting (left) evaluation point
                                 number_of_files = str2double(number_of_files);
 % %       Soubory  ke zpracování                        
-  
+%% CSV vs WAV file
+
+file_type = filetype();
+
+
   while i_files<=(number_of_files)
  
-   disp('Waiting for user choice - Choose a CSV file.') 
+if file_type(1) == 1
+             
+      disp('Waiting for user choice - Choose a CSV file.') 
                                                                              waitbar1 = waitbar(0.15, 'choose input file ', 'Units', 'normalized', 'Position', [0.4 0.2 0.22 0.06]); %position of waitbar
     [filename,filepath]=uigetfile({'*.*','csv'},...
                       'Select reference Data File ');
                       cd(filepath);
                                                                             close(waitbar1)
-
 %                       pause();
      data = importdata(filename, ';' );
-data=data.data(:,1);
+     data=data.data(:,1);
+ else    
+        end
+if file_type(2)== 1
+    
+    disp('Waiting for user choice - Choose a WAV file.') 
+                                                                             waitbar1 = waitbar(0.15, 'choose input file ', 'Units', 'normalized', 'Position', [0.4 0.2 0.22 0.06]); %position of waitbar
+    [filename,filepath]=uigetfile({'*.*','wav'},...
+                      'Select reference WAV File ');
+                      cd(filepath);
+                                                                            close(waitbar1)
+[y,fs] = audioread(filename);
+data=y(:,1) + y(:,2); %%mono creation
+data=data/2; %%normalization
+        else    
+        end
 
+      
 % plot(data);
                   
 %  pause();  
@@ -53,14 +74,18 @@ data=data.data(:,1);
 %        data=data(2,1:end);
        data_total = [data_total ;data];
    end
-                                                                            waitbar1 = waitbar(1, 'CVS file reading ', 'Units', 'normalized', 'Position', [0.4 0.2 0.22 0.06]); %position of waitbar
-                                                                            disp('Reading a CSV file - this operation usually takes a while (according to number of rows).') 
+                                                                            waitbar1 = waitbar(1, ' File reading ', 'Units', 'normalized', 'Position', [0.4 0.2 0.22 0.06]); %position of waitbar
+                                                                            disp('File reading - this operation usually takes a while (according to size).') 
                                                                             statusbar(0, ['Desktop status: processing  ', filename]);
                                                                             close(waitbar1)
                                                                             
                                                                             
-          if i_files ==1                                                                  
-first_time= char(filename(length(filename)-29:length(filename)-11));%('testing-file-name)'
+          if i_files == 1 
+    if file_type(1) == 1
+    first_time = char(filename(length(filename)-29:length(filename)-11));%('testing-file-name)'
+    else
+    first_time=char( );    
+    end
           else
           end
  i_files = i_files+1;
