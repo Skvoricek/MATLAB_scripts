@@ -1,0 +1,54 @@
+function thisNumber = filetype()
+
+thisNumber = nan(1, 2);
+
+fig = figure('pos', [550 150 255 150], 'Menubar', 'none');
+
+button(1) = uicontrol('style','pushbutton','string','___CSV___',...
+   'parent', fig, 'units', 'pixels', 'pos', [10 50 100 80], ...
+   'UserData', false, 'Callback', @prepareDataSlot1);
+
+button(2) = uicontrol('style','pushbutton','string','___WAV___ ',...
+   'parent', fig, 'units', 'pixels', 'pos', [150 50 100 80], ...
+   'UserData', false, 'Callback', @prepareDataSlot2);
+%{
+button(3) = uicontrol('style','togglebutton','string','Figure 3',...
+   'parent', fig, 'units', 'pixels', 'pos', [190 50 80 50], ...
+   'UserData', false, 'Callback', @prepareDataSlot1);
+
+button(4) = uicontrol('style','togglebutton','string','Figure 4',...
+   'parent', fig, 'units', 'pixels', 'pos', [280 50 80 50], ...
+   'UserData', false, 'Callback', @prepareDataSlot2);
+
+button(5) = uicontrol('style','togglebutton','string','Figure 5',...
+   'parent', fig, 'units', 'pixels', 'pos', [370 50 80 50], ...
+   'UserData', false, 'Callback', @prepareDataSlot1);
+
+button(6) = uicontrol('style','togglebutton','string','Figure 6',...
+   'parent', fig, 'units', 'pixels', 'pos', [460 50 80 50], ...
+   'UserData', false, 'Callback', @prepareDataSlot1);
+%}
+
+
+exportButton = uicontrol('style','pushbutton','string','LOAD',...
+   'parent', fig, 'units', 'pixels', 'pos', [10 10 240 30]);
+
+exportButton.Callback = @(src,callbackData)exportMyData;
+
+function exportMyData
+   thisNumber = [button(1).UserData, button(2).UserData]; 
+%        , button(3).UserData, button(4).UserData, button(5).UserData, button(6).UserData];
+   close(fig);
+end
+
+uiwait(fig);
+end
+
+
+function prepareDataSlot1(button1Handle, evenData)
+button1Handle.UserData = button1Handle.Value;
+end
+
+function prepareDataSlot2(button1Handle, evenData)
+button1Handle.UserData = button1Handle.Value;
+end
