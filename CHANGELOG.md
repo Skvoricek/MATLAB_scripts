@@ -102,6 +102,12 @@ FILTERED_PEAKFINDER &  SPECTRAL_FILTRATION
  - commented "filter" variable - causing problem during spectral filtration of signal
 FILTERED_PEAKFINDER 
  - repaired saved_variable (computed characteristics and calculation variablses) saving into ascii txt file
-
+ 
+*********************
+2016-10-13
+FILTERED_PEAKFINDER &  SPECTRAL_FILTRATION & PARTIAL SIGNAL PROCESSING
+ - added possibility to load waw file (via filetype function)
+ 
+ 
 
  Kuba Maršálek - jakub.marsalek@safibra.cz
