@@ -107,7 +107,10 @@ FILTERED_PEAKFINDER
 2016-10-13
 FILTERED_PEAKFINDER &  SPECTRAL_FILTRATION & PARTIAL SIGNAL PROCESSING
  - added possibility to load waw file (via filetype function)
- 
+*********************
+2016-11-02
+SOUND_VIEWER
+-added export into the txt file.
  
 
  Kuba Maršálek - jakub.marsalek@safibra.cz
