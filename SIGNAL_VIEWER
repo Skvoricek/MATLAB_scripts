@@ -19,7 +19,7 @@ clear;
    prompt = {'Počet souborů ke zpracování'};
             dlg_title = 'Parameters input';
                     num_lines = 1;
-                    def = {'1'};% inside default values
+                    def = {'3'};% inside default values
                     options.Resize='on';
                     options.WindowStyle='modal';
                     options.Interpreter='tex';
@@ -33,19 +33,9 @@ clear;
   %% CSV vs WAV file
 
 file_type = filetype();
-
-
-  while i_files<=(number_of_files)
- 
 if file_type(1) == 1
-             
-      disp('Waiting for user choice - Choose a CSV file.') 
-                                                                             waitbar1 = waitbar(0.15, 'choose input file ', 'Units', 'normalized', 'Position', [0.4 0.2 0.22 0.06]); %position of waitbar
-    [filename,filepath]=uigetfile({'*.*','csv'},...
-                      'Select reference Data File ');
-                      cd(filepath);
-                                                                            close(waitbar1)
- % INPUT DATA INTERACTIVE
+    
+    %%INPUT DATA INTERACTIVE
    prompt = {'Sampling period'};
             dlg_title = 'Parameters input';
                     num_lines = 1;
@@ -65,6 +55,20 @@ if file_type(1) == 1
 
                                 fs =answer(1,1); %aproximate position (optical length) of starting (left) evaluation point
                                 fs = str2double(fs);
+else
+end
+
+  while i_files<=(number_of_files)
+ 
+if file_type(1) == 1
+             
+      disp('Waiting for user choice - Choose a CSV file.') 
+                                                                             waitbar1 = waitbar(0.15, 'choose input file ', 'Units', 'normalized', 'Position', [0.4 0.2 0.22 0.06]); %position of waitbar
+    [filename,filepath]=uigetfile({'*.*','csv'},...
+                      'Select reference Data File ');
+                      cd(filepath);
+                                                                            close(waitbar1)
+ % 
                                                                             
 %                       pause();
      data = importdata(filename, ';' );
