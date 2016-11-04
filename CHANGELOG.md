@@ -111,6 +111,11 @@ FILTERED_PEAKFINDER &  SPECTRAL_FILTRATION & PARTIAL SIGNAL PROCESSING
 2016-11-02
 SOUND_VIEWER
 -added export into the txt file.
+********************
+2016-11-04
+SIGNAL_VIEWER
+- created new sccript - CSV and WAV into signal with FFT and spectrogram. Able to save file int otxt (commented)
+
  
 
  Kuba Maršálek - jakub.marsalek@safibra.cz
