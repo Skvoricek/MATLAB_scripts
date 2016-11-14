@@ -124,6 +124,7 @@ FREQUENCY_MIC-SIG_PROC
  
  FILTERED_PEAKFINDER 
   - code repired according to last commit...
+  - changed initial save limit for noise calculation (down to 0.5xfs) 
  
 
  Kuba Maršálek - jakub.marsalek@safibra.cz / kubamarsalek-at-gmail
