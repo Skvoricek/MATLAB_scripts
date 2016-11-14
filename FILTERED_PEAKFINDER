@@ -434,7 +434,7 @@ if num == 0;
                 meanSigP_tot = mean (meanSigP);
                 stdev_SigP_tot = mean(stdevSigP);
             else     
-                meanSigP_tot = mean (meanSigP+meanSigP_neg);
+                meanSigP_tot = (meanSigP+meanSigP_neg)/2;
                 stdev_SigP_tot = mean(stdevSigP+stdevSigP_neg);
                 end
 end    
@@ -444,7 +444,7 @@ end
         num_double=str2double (num); % transfer to number (implement into matrix
         SNR_tot= (meanSigP_tot/data_threshold);
         SNR_tot_DB = 10*log10(SNR_tot);
-    save_variables = [meanSigP_tot,stdev_SigP_tot,num_double,threshold_ref,SNR_tot_DB,Threshold,noise_start_time,noise_end_time,sep_num,absOn,fs,wwidth ,fml,fmh];
+    save_variables = [meanSigP,meanSigP_neg,stdevSigP,stdevSigP_neg,num_double,threshold_ref,SNR_tot_DB,Threshold,noise_start_time,noise_end_time,sep_num,absOn,fs,wwidth ,fml,fmh];
     
 waitbar1 = waitbar(1, 'Results saving', 'Units', 'normalized', 'Position', [0.4 0.2 0.22 0.06]);
  
