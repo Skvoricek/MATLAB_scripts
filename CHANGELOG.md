@@ -120,6 +120,7 @@ SIGNAL_VIEWER
 2016-11-14
 FREQUENCY_MIC-SIG_PROC
  - created new script for microphone evaluation. Manual choice of the signal part (CSV or WAV), filtration (parameter choice), statistical variables and fig/png save.
+ - save_statistics= [max;min;mean;std;var;fs;wwidth;fmll;fmhh;samples]; - first 4 from abs(IFFT(data)).
  
 
- Kuba Maršálek - jakub.marsalek@safibra.cz
+ Kuba Maršálek - jakub.marsalek@safibra.cz / kubamarsalek-at-gmail
