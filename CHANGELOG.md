@@ -116,6 +116,10 @@ SOUND_VIEWER
 SIGNAL_VIEWER
 - created new sccript - CSV and WAV into signal with FFT and spectrogram. Able to save file int otxt (commented)
 
+********************
+2016-11-14
+FREQUENCY_MIC-SIG_PROC
+ - created new script for microphone evaluation. Manual choice of the signal part (CSV or WAV), filtration (parameter choice), statistical variables and fig/png save.
  
 
  Kuba Maršálek - jakub.marsalek@safibra.cz
