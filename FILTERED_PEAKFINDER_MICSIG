@@ -108,10 +108,10 @@ data=data/2; %%normalization
                       % 32 kHz SAMPLING
 %                             def = {'0.5 ','15000','3.1253618438178957e+04','256'};% inside default values
                        
-%                       %16 kHz SAMPLING
-%                             def = {'7 ','7500','1.562721904628683e+04','256'};% inside default values
-                    % 4kHz SAMPLING 
-                            def = {'5 ','1500','3.906790075824176e+03','256'};% inside default values
+                      %16 kHz SAMPLING
+                            def = {'7 ','7500','1.562721904628683e+04','256'};% inside default values
+%                     % 4kHz SAMPLING 
+%                             def = {'5 ','1500','3.906790075824176e+03','256'};% inside default values
                     options.Resize='on';
                     options.WindowStyle='modal';
                     options.Interpreter='tex';
@@ -266,7 +266,7 @@ hold on
    prompt = {'Noise extablishment start time [sec]','Noise extablishment end time [sec]','separation [sec]','Threshold [x noise]','ABSolutní hodnoty signálu?'};
             dlg_title = 'Parameters input - all values in (abs)!';
                     num_lines = 1;
-                    def = {'10 ','60 ','20','7','1'};% inside default values
+                    def = {'5 ','12 ','2','5','1'};% inside default values
                     options.Resize='on';
                     options.WindowStyle='modal';
                     options.Interpreter='tex';
@@ -309,8 +309,8 @@ hold on
       data=abs(data);
       else
       end
-      startEval_peak = 4*fs % eliminace chyby filtrací při počítání peaků (přebuzený max thresholdu (4 vteřiny od začátku))
-      endEvalpeak = 2*fs % eliminace posledního peaku vzniklého filtrací - (2 vteřiny od z od konce)
+      startEval_peak = 0.5*fs % eliminace chyby filtrací při počítání peaků (přebuzený max thresholdu (4 vteřiny od začátku))
+      endEvalpeak = 0.5*fs % eliminace posledního peaku vzniklého filtrací - (2 vteřiny od z od konce)
       data = data(startEval_peak:(length(data)-endEvalpeak));
       time_vector=time_vector(startEval_peak:(length(time_vector)-endEvalpeak));
       
@@ -461,5 +461,5 @@ waitbar1 = waitbar(1, 'Results saving', 'Units', 'normalized', 'Position', [0.4 
 
 %%CLEARING AND CLOSING ALL
 
-% close all
-% clear all
+close all
+clear all
