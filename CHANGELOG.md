@@ -128,6 +128,8 @@ FREQUENCY_MIC-SIG_PROC
  ********************
 2016-11-15
 FREQUENCY_MIC-SIG_PROC
-- small code mistakes and formating repaired 
+ - small code mistakes and formating repaired
+ - added automatical fs input from WAV file, 
+ - export  - save_statistics= [max;min;mean;std;var;fs;wwidth;fmll;fmhh;max_freq;samples]; - first 4 from abs(IFFT(data)). 
 
  Kuba Maršálek - jakub.marsalek@safibra.cz / kubamarsalek-at-gmail
