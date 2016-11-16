@@ -132,7 +132,7 @@ FREQUENCY_MIC-SIG_PROC
  - added automatical fs input from WAV file, 
  - export  - save_statistics= [max;min;mean;std;var;fs;wwidth;fmll;fmhh;max_freq;samples]; - first 4 from abs(IFFT(data)). 
   ********************
-2016-11-15
+2016-11-16
 FREQUENCY_MIC-SIG_PROC
   - added automatic sample recaltulation for filtered signal (max value for estimated amount of samples - moved along the X axis
   - Error message in case of internal overflow of recalculating cycle
