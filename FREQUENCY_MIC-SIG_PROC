@@ -102,6 +102,7 @@ end
  
   %% NASTAVOVÁNÍ NÁZVŮ A ČASŮ
 %    first_time= char(filename(length(filename)-29:length(filename)-11));%('testing-file-name)'
+% filename = filename(1:12);
   
 
  %% ZADÁVÁNÍ PARAMETRŮ
@@ -145,7 +146,8 @@ end
                                 filename_ext =answer(1,1); %aproximate position (optical length) of starting (left) evaluation point
                                 filename_ext = char(filename_ext);	
                                 
-                                filename = char(filename(1:length(filename)-4));%filename rename
+%                                 filename = char(filename(1:length(filename)-14));%filename rename
+                                filename = char(filename(1:12));%filename rename
                                 filename=strcat(filename,'_',filename_ext)% filename correction and summation of original name and user input
                                 
        %%result plotting       
