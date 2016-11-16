@@ -343,10 +343,10 @@ final_spectrum = filter2.*abs(X); % filtrace (pro vykresleni spektra
 %          A=InverseFFT_data;
         Res_min_length=(10*fs/fmh); % automatic calculation of minimal length of signal with regardence to points in the sinusoidal function
 %         Res_sum_number=round(length(InverseFFT_data)/Res_min_length);
-        Res_sum_number=600;
+%         Res_sum_number=600;
          Resampled_InverseFFT_data=zeros(1,Res_sum_number);%memory prealocation
         i = uint32(1);
-        figure(22)
+%         figure(22)
          while (i<Res_sum_number+1)
 %              pause();
 %              i
@@ -377,7 +377,7 @@ final_spectrum = filter2.*abs(X); % filtrace (pro vykresleni spektra
          end
 %          mean(Resampled_InverseFFT_data)
 
-plot(Resampled_InverseFFT_data);
+% plot(Resampled_InverseFFT_data);
         h5=figure ('name','Reconstructed signal', 'Units', 'normalized','Position', [0.01 0.3 0.98 0.61]); % position normalized to the screen dimensions
                       hold on
                         plot(time_vector,InverseFFT_data, 'Color','r');
@@ -550,5 +550,5 @@ filename_save=strcat((filename(1:13)),filename_ext);
 
 %% CLEARING AND CLOSING ALL
 
-% close all
-% clear all
+close all
+clear all
