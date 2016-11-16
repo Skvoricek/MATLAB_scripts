@@ -137,6 +137,7 @@ FREQUENCY_MIC-SIG_PROC
   - added automatic sample recaltulation for filtered signal (max value for estimated amount of samples - moved along the X axis
   - Error message in case of internal overflow of recalculating cycle
   - changed the save statistics accordingly (now from recalculated samples)
+  - chart and filename changed ( filename = char(filename(1:12));%filename rename (line 150))
  -All WAW scripts works with m4a as well 
  
 
