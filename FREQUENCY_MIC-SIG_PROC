@@ -40,8 +40,7 @@ file_type = filetype();
 
 
   while i_files<=(number_of_files)
- 
-if file_type(1) == 1
+ if file_type(1) == 1
              
       disp('Waiting for user choice - Choose a CSV file.') 
                                                                              waitbar1 = waitbar(0.15, 'choose input file ', 'Units', 'normalized', 'Position', [0.4 0.2 0.22 0.06]); %position of waitbar
@@ -191,15 +190,15 @@ end
    prompt = {'Central frequency [Hz]','Frequency window width [Hz]','Sampling frequency [Hz]','FFT window width [samples]'};
             dlg_title = 'Parameters input - all values in (abs)!';
                     num_lines = 1;
-                    % WAV SAMPLING 
-                            fs=num2str(fs); %input must be a string
-                            def = {filename_ext,'5',fs,'256'};% inside default values
+%                     % WAV SAMPLING 
+%                             fs=num2str(fs); %input must be a string
+%                             def = {filename_ext,'5',fs,'256'};% inside default values
                     
-%                     % 32KHZ SAMPLING 
-%                             def = {filename_ext,'5','3.1253618438178957e+04','256'};% inside default values
+                    % 32KHZ SAMPLING 
+                            def = {filename_ext,'5','3.1253618438178957e+04','256'};% inside default values
                     % 16 KHZ SAMPLING
 %                             def = {filename_ext,'5','1.562721904628683e+04','256'};% inside default values
-                    
+%                     
                     options.Resize='on';
                     options.WindowStyle='modal';
                     options.Interpreter='tex';
@@ -338,12 +337,50 @@ final_spectrum = filter2.*abs(X); % filtrace (pro vykresleni spektra
    
        InverseFFT_data = ((real(ifft(final_signal)))); %realna slozka zpetne fft (odskalovani meritka, spravne zobrazeni)
          InverseFFT_data=abs(InverseFFT_data);
-        
+    %%InverseFFT_data sampling process
+%          A=InverseFFT_data;
+        Res_min_length=(10*fs/fmh); % automatic calculation of minimal length of signal with regardence to points in the sinusoidal function
+%         Res_sum_number=round(length(InverseFFT_data)/Res_min_length);
+        Res_sum_number=600;
+         Resampled_InverseFFT_data=zeros(1,Res_sum_number);%memory prealocation
+        i = uint32(1);
+        figure(22)
+         while (i<Res_sum_number+1)
+%              pause();
+%              i
+             
+             
+             help_index = (length(InverseFFT_data)/Res_sum_number);
+%              help_count = A(1:(length(A)/Res_sum_number)
+                       help_count = InverseFFT_data((1+(help_index*(i-1))):(help_index*i));
+             
+%              ((1+length(InverseFFT_data/Res_sum_number)*(i-1)):(length((InverseFFT_data)/(Res_sum_number+1-i))))
+            Resampled_InverseFFT_data(1,i) = max(help_count);
+            Resampled_InverseFFT_data;
+            i=i+1;
+            
+%            if (i >48) %control plot
+%                pause(0.0005);
+%                plot(Resampled_InverseFFT_data);
+%                 legend(['Saved value ' num2str(max(help_count)) '[Au]'])
+%            else
+%                plot(Resampled_InverseFFT_data);
+%               legend(['Saved value ' num2str(max(help_count)) '[Au]'])
+%            
+%            end
+       end
+         if((help_index*i)==(help_index*(i-1)))
+             error('The sample recalculation has failed due to cycle overflow')
+         else
+         end
+%          mean(Resampled_InverseFFT_data)
+
+plot(Resampled_InverseFFT_data);
         h5=figure ('name','Reconstructed signal', 'Units', 'normalized','Position', [0.01 0.3 0.98 0.61]); % position normalized to the screen dimensions
                       hold on
                         plot(time_vector,InverseFFT_data, 'Color','r');
-                          mean_time_vector(1:length(time_vector))= mean(InverseFFT_data);
-                        plot(time_vector,mean_time_vector, 'Color','g');    
+                          mean_time_vector(1:length(time_vector))= mean(Resampled_InverseFFT_data);%calculating mean value
+                        plot(time_vector,mean_time_vector, 'Color','g');    %ploting mean value
                         xlabel('time [sec]')
                         ylabel('IFFT signal [Au]')
                         title(filename)
@@ -473,9 +510,9 @@ else
 end
 
 %%SAVING VARIABLES
-InverseFFT_data=abs(InverseFFT_data);
-max=max(InverseFFT_data);
-min= min(InverseFFT_data);
+Resampled_InverseFFT_data=abs(Resampled_InverseFFT_data);
+max=max(Resampled_InverseFFT_data);
+min= min(Resampled_InverseFFT_data);
 % max=max(brushed_data);
 
 % max=str2num(max);
@@ -486,10 +523,10 @@ disp(['min value: ', num2str(min)])
 mean=mean(InverseFFT_data);
 % mean=str2num(mean);
 disp(['mean value: ', num2str(mean)])
-std=std(InverseFFT_data);
+std=std(Resampled_InverseFFT_data);
 % std=str2num(std);
 disp(['standard deviation: ', num2str(std)])
-var=var(InverseFFT_data);
+var=var(Resampled_InverseFFT_data);
 % var=str2num(var);
 disp(['variance value: ', num2str(var)])
 samples=(length((brushed_data)));
