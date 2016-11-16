@@ -342,7 +342,7 @@ final_spectrum = filter2.*abs(X); % filtrace (pro vykresleni spektra
     %%InverseFFT_data sampling process
 %          A=InverseFFT_data;
         Res_min_length=(10*fs/fmh); % automatic calculation of minimal length of signal with regardence to points in the sinusoidal function
-%         Res_sum_number=round(length(InverseFFT_data)/Res_min_length);
+        Res_sum_number=round(length(InverseFFT_data)/Res_min_length);
 %         Res_sum_number=600;
          Resampled_InverseFFT_data=zeros(1,Res_sum_number);%memory prealocation
         i = uint32(1);
