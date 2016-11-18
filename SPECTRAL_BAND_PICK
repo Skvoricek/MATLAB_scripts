@@ -1,0 +1,479 @@
+%% partial signal processing - manual selection of processed region. 20160316 - jakub.marsalek@safibra.cz
+% Originated in Spectral_filtration_20160308.m
+
+
+%% Interactive data input
+clc; 
+close all;
+clear;
+    
+%% Data loading
+%set(0,'DefaulttextInterpreter','none')   % default nonTeX text interpreter - Graph title appearance
+  set(groot, 'DefaultTextInterpreter', 'none')
+      set(groot, 'DefaultLegendInterpreter', 'none')
+       absOn = NaN;
+       
+       data_total=nan;
+     i_files= 1; 
+       %absOn = 1;% IF NOT COMENTED - PEAK CALCULATION IS PERFORMED FROM
+       
+%       ABS VALUES OF SIGNAL
+      
+
+      
+  % INPUT DATA INTERACTIVE
+   prompt = {'Number of files to processing'};
+            dlg_title = 'Parameters input';
+                    num_lines = 1;
+                    def = {'1'};% inside default values
+                    options.Resize='on';
+                    options.WindowStyle='modal';
+                    options.Interpreter='tex';
+                    answer=inputdlg(prompt,dlg_title,num_lines,...
+                                    def);%related to point definition - careful when changed
+
+
+                                number_of_files =answer(1,1); 
+                                number_of_files = str2double(number_of_files);
+% %      files to process cycle input                        
+  %% CSV vs WAV file
+
+file_type = filetype();
+
+
+  while i_files<=(number_of_files)
+ if file_type(1) == 1
+             
+      disp('Waiting for user choice - Choose a CSV file.') 
+                                                                             waitbar1 = waitbar(0.15, 'choose input file ', 'Units', 'normalized', 'Position', [0.4 0.2 0.22 0.06]); %position of waitbar
+    [filename,filepath]=uigetfile({'*.*','csv'},...
+                      'Select reference Data File ');
+                      cd(filepath);
+                                                                            close(waitbar1)
+%                       pause();
+     data = importdata(filename, ';' );
+     data=data.data(:,1);
+ else    
+end
+if file_type(2)== 1
+    
+    disp('Waiting for user choice - Choose a WAV file.') 
+                                                                             waitbar1 = waitbar(0.15, 'choose input file ', 'Units', 'normalized', 'Position', [0.4 0.2 0.22 0.06]); %position of waitbar
+    [filename,filepath]=uigetfile({'*.*','wav'},...
+                      'Select reference WAV File ');
+                      cd(filepath);
+                                                                            close(waitbar1)
+[y,fs] = audioread(filename);
+data=y(:,1);
+% + y(:,2); %%mono creation
+% data=data/2; %%normalization
+    else
+end
+
+      
+% plot(data);
+                  
+%  pause();  
+   if isnan(data_total);                                                                       
+       data_total = data;
+   else
+%        data=data(2,1:end);
+       data_total = [data_total ;data];
+   end
+                                                                            waitbar1 = waitbar(1, ' File reading ', 'Units', 'normalized', 'Position', [0.4 0.2 0.22 0.06]); %position of waitbar
+                                                                            disp('File reading - this operation usually takes a while (according to size).') 
+                                                                            statusbar(0, ['Desktop status: processing  ', filename]);
+                                                                            close(waitbar1)
+                                                                            
+                                                                            
+          if i_files == 1 
+    if file_type(1) == 1
+    first_time = char(filename(length(filename)-29:length(filename)-11));%('testing-file-name)'
+    else
+    first_time=char( );    
+    end
+          else
+          end
+ i_files = i_files+1;
+ 
+  end
+  %% combined signal processing
+  data=data_total(2:end); % return to original script after "multiple files change" 
+   mean_data=mean(data);
+  data=data-mean_data;
+ 
+  %% NASTAVOVÁNÍ NÁZVŮ A ČASŮ
+%    first_time= char(filename(length(filename)-29:length(filename)-11));%('testing-file-name)'
+% filename = filename(1:12);
+  
+
+ %% ZADÁVÁNÍ PARAMETRŮ
+
+  %% PARTIAL SIGNAL SELECTION
+%    data=data_total(2:end);
+   
+  
+ h1 = figure ('name','Whole signal for manual selection', 'Units', 'normalized','Position', [0.01 0.3 0.98 0.61]); % position normalized to the screen dimensions
+                                set(0,'defaulttextinterpreter','none') 
+                 hold on
+                               
+                                plot (data); % initial ploting to choose the data
+                                 br = brush; %brush tool definition
+               set(br,'Color',[1 .0 .0],'Enable','on'); %brush variables
+                hold off
+                  waitbar1 = waitbar(10, 'use MATLABs BRUSH TOOL ', 'Units', 'normalized', 'Position', [0.4 0.2 0.22 0.06]); %position of waitbar
+                     disp('BRUSH tool is located in left top corner of figure window.')
+                     disp('Hold Shift while clicking on evaluation line in order to select multiple points.')  
+                     disp('save new variables after the selection process is finished. save it as "ans" variable')  
+                                     pause ();
+                     disp('Script poused - pres any kay to continue.')
+                                     close(waitbar1)   
+        
+%   pause();
+%%brushed/nonbrushed signal correction
+EX=exist('ans');
+if (EX == 1)
+  brushed_data = ans(:,2);
+%   brushed
+elseif (EX == 2)
+    brushed_data = data;
+%     nonbrushed
+end
+  pause();
+%   pause();
+% close all
+  %%result interactive name input
+   prompt = {'file name extension'};
+            dlg_title = 'Parameters input';
+                    num_lines = 1;
+                    def = {'input_char_here'};% inside default values
+                    options.Resize='on';
+                    options.WindowStyle='modal';
+                    options.Interpreter='tex';
+                    answer=inputdlg(prompt,dlg_title,num_lines,...
+                                    def);%related to point definition - careful when changed
+
+
+                                filename_ext =answer(1,1); %aproximate position (optical length) of starting (left) evaluation point
+                                filename_ext = char(filename_ext);	
+                                
+%                                 filename = char(filename(1:length(filename)-14));%filename rename
+                                filename = char(filename(1:12));%filename rename
+                                filename=strcat(filename,'_',filename_ext)% filename correction and summation of original name and user input
+                                
+       %%result plotting       
+       close (h1);
+      
+    h1=figure ('name','Manualy Brushed signal data', 'Units', 'normalized','Position', [0.01 0.3 0.98 0.61]); % position normalized to the screen dimensions
+                    set(0,'defaulttextinterpreter','none')   
+                    hold on
+                  
+                        plot (brushed_data);
+                        xlabel('Samples [Au]')
+                        ylabel('Signal [Au]')
+                        title(filename)
+                        
+                        legend([filename_ext,'Hz'])
+                         annotation('textbox', [0.15 0.85 0.19 0.05], 'interpreter','none','FitBoxToText','on', 'String', [' max:  ' num2str(max(brushed_data)) ', min: ' num2str(min(brushed_data)) ', mean: ' num2str(mean(brushed_data)) ]);
+                      hold off
+                             waitbar1 = waitbar(10, 'press any key ', 'Units', 'normalized', 'Position', [0.4 0.2 0.22 0.06]); %position of waitbar
+                       disp('Script poused - pres any kay to continue.')
+%                              pause();  
+                               close(waitbar1)  
+                           
+  data=brushed_data;
+  
+  %% combined signal processing
+  % return to original script after "multiple files change" 
+   mean_data=mean(data);
+  data=data-mean_data;
+ 
+  %% NASTAVOVÁNÍ NÁZVŮ A ČASŮ
+%    first_time= char(filename(length(filename)-29:length(filename)-11));%('testing-file-name)'
+  
+
+ %% ZADÁVÁNÍ PARAMETRŮ
+ 
+ 
+%{
+ %}
+%%{
+                                                                            waitbar1 = waitbar(1, 'Input correct values ', 'Units', 'normalized', 'Position', [0.4 0.2 0.22 0.06]);
+                                                                            disp('Input values into dialog window.') 
+   prompt = {'Number of bands [Au]','Frequency window width [Hz]','Sampling frequency [Hz]','FFT window width [samples]'};
+            dlg_title = 'Parameters input - all values in (abs)!';
+                    num_lines = 1;
+%                     % WAV SAMPLING 
+%                             fs=num2str(fs); %input must be a string
+%                             def = {filename_ext,'5',fs,'256'};% inside default values
+                    
+% %                     32kHz SAMPLING 
+                            def = {'3','5','3.1253618438178957e+04','256'};% inside default values
+% %                     16 kHz SAMPLING
+%                             def = {filename_ext,'5','1.562721904628683e+04','256'};% inside default values
+% %                        4 kHz SAMPLING
+%                             def = {filename_ext,'5','4.0001090595862029e+03','256'};% inside default values
+%                     
+ 
+                    options.Resize='on';
+                    options.WindowStyle='modal';
+                    options.Interpreter='tex';
+                    answer=inputdlg(prompt,dlg_title,num_lines,...
+                                    def);%related to point definition - careful when changed
+
+
+                                number_of_bands =answer(1,1); %aproximate position (optical length) of starting (left) evaluation point
+                                fmh =answer(2,1); %aproximate position (optical length) of ending (right) evaluation point
+                                    fmll=char(number_of_bands); %string type hold for plotting
+                                    fmhh=char(fmh);%string type hold for plotting
+                                fs = answer(3,1); %Threshold for peaks to be detected, minimum peak height
+                                wwidth = answer(4,1); %Minimum peak separation distance
+                                
+                                
+                                                    fs=(str2double(fs)) %cell to number convertion - polarity change
+                                                    wwidth=str2double(wwidth) %cell to number convertion
+                                                    number_of_bands=str2double(number_of_bands) %cell to number convertion
+                                                    fmh=str2double(fmh) %cell to number convertion
+%                                   fml - centrální frekvence                  
+%                                   fmh - celková šírka okna pro filtraci
+% central=number_of_bands;
+% sirka_okna=(fmh-1)/2;
+% % number_of_bands=central-sirka_okna; %%přepočty pro nové hranice filtru
+% fmh=central+sirka_okna; %%přepočty pro nové hranice filtru
+                                                    
+                                                                          close(waitbar1)
+        %jednickovy_filter = 1 % logicka uroven spusteni nebo vypnuti filtru 1 zapnuto, else vypnuto 
+
+        win=hamming(wwidth); % použité okno
+        overlap=fix(wwidth/2); % překryv 
+        time_stamp=1/fs;
+        time_vector= (0:time_stamp:((length(data)-1)*(time_stamp)))';
+%}
+            h2=figure ('name','Reference', 'Units', 'normalized','Position', [0.01 0.3 0.98 0.61]); % position normalized to the screen dimensions
+                    set(0,'defaulttextinterpreter','none')   
+                    hold on
+                        plot(time_vector,data)
+                        xlabel('time [sec]')
+                        ylabel('signal [Au]')
+                        title(filename)
+                        
+                        legend('measured_signal')
+                         annotation('textbox', [0.15 0.85 0.19 0.05], 'interpreter','none','FitBoxToText','on', 'String', [' Start Time:  ' first_time '']);
+                              hold off
+                        %plot([output,recoat],[threshold_ref,threshold_ref],'m')
+                        %scatter(opticallength_ref(locsnew_ref),ERpeaknew_ref,'r')
+                        hold off
+                        
+                        
+ %% FFT COMPUTATION      
+      
+   t = 0:1/fs:1; % Time vector of 1 second 
+        %overlap=0;
+        X = fft(data,length(data));
+        absx = abs(X);
+        %X=absx;
+        f1 = (0:length(data)/2-1)*fs/length(data); 
+        
+        %absx = absx';save fft2.txt absx -ASCII; 
+        init_plot_val=5;
+    h3= figure('Name','Spektrum', 'Units', 'normalized','Position', [0.01 0.3 0.98 0.61]); % position normalized to the screen dimensions);
+        init_plot_val=5;
+        hold on
+        plot(f1(init_plot_val:end),X(init_plot_val:(length(X)/2)));
+        xlabel('frequency [Hz]')
+        ylabel('spectral density [Au]')
+          title(filename)
+          
+               legend('FFT of the signal')
+               %annotation('textbox', [0.15 0.85 0.19 0.05], 'interpreter','none','FitBoxToText','on', 'String', [' Start Time:  ' first_time '']);
+                             
+        hold off
+        
+ 
+        
+        %% GENERACE FILTRU     
+        i = uint32(1);
+    Spectral_vector=zeros(number_of_bands,2);%memory prealocation%Spectral_vectro_allocation
+    sirka_okna=(fmh-1)/2;
+        while (i<number_of_bands+1)
+            
+              
+            prompt = {'Central frequency [Hz]'};
+            dlg_title = 'Parameters input';
+                    num_lines = 1;
+                    def = {'1'};% inside default values
+                    options.Resize='on';
+                    options.WindowStyle='modal';
+                    options.Interpreter='tex';
+                    answer=inputdlg(prompt,dlg_title,num_lines,...
+                                    def);%related to point definition - careful when changed
+
+
+                                central_freq =answer(1,1); 
+                                central_freq = str2double(central_freq);
+                                
+
+
+fml=central_freq-sirka_okna; %%přepočty pro nové hranice filtru
+fmh=central_freq+sirka_okna; %%přepočty pro nové hranice filtru  
+% pause();
+       
+%         DISABLED - NO FILTRATION NEEDED
+%  filter = [(0:fs-1)]; % vytvorení vektoru pro filtraci
+% %  filter=filter'
+%  filter((1:fs),1) = [0]; % plnení vektoru pro filtraci
+%%{
+%scale filtru na prepocitani
+        delkafft = length(X);
+        f_prepocet = delkafft/fs; % prepoctova konstanta filtru
+        %figure('Name','prepocitanej filter')
+        %hold on
+        
+%PLNĚNÍ FILTRU DLE MEZNÍCH KMITOČTŮ
+        w1= [1:delkafft];
+        konst_spodni = floor((fml*f_prepocet))% prepoctova konstanta pro filtr v zavislosti na delce - zaokrouhleno
+        konst_horni = floor((fmh*f_prepocet))
+        filter2(1,(1:konst_spodni)) = [0]; %plnení filtru podle meznih mitoctu
+        filter2(1,((delkafft - (konst_spodni)):delkafft)) = [0]; 
+        filter2(1,(konst_spodni:konst_horni)) = [1];%plnení filtru podle meznih mitoctu (konst_spodni cannot be 0!)
+        filter2(1,((delkafft - (konst_horni)):delkafft - (konst_spodni))) = [1]; 
+        filter2(1,((delkafft -(konst_spodni)):delkafft)) = [0];
+      
+
+        
+        
+ %{        
+jednickovy_filter = 0
+  %Vypnutí/zapnutí filtru
+    if jednickovy_filter == 1;
+        filter2(1,(1:delkafft)) = [1];
+    else
+    end;
+    
+%}
+%% APLIKACE FILTRACE
+%%{ 
+filter2= (filter2)';%siutable matrix orientation
+final_spectrum = filter2.*abs(X); % filtrace (pro vykresleni spektra
+        final_signal = filter2.*X; % filtrace  pro vykresleni casoveho singalu
+filter2= (filter2)'; %siutable matrix orientation
+        frequency_step_filter = fs/length(final_spectrum);
+        frekvencni_osa = ([0:frequency_step_filter:(frequency_step_filter*(length(final_spectrum)-1))])';
+        
+        max_freq=final_spectrum(1:length(final_spectrum)/2);
+%         figure()
+%         plot (max_freq);
+        max_freq=max(max_freq);
+       
+        
+        Spectral_vector(i,1) = central_freq;
+        Spectral_vector(i,2) = max_freq; % zmenit druh k ulozeni.......
+         max_freq=num2str(max_freq);
+        %         ,max_freq
+%         Resampled_InverseFFT_data(1,i) = max(help_count);
+
+        i=i+1;
+        end
+        
+
+h4= figure('Name','Discrete spectrum', 'Units', 'normalized','Position', [0.01 0.3 0.98 0.61]); % position normalized to the screen dimensions);
+%         init_plot_val=5;
+        hold on
+        stem (Spectral_vector(:,1),Spectral_vector(:,2))
+        xlabel('frequency [Hz]')
+        ylabel('spectral density [Au]')
+          title(filename)
+          
+               legend('Spectrum')
+               %annotation('textbox', [0.15 0.85 0.19 0.05], 'interpreter','none','FitBoxToText','on', 'String', [' Start Time:  ' first_time '']);
+                             
+        hold off
+        
+%%SAVING PROCESS
+% filename = filename(1:length(filename)-11);%'testing_file_name' % zkrácení názvu o přípony a formáty
+
+waitbar1 = waitbar(0, 'saving process ', 'Units', 'normalized', 'Position', [0.4 0.2 0.22 0.06]); %position of waitbar 
+saving_vector = numberAllocator();
+
+if saving_vector(1) == 1
+                        saveas(h1,['h1_',filename],'png') % saves h plot (last calculated curve) as a png file. (the name is same as the original file - which CANNOT have the same_name.txt in the same folder!
+                       saveas(h1,['h1_',filename],'fig')
+                       disp(' Figure 1 saved.') 
+        else    
+end
+if saving_vector(2)== 1
+              waitbar(0.2)    
+       
+                         saveas(h2,['h2_',filename],'png')
+                         saveas(h2,['h2_',filename],'fig') 
+                            disp(' Figure 2 saved.') 
+        else    
+        end
+if saving_vector(3)==1
+              waitbar(0.4)           
+          
+                         saveas(h3,['h3_',filename],'png')
+                         saveas(h3,['h3_',filename],'fig')            
+                           disp(' Figure 3 saved.') 
+        else    
+        end
+if saving_vector(4)==1
+                        waitbar(0.6)   
+           
+                         saveas(h4,['h4_',filename],'png')
+                         saveas(h4,['h4_',filename],'fig')
+                          disp(' Figure 4 saved.') 
+        else    
+        end
+if saving_vector(5)==1
+                          waitbar(0.8)
+  
+                           saveas(h5,['h5_',filename],'png')
+                         saveas(h5,['h5_',filename],'fig')
+                                     disp(' Figure 5 saved.') 
+                                     
+                                     
+                else                               
+                end
+if saving_vector(6)==1
+                        waitbar(1)    
+           
+                         saveas(h6,['h6_',filename],'png')
+                         saveas(h6,['h6_',filename],'fig')
+                          disp(' Figure 6 saved.')
+                          close(waitbar1)
+        else    
+            close(waitbar1) 
+        end        
+        
+
+if isnan(saving_vector)
+   disp('No figure has been saved...');
+   close(waitbar1)
+waitbar1 = waitbar(1, 'Realtion finished', 'Units', 'normalized', 'Position', [0.4 0.2 0.22 0.06]);
+                         pause(1);
+                         close(waitbar1)             
+else
+   waitbar1 = waitbar(1, 'Realtion finished', 'Units', 'normalized', 'Position', [0.4 0.2 0.22 0.06]);
+                         pause(1);
+                         close(waitbar1)
+end
+        
+        
+        
+waitbar1 = waitbar(0, 'Results saving', 'Units', 'normalized', 'Position', [0.4 0.2 0.22 0.06]);
+
+filename_save=strcat((filename(1:13)),filename_ext);
+save_variable = [length(X),str2num(fmhh);Spectral_vector]
+ save(['save_variable_spect_' filename_save '.txt'],'save_variable','-ascii','-double') %saves peak positions and amplitudes into txt.file
+                       disp('statistics and results has been successfully saved...');  
+ 
+                         pause(0.2);
+                         close(waitbar1)
+                         waitbar1 = waitbar(1, 'RELATION IS FINISHED  - get a coffee ;) ', 'Units', 'normalized', 'Position', [0.4 0.2 0.22 0.06]);
+  
+%% CLEARING AND CLOSING ALL
+
+close all
+% clear all
+                         %}
