@@ -138,6 +138,14 @@ FREQUENCY_MIC-SIG_PROC
   - Error message in case of internal overflow of recalculating cycle
   - changed the save statistics accordingly (now from recalculated samples)
   - chart and filename changed ( filename = char(filename(1:12));%filename rename (line 150))
+ ********************
+ SPECTRAL_BAND_PICK
+ 2016-11-18
+  - script to bring out numerical values of a spectrum (brushed or not)
+  - addded brushed/nonbrushed decision-making logic
+  - Ccentral frequencies input in a cycle - number of cycles is a subject of a choice 
+  Export save_variable = [length(X) FFT data length,str2num(fmhh - window width );Spectral_vector (where Spectral_vector(i,1) = central_freq and Spectral_vector(i,2) = max_freq)
+  
  -All WAW scripts works with m4a as well 
  
 
