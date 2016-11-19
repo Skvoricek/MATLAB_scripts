@@ -145,6 +145,9 @@ FREQUENCY_MIC-SIG_PROC
   - addded brushed/nonbrushed decision-making logic
   - Ccentral frequencies input in a cycle - number of cycles is a subject of a choice 
   Export save_variable = [length(X) FFT data length,str2num(fmhh - window width );Spectral_vector (where Spectral_vector(i,1) = central_freq and Spectral_vector(i,2) = max_freq)
+  ********************
+ SPECTRAL_BAND_PICK
+ 2016-11-19
   - Added Central frequency bypass for 21 microphonce testing frequencies.
  -All WAW scripts works with m4a as well 
  
