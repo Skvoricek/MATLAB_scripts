@@ -312,7 +312,54 @@ end
                                 central_freq =answer(1,1); 
                                 central_freq = str2double(central_freq);
                                 
-
+%ARTIFICIAL PROCESSING INPUT (CENTRAL FREQUENCY BYPASS)
+if (i==1)
+    central_freq=100;
+elseif(i==2)
+    central_freq=200;
+elseif(i==3)
+    central_freq=360;
+elseif(i==4)
+    central_freq=440;
+elseif(i==5)
+    central_freq=515;
+elseif(i==6)
+    central_freq=648;
+elseif(i==7)
+    central_freq=762;
+elseif(i==8)
+    central_freq=872;
+elseif(i==9)
+    central_freq=931;
+elseif(i==10)
+    central_freq=1200;
+elseif(i==11)
+    central_freq=1500;
+elseif(i==12)
+    central_freq=1800;
+elseif(i==13)
+    central_freq=2300;
+elseif(i==14)
+    central_freq=2800;
+elseif(i==15)
+    central_freq=3300;
+elseif(i==16)
+    central_freq=4280;
+elseif(i==17)
+    central_freq=5000;
+elseif(i==18)
+    central_freq=6000;
+elseif(i==19)
+    central_freq=8000;
+elseif(i==20)
+    central_freq=10000;
+elseif(i==21)
+    central_freq=13500;
+else
+    
+end
+    
+                                
 
 fml=central_freq-sirka_okna; %%přepočty pro nové hranice filtru
 fmh=central_freq+sirka_okna; %%přepočty pro nové hranice filtru  
@@ -476,4 +523,4 @@ save_variable = [length(X),str2num(fmhh);Spectral_vector]
 
 close all
 % clear all
-                         %}
+                    
