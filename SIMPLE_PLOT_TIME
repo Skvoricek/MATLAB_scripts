@@ -1,0 +1,164 @@
+% CREATED for simple verification of obtained signal
+
+%% NAČTĚNÍ DAT
+clc; 
+close all;
+clear;
+
+    
+%set(0,'DefaulttextInterpreter','none')   % default nonTeX text interpreter - Graph title appearance
+  set(groot, 'DefaultTextInterpreter', 'none')
+      set(groot, 'DefaultLegendInterpreter', 'none')
+     
+     data_total=nan;
+     i_files= 1;
+      % INPUT DATA INTERACTIVE
+   prompt = {'Počet souborů ke zpracování'};
+            dlg_title = 'Parameters input';
+                    num_lines = 1;
+                    def = {'1'};% inside default values
+                    options.Resize='on';
+                    options.WindowStyle='modal';
+                    options.Interpreter='tex';
+                    answer=inputdlg(prompt,dlg_title,num_lines,...
+                                    def);%related to point definition - careful when changed
+
+
+                                number_of_files =answer(1,1); %aproximate position (optical length) of starting (left) evaluation point
+                                number_of_files = str2double(number_of_files);
+                                
+                
+                                
+ %% INPUT DATA INTERACTIVE
+ while i_files<=(number_of_files)
+ 
+   disp('Waiting for user choice - Choose a CSV file.') 
+                                                                             waitbar1 = waitbar(0.15, 'choose input file ', 'Units', 'normalized', 'Position', [0.4 0.2 0.22 0.06]); %position of waitbar
+    [filename,filepath]=uigetfile({'*.*','csv'},...
+                      'Select reference Data File ');
+                      cd(filepath);
+                                                                            close(waitbar1)
+
+%                       pause();
+     data = importdata(filename, ';' );
+data=data.data(:,1);
+
+plot(data);
+                  
+%  pause();  
+   if data_total == nan;                                                                       
+       data_total = data;
+   else
+%        data=data(2,1:end);
+       data_total = [data_total ;data];
+   end
+                                                                            waitbar1 = waitbar(1, 'CVS file reading ', 'Units', 'normalized', 'Position', [0.4 0.2 0.22 0.06]); %position of waitbar
+                                                                            disp('Reading a CSV file - this operation usually takes a while (according to number of rows).') 
+                                                                            statusbar(0, ['Desktop status: processing  ', filename]);
+                                                                            close(waitbar1)
+                                                                            
+                                                                            
+                                                                            
+first_time= char(filename(1,21:length(filename)-11));%('testing-file-name)'
+
+ i_files = i_files+1;
+ 
+ end
+ 
+   %% sampling frequency estimation
+ prompt = {'Sampling frequency of chosen file'};
+            dlg_title = 'Parameters input';
+                    num_lines = 1;
+                    def = {'10'};% inside default values
+                    options.Resize='on';
+                    options.WindowStyle='modal';
+                    options.Interpreter='tex';
+                    answer=inputdlg(prompt,dlg_title,num_lines,...
+                                    def);%related to point definition - careful when changed
+
+
+                                fs =answer(1,1); %aproximate position (optical length) of starting (left) evaluation point
+%                                 pause();
+                                fs = str2double(fs);
+
+                                
+time_stamp=1/fs;
+time_stamp= time_stamp/3600; %recalculated to minutes
+time_vector = (0:time_stamp:((length(data_total)-1)*(time_stamp)))';                              
+                
+ 
+ %% PLOT GENERATION
+
+
+
+ h2=figure('Name','Selected peaks', 'Units', 'normalized','Position', [0.01 0.3 0.98 0.61]);
+
+ disp([ ' ' ' ' ]) 
+ hold on
+ plot (time_vector, data_total)
+
+        legend ('Measured data');
+        ylabel('Signal Intensity [Au]')
+        xlabel('Time [hours]')
+        title(filename)
+%         annotation('textbox', [0.15 0.85 0.10 0.05], 'interpreter','none','FitBoxToText','on', 'String', [' Number of peaks:  ' num ' '],'Color', 'r');
+  hold off
+  %%SAVING PROCESS
+filename = filename(1:length(filename)-11);%'testing_file_name' % zkrácení názvu o přípony a formáty
+
+waitbar1 = waitbar(0, 'saving process ', 'Units', 'normalized', 'Position', [0.4 0.2 0.22 0.06]); %position of waitbar 
+saving_vector = numberAllocator();
+if saving_vector(1) == 1
+                        saveas(h1,['h1_plot_',filename],'png') % saves h plot (last calculated curve) as a png file. (the name is same as the original file - which CANNOT have the same_name.txt in the same folder!
+                       saveas(h1,['h1_plot_',filename],'fig')
+                       disp(' Figure 1 saved.') 
+        else    
+        end
+if saving_vector(2)== 1
+              waitbar(0.2)    
+       
+                         saveas(h2,['h2_plot_',filename],'png')
+                         saveas(h2,['h2_plot_',filename],'fig') 
+                            disp(' Figure 2 saved.') 
+        else    
+        end
+if saving_vector(3)==1
+              waitbar(0.4)           
+          
+                         saveas(h3,['h3_plot_',filename],'png')
+                         saveas(h3,['h3_plot_',filename],'fig')            
+                           disp(' Figure 3 saved.') 
+        else    
+        end
+if saving_vector(4)==1
+                        waitbar(0.8)    
+           
+                         saveas(h4,['h4_plot_',filename],'png')
+                         saveas(h4,['h4_plot_',filename],'fig')
+                          disp(' Figure 4 saved.') 
+        else    
+        end
+if saving_vector(5)==1
+                          waitbar(1)
+  
+                           saveas(h5,['h5_plot_',filename],'png')
+                         saveas(h5,['h5_plot_',filename],'fig')
+                                     disp(' Figure 5 saved.') 
+                                     close(waitbar1)
+                                     
+else
+               close(waitbar1) 
+        end
+
+if isnan(saving_vector)
+   disp('No figure has been saved...');
+   close(waitbar1)
+waitbar1 = waitbar(1, 'Realtion finished', 'Units', 'normalized', 'Position', [0.4 0.2 0.22 0.06]);
+                         pause(1);
+                         close(waitbar1)             
+else
+   waitbar1 = waitbar(1, 'Realtion finished', 'Units', 'normalized', 'Position', [0.4 0.2 0.22 0.06]);
+                         pause(1);
+                         close(waitbar1)
+end
+disp('Relation has been finished - go get a coffee ;) ');
