@@ -154,6 +154,9 @@ FREQUENCY_MIC-SIG_PROC
  2016-12-29
   - addedd 8kHz sampling to most of the scripts.
    - updated network backup and names of all files
- 
+ *******************
+ 2017-01-05
+   SIMPLE_PLOT_TIME
+   - created from SIMPLE_PLOT by adding sampling frequency and sample axes recalculation...
 
  Kuba Maršálek - jakub.marsalek@safibra.cz 
