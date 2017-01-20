@@ -162,6 +162,8 @@ FREQUENCY_MIC-SIG_PROC
  2017-01-20
    SIMPLE_PLOT_TIME
   - file numbering has been repaired, right name of the figure2 window
+  MULTIPLE_SIGNAL_VIEWER
+   - repaired subplot figure structure (wrong numbering), cha
    
 
  Kuba Maršálek - jakub.marsalek@safibra.cz 
