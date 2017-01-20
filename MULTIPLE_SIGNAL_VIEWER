@@ -70,7 +70,7 @@ close(waitbar1)
  prompt = {'Sampling frequency of chosen file'};
             dlg_title = 'Parameters input';
                     num_lines = 1;
-                    def = {'2000'};% inside default values
+                    def = {'1000'};% inside default values
                     options.Resize='on';
                     options.WindowStyle='modal';
                     options.Interpreter='tex';
@@ -83,8 +83,8 @@ close(waitbar1)
                                 fs = str2double(fs);
 
                                 
-time_stamp=1/fs;
-time_stamp= time_stamp/60; %recalculated to minutes
+time_stamp=1/fs; % time in seconds
+% time_stamp= time_stamp/60; %recalculated to minutes
 time_vector = (0:time_stamp:((length(data)-1)*(time_stamp)))';
            
 eval(sprintf('time_vector%d = (time_vector);', i));   %dynamická tvorba proměnné v cyklu
@@ -100,30 +100,28 @@ signal{i}=(data);%alokace do proměnných
     
  
    plot (time{i}, signal_o{i});
-   
+   i %number of file displ
      i = i+1;
   end
   ylabel('Light intensity [au]')
-        xlabel('Time [min]')
+        xlabel('Time [sec]')
 %         xlim([1541 1554]) % změna měřítka osy
         %set(gca,'position',[0.13 0.3 0.775 0.815]) - posune graf v obrázku
         legend (...           
-'CH1',...
-'CH2',...
-'CH3',...
-'CH4',...
-'CH5',...
-'CH6',...
-'CH7',...
-'CH8',...
-'CH9',...
-'CH10',...
-'CH11',...
-'CH12',...
-'CH13',...
-'CH14',...
-'CH15',...
-'CH16'...
+'1512nm',...
+'1517nm',...
+'1522nm',...
+'1527nm',...
+'1532nm',...
+'1537nm',...
+'1542nm',...
+'1547nm',...
+'1552nm',...
+'1557nm',...
+'1562nm',...
+'1567nm',...
+'1572nm',...
+'1557nm'...
 );
 % '27 059m',...
 % '27 161m',...
@@ -161,8 +159,8 @@ if saving_vector(1) == 1
      linkaxes(ah,'x');
 %    legend(['CH_',num2str(i)])
      
-     ylabel(['CH_1']); %',num2str(i)]);
-        xlabel('Time [min]')
+     ylabel(['1512nm']); %',num2str(i)]);
+        xlabel('Time [sec]')
                        disp(' Signal 1 plotted.') 
         else    
 end
@@ -176,8 +174,8 @@ if saving_vector(2)== 1
      linkaxes(ah,'x');
 %    legend(['CH_',num2str(i)])
      
-        ylabel(['CH_2']); %',num2str(i)]);
-        xlabel('Time [min]')
+        ylabel(['1517nm']); %',num2str(i)]);
+        xlabel('Time [sec]')
                        disp(' Signal 2 plotted.') 
         else    
 end
@@ -191,8 +189,8 @@ end
      linkaxes(ah,'x');
 %    legend(['CH_',num2str(i)])
      
-        ylabel(['CH_3']); %',num2str(i)]);
-        xlabel('Time [min]')
+        ylabel(['1522nm']); %',num2str(i)]);
+        xlabel('Time [sec]')
                        disp(' Signal 3 plotted.') 
         else    
    end
@@ -206,8 +204,8 @@ end
      linkaxes(ah,'x');
 %    legend(['CH_',num2str(i)])
      
-        ylabel(['CH_4']); %',num2str(i)]);
-        xlabel('Time [min]')
+        ylabel(['1527nm']); %',num2str(i)]);
+        xlabel('Time [sec]')
                        disp(' Signal 4 plotted.') 
         else    
    end
@@ -218,12 +216,13 @@ end
     sequence=sequence+1;
 %      waitbar1((int8(sequence/num_of_subplot)));
      ah(5)= subplot(num_of_subplot,1,sequence);
-     plot (time{1}, signal{1}); 
+     plot (time{5}, signal{5}); 
      linkaxes(ah,'x');
 %    legend(['CH_',num2str(i)])
      
-        ylabel(['CH_1',num2str(i)]);
-        xlabel('Time [min]')
+%         ylabel(['1532nm',num2str(i)]);
+        ylabel(['1532nm']);
+        xlabel('Time [sec]')
                        disp(' Signal 5 plotted.') 
    else
        
@@ -238,8 +237,8 @@ end
      linkaxes(ah,'x');
 %    legend(['CH_',num2str(i)])
      
-        ylabel(['CH_6']); %',num2str(i)]);
-        xlabel('Time [min]')
+        ylabel(['1537nm']); %',num2str(i)]);
+        xlabel('Time [sec]')
                        disp(' Signal 6 plotted.') 
         else    
    end
@@ -253,8 +252,8 @@ end
      linkaxes(ah,'x');
 %    legend(['CH_',num2str(i)])
      
-        ylabel(['CH_7']); %',num2str(i)]);
-        xlabel('Time [min]')
+        ylabel(['1542nm']); %',num2str(i)]);
+        xlabel('Time [sec]')
                        disp(' Signal 7 plotted.') 
         else    
    end
@@ -263,12 +262,12 @@ end
      sequence=sequence+1;
 %      waitbar1((int8(sequence/num_of_subplot)));
      ah(8)= subplot(num_of_subplot,1,sequence);
-     plot (time{8}, signal{7}); 
+     plot (time{8}, signal{8}); 
      linkaxes(ah,'x');
 %    legend(['CH_',num2str(i)])
      
-        ylabel(['CH_8']); %',num2str(i)]);
-        xlabel('Time [min]')
+        ylabel(['1547nm']); %',num2str(i)]);
+        xlabel('Time [sec]')
                        disp(' Signal 8 plotted.') 
         else    
    end
@@ -282,8 +281,8 @@ end
      linkaxes(ah,'x');
 %    legend(['CH_',num2str(i)])
      
-        ylabel(['CH_9']); %',num2str(i)]);
-        xlabel('Time [min]')
+        ylabel(['1552nm']); %',num2str(i)]);
+        xlabel('Time [sec]')
                        disp(' Signal 6 plotted.') 
         else    
    end
@@ -297,8 +296,8 @@ end
      linkaxes(ah,'x');
 %    legend(['CH_',num2str(i)])
      
-        ylabel(['CH_6']); %',num2str(i)]);
-        xlabel('Time [min]')
+        ylabel(['1557nm']); %',num2str(i)]);
+        xlabel('Time [sec]')
                        disp(' Signal 6 plotted.') 
         else    
    end
@@ -312,8 +311,8 @@ end
      linkaxes(ah,'x');
 %    legend(['CH_',num2str(i)])
      
-        ylabel(['CH_11']); %',num2str(i)]);
-        xlabel('Time [min]')
+        ylabel(['1562nm']); %',num2str(i)]);
+        xlabel('Time [sec]')
                        disp(' Signal 11 plotted.') 
         else    
    end
@@ -327,8 +326,8 @@ end
      linkaxes(ah,'x');
 %    legend(['CH_',num2str(i)])
      
-        ylabel(['CH_12']); %',num2str(i)]);
-        xlabel('Time [min]')
+        ylabel(['1567nm']); %',num2str(i)]);
+        xlabel('Time [sec]')
                        disp(' Signal 12 plotted.') 
         else    
    end
@@ -343,8 +342,8 @@ end
      linkaxes(ah,'x');
 %    legend(['CH_',num2str(i)])
      
-        ylabel(['CH_13']); %',num2str(i)]);
-        xlabel('Time [min]')
+        ylabel(['1572nm']); %',num2str(i)]);
+        xlabel('Time [sec]')
                        disp(' Signal 13 plotted.') 
         else    
    end
@@ -357,24 +356,24 @@ end
      linkaxes(ah,'x');
 %    legend(['CH_',num2str(i)])
      
-        ylabel(['CH_14']); %',num2str(i)]);
-        xlabel('Time [min]')
+        ylabel(['1577nm']); %',num2str(i)]);
+        xlabel('Time [sec]')
                        disp(' Signal 14 plotted.') 
         else    
    end
           %15
-   if saving_vector(6) == 1
+   if saving_vector(15) == 1
     
     sequence=sequence+1;
 %      waitbar1((int8(sequence/num_of_subplot)));
      ah(15)= subplot(num_of_subplot,1,sequence);
-     plot (time{6}, signal{6}); 
+     plot (time{156}, signal{15}); 
      linkaxes(ah,'x');
 %    legend(['CH_',num2str(i)])
      
-        ylabel(['CH_6']); %',num2str(i)]);
-        xlabel('Time [min]')
-                       disp(' Signal 6 plotted.') 
+        ylabel(['CH_15']); %',num2str(i)]);
+        xlabel('Time [sec]')
+                       disp(' Signal 15 plotted.') 
         else    
    end
           %16
@@ -387,7 +386,7 @@ end
 %    legend(['CH_',num2str(i)])
      
         ylabel(['CH_16']); %',num2str(i)]);
-        xlabel('Time [min]')
+        xlabel('Time [sec]')
                        disp(' Signal 16 plotted.') 
    else
       
@@ -403,7 +402,4 @@ hold off
 pause();
 
  end
-   
-
-       
    
