@@ -60,16 +60,17 @@ plot(data);
                                                                             
                                                                             
 first_time= char(filename(1,21:length(filename)-11));%('testing-file-name)'
-
+ i_files % file number listing
  i_files = i_files+1;
  
- end
  
+ end
+%  
    %% sampling frequency estimation
  prompt = {'Sampling frequency of chosen file'};
             dlg_title = 'Parameters input';
                     num_lines = 1;
-                    def = {'10'};% inside default values
+                    def = {'1024'};% inside default values
                     options.Resize='on';
                     options.WindowStyle='modal';
                     options.Interpreter='tex';
@@ -83,23 +84,24 @@ first_time= char(filename(1,21:length(filename)-11));%('testing-file-name)'
 
                                 
 time_stamp=1/fs;
-time_stamp= time_stamp/3600; %recalculated to minutes
+% time_stamp= time_stamp/3600; %recalculated to minutes
 time_vector = (0:time_stamp:((length(data_total)-1)*(time_stamp)))';                              
-                
- 
+%                 
+%  
  %% PLOT GENERATION
 
 
 
- h2=figure('Name','Selected peaks', 'Units', 'normalized','Position', [0.01 0.3 0.98 0.61]);
+ h2=figure('Name','Measured signal', 'Units', 'normalized','Position', [0.01 0.3 0.98 0.61]);
 
  disp([ ' ' ' ' ]) 
  hold on
  plot (time_vector, data_total)
-
+% plot (data_total)
         legend ('Measured data');
         ylabel('Signal Intensity [Au]')
-        xlabel('Time [hours]')
+        xlabel('Time [sec]')
+%         xlabel('Samples [au]')
         title(filename)
 %         annotation('textbox', [0.15 0.85 0.10 0.05], 'interpreter','none','FitBoxToText','on', 'String', [' Number of peaks:  ' num ' '],'Color', 'r');
   hold off
