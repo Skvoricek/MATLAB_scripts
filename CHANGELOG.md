@@ -164,6 +164,10 @@ FREQUENCY_MIC-SIG_PROC
   - file numbering has been repaired, right name of the figure2 window
   MULTIPLE_SIGNAL_VIEWER
    - repaired subplot figure structure (wrong numbering), cha
-   
+  FILTERED_SIGMALIMIT_FINDER
+   - Created evaluation script (origin filtered_peakfinder) for sigma lvl establishment
+   - noise threshold calculated as sigma function (std) + mean value of the signal
+   - saved peaks as following> save_sigma_peaks=[max_peak_value;low_sigma_point;high_sigma_point]
+   - from max_peak_value and threshold (sigma) the SNR is recalculated
 
  Kuba Maršálek - jakub.marsalek@safibra.cz 
