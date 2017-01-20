@@ -158,5 +158,10 @@ FREQUENCY_MIC-SIG_PROC
  2017-01-05
    SIMPLE_PLOT_TIME
    - created from SIMPLE_PLOT by adding sampling frequency and sample axes recalculation...
+ *******************
+ 2017-01-20
+   SIMPLE_PLOT_TIME
+  - file numbering has been repaired, right name of the figure2 window
+   
 
  Kuba Maršálek - jakub.marsalek@safibra.cz 
