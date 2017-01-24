@@ -169,5 +169,9 @@ FREQUENCY_MIC-SIG_PROC
    - noise threshold calculated as sigma function (std) + mean value of the signal
    - saved peaks as following> save_sigma_peaks=[max_peak_value;low_sigma_point;high_sigma_point]
    - from max_peak_value and threshold (sigma) the SNR is recalculated
+*********************
+2017-01-24
+SIMPLE_PLOT_TIME_DIR
+ - Created script which takes all csv files in the folder and saves fig and png graphs for each file with time x axess according to given sampling frequency.
 
  Kuba Maršálek - jakub.marsalek@safibra.cz 
