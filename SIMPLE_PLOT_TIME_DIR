@@ -1,0 +1,106 @@
+% CREATED for simple verification of obtained signal. Changed from
+% SIMPLE_PLOT_TIME_20170120; where the goal is to have a script able to
+% take all files from dirrectory and save the graph with time according to
+% the sampling frequency for each file without the need to open each and
+% every file manualy.
+
+%% NAČTĚNÍ DAT
+clc; 
+close all;
+clear;
+
+    
+%set(0,'DefaulttextInterpreter','none')   % default nonTeX text interpreter - Graph title appearance
+  set(groot, 'DefaultTextInterpreter', 'none')
+      set(groot, 'DefaultLegendInterpreter', 'none')
+                             
+ [filename,filepath]=uigetfile({'*.*','csv'},... % manual gie choice of folder (and files inside)
+                      'Select reference Data File ');
+                      cd(filepath);
+                      
+fileList = dir(filepath);                  
+fileList = fileList(~[fileList.isdir]); %remove directories
+[junk, sortorder] = sort([fileList.datenum]);
+fileList = fileList(sortorder); %list is now in ascending date order
+numfiles = numel(fileList);
+In = cell(numfiles,1);
+
+   %% sampling frequency estimation
+ prompt = {'Sampling frequency of chosen file'};
+            dlg_title = 'Parameters input';
+                    num_lines = 1;
+                    def = {'0.842935078827349'};% inside default values
+                    options.Resize='on';
+                    options.WindowStyle='modal';
+                    options.Interpreter='tex';
+                    answer=inputdlg(prompt,dlg_title,num_lines,...
+                                    def);%related to point definition - careful when changed
+
+
+                                fs =answer(1,1); %aproximate position (optical length) of starting (left) evaluation point
+%                                 pause();
+                                fs = str2double(fs);
+
+
+for ii = 1:numfiles % data input cycle
+%     waitbar1 = waitbar(1, 'Realtion finished', 'Units', 'normalized', 'Position', [0.4 0.2 0.22 0.06]);
+%                          pause(1);
+    cd(filepath);
+data = importdata(fileList(ii).name, ';' );
+data=data.data(:,1);
+ii %show file number
+filename = (fileList(ii).name) % show file name
+first_time= char(filename(1,21:length(filename)-11));%('testing-file-name)'
+           
+time_stamp=1/fs;
+time_stamp= time_stamp/60; %recalculated to minutes
+time_vector = (0:time_stamp:((length(data)-1)*(time_stamp)))';                              
+
+ %% PLOT GENERATION
+
+ h1=figure('Name','Measured signal', 'Units', 'normalized','Position', [0.01 0.3 0.98 0.61]);
+
+ disp([ ' ' ' ' ]) 
+ hold on
+ plot (time_vector, data)
+% plot (data_total)
+        legend ('Measured signal');
+        ylabel('Wind speed [m/s]')
+        xlabel('Time [min]')
+%         xlabel('Samples [au]')
+        title(filename)
+%         annotation('textbox', [0.15 0.85 0.10 0.05], 'interpreter','none','FitBoxToText','on', 'String', [' Number of peaks:  ' num ' '],'Color', 'r');
+  hold off
+  %%SAVING PROCESS
+filename = filename(1:length(filename)-11);%'testing_file_name' % zkrácení názvu o přípony a formáty
+
+waitbar_amount = ii/numfiles;
+waitbar1 = waitbar(waitbar_amount, 'saving process ', 'Units', 'normalized', 'Position', [0.4 0.2 0.22 0.06]); %position of waitbar 
+% saving_vector = numberAllocator();
+% if saving_vector(1) == 1
+%                         saveas(h1,['h1_plot_',filename],'png') % saves h plot (last calculated curve) as a png file. (the name is same as the original file - which CANNOT have the same_name.txt in the same folder!
+%                        saveas(h1,['h1_plot_',filename],'fig')
+%                        disp(' Figure 1 saved.') 
+%         else    
+%         end
+%    waitbar1= waitbar(waitbar_amount);
+       
+                         saveas(h1,['h1_plot_',filename],'png')
+                         saveas(h1,['h1_plot_',filename],'fig') 
+                         
+                            disp([,filename, ' has been saved']);
+   close(waitbar1)
+         
+% else
+%    waitbar1 = waitbar(1, 'Realtion finished', 'Units', 'normalized', 'Position', [0.4 0.2 0.22 0.06]);
+%                          pause(1);
+%                          close(waitbar1)
+close all
+end%input file end cycle
+waitbar1 = waitbar(1, 'Realtion finished', 'Units', 'normalized', 'Position', [0.4 0.2 0.22 0.06]);
+                         pause(1);
+                         
+% end
+disp('Relation has been finished - go get a coffee ;) ');
+
+close(waitbar1)           
