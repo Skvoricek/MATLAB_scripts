@@ -173,5 +173,7 @@ FREQUENCY_MIC-SIG_PROC
 2017-01-24
 SIMPLE_PLOT_TIME_DIR
  - Created script which takes all csv files in the folder and saves fig and png graphs for each file with time x axess according to given sampling frequency.
-
+*********************
+2017-02-01
+ - repaired subplot number 15. (wrong data input)
  Kuba Maršálek - jakub.marsalek@safibra.cz 
