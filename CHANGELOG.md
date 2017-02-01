@@ -177,6 +177,9 @@ SIMPLE_PLOT_TIME_DIR
 2017-02-01
 MULTIPLE_SIGNAL_VIEWER
  - repaired subplot number 15. (wrong data input)
+MULTIPLE_SIGNAL_VIEWER_SHIFT
+ - updated MULTIPLE_SIGNAL_VIEWER
+ - possible to insert time_shift between signals for better synchronization
 
 
 Kuba Maršálek - jakub.marsalek@safibra.cz 
