@@ -180,6 +180,11 @@ MULTIPLE_SIGNAL_VIEWER
 MULTIPLE_SIGNAL_VIEWER_SHIFT
  - updated MULTIPLE_SIGNAL_VIEWER
  - possible to insert time_shift between signals for better synchronization
+*********************
+2017-02-02
+PARTIAL_TIME_PLOT_DIR
+ - created to plot spectrum of part of the signal according to choosen time range (multiple channels measured in the same time to compare the spectral densities in all of them)
+  - the folder has to be empty of other files (can be filled with folders)
 
 
 Kuba Maršálek - jakub.marsalek@safibra.cz 
