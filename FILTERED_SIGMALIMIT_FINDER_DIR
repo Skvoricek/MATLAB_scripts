@@ -320,6 +320,8 @@ hold on
  data=data(41:end,1);
  %data=abs(data);
  
+ %{
+%start bypas values input
                                                                             waitbar1 = waitbar(1, 'Input correct values ', 'Units', 'normalized', 'Position', [0.4 0.2 0.22 0.06]);
                                                                             disp('Input values into dialog window.') 
    prompt = {'Noise extablishment start time [sec]','Noise extablishment end time [sec]','separation [sec]','Threshold [x noise]','ABSolutní hodnoty signálu?','first sec neglect','last sec neglect'};
@@ -335,14 +337,24 @@ hold on
                                 noise_start_time =answer(1,1); 
                                 noise_end_time =answer(2,1); 
                                 separation =answer(3,1); 
-                                    noisee=char(noise_end_time); %string type hold for plotting
-                                    
-                                    separationn=char(separation);%string type hold for plotting
-                                 Threshold = answer(4,1); %Minimum peak separation distance
-                                 absOn =answer(5,1); %dotaz na metodu zpracování ("1" - bere signál v ABS hodnitě, "jiný" - počítá ze zdroje po filtraci
+                                Threshold = answer(4,1); %Minimum peak separation distance
+                                absOn =answer(5,1); %dotaz na metodu zpracování ("1" - bere signál v ABS hodnitě, "jiný" - počítá ze zdroje po filtraci
                                 first_sec_neglect=answer(6,1);
                                 last_sec_neglect=answer(7,1);
+ close(waitbar1)
+% end bypas parameter input            
+ %}
+                                noise_start_time='600'
+                                noise_end_time='2200 '
+                                separation='0.1'
+                                Threshold='6'
+                                absOn='1'
+                                first_sec_neglect='500'
+                                last_sec_neglect='50'
                                 
+                                
+                                 noisee=char(noise_end_time); %string type hold for plotting
+                                 separationn=char(separation);%string type hold for plotting
                                                  
                                                     Threshold=str2double(Threshold) %cell to number convertion
                                                     noise_start_time=str2double(noise_start_time) %cell to number convertion
@@ -353,8 +365,8 @@ hold on
                                                     last_sec_neglect=str2double(last_sec_neglect);
                                                     
                                                     sep_num=separation;
-                                                                          close(waitbar1)
-        %jednickovy_filter = 1 % logicka uroven spusteni nebo vypnuti filtru 1 zapnuto, else vypnuto 
+                                                                          
+       
 
      
         time_stamp=1/fs;
