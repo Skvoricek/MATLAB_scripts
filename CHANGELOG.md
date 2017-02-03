@@ -185,6 +185,16 @@ MULTIPLE_SIGNAL_VIEWER_SHIFT
 PARTIAL_TIME_PLOT_DIR
  - created to plot spectrum of part of the signal according to choosen time range (multiple channels measured in the same time to compare the spectral densities in all of them)
   - the folder has to be empty of other files (can be filled with folders)
-
+*********************
+2017-02-03
+FILTERED_SIGMALIMIT_FINDER_DIR
+ - created from sigmalimit_finder via additional loop and numbering signal recalculation. Special saving of variables:
+ save_variables = [meanSigP,meanSigP_neg,stdevSigP,stdevSigP_neg,num_double,threshold_ref,SNR_tot_DB,Threshold,noise_start_time,noise_end_time,sep_num,absOn,fs,wwidth ,fml,fmh,first_sec_neglect,last_sec_neglect];
+ save_sigma_peaks=[[SNR_max 0];max_peak_value;low_sigma_point;high_sigma_point] 
+ - takes all vlues in seconds and/or Hz, recalculation into speed is not implemented
+ - threshold is taken as a std (data part for processing)
+ - implemented relative filepath to pick up additional matlab functions
+ - automatically saved figures (numberAllocator bypased)
+ - bypas for parameter input inside the lowest file loop is prepared
 
 Kuba Maršálek - jakub.marsalek@safibra.cz 
