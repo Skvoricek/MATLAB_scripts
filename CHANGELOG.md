@@ -196,5 +196,11 @@ FILTERED_SIGMALIMIT_FINDER_DIR
  - implemented relative filepath to pick up additional matlab functions
  - automatically saved figures (numberAllocator bypased)
  - bypas for parameter input inside the lowest file loop is prepared
+ *********************
+ 2017-02-15
+ FILTERED_SIGMALIMIT_FINDER_DIR
+  - fix of variable clearing
+  - implemented case of no peaks (no signal / start / end of event detected)
+  - added plot (time, threshold) length check - possible plotting problem solved
 
 Kuba Maršálek - jakub.marsalek@safibra.cz 
