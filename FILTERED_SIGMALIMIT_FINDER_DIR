@@ -35,7 +35,7 @@ In = cell(numfiles,1);
    prompt = {'Počet souborů na kanál ke zpracování'};
             dlg_title = 'Parameters input';
                     num_lines = 1;
-                    def = {'3'};% inside default values
+                    def = {'1'};% inside default values
                     options.Resize='on';
                     options.WindowStyle='modal';
                     options.Interpreter='tex';
@@ -219,12 +219,18 @@ time_vector = (0:time_stamp:((length(data)-1)*(time_stamp)))';
    %% GENERACE FILTRU     
  init_plot_val=5;
  %variables clearing
- konst_spodni=0;
- konst_horni=0;
- delkafft=0;
- f_prepocet=0;
- final_spectrum=0;
- clear filter2
+ clear konst_spodni;
+ clear konst_horni;
+ clear delkafft;
+ clear f_prepocet;
+ clear final_spectrum;
+ clear save_sigma_peaks;
+ clear low_sigma_point;
+ clear high_sigma_point;
+ clear SIG_peak;
+ clear SIG_peak_neg;
+ clear filter2;
+ 
 %  filter = [(0:fs-1)]; % vytvorení vektoru pro filtraci
 %  filter((1:fs),1) = [0]; % plnení vektoru pro filtraci
 %%{
@@ -344,12 +350,12 @@ hold on
  close(waitbar1)
 % end bypas parameter input            
  %}
-                                noise_start_time='600'
-                                noise_end_time='2200 '
+                                noise_start_time='100'
+                                noise_end_time='400 '
                                 separation='0.1'
                                 Threshold='6'
                                 absOn='1'
-                                first_sec_neglect='500'
+                                first_sec_neglect='100'
                                 last_sec_neglect='50'
                                 
                                 
@@ -414,17 +420,28 @@ hold on
  locations=(locs/fs) + (startEval_peak/fs); % přidáno posunutí vykrelených bodů pro případ vynechání části signálu pro výpočty - (startEval_peak/fs))
  locations_neg=(locs_neg/fs)+(startEval_peak/fs);% přidáno posunutí vykrelených bodů pro případ vynechání části signálu pro výpočty - (startEval_peak/fs))
  save_sigma_peaks = [SIG_peak ,locations;SIG_peak_neg ,locations_neg];
- 
+%  pause();
  %%parametr establisment
- low_sigma_point=save_sigma_peaks(1,:);
- high_sigma_point=save_sigma_peaks(end,:);
- max_value_index=find(save_sigma_peaks==max(save_sigma_peaks(1:end,1)));
- max_peak_value=save_sigma_peaks(max_value_index,:);
- 
+ if (isempty(save_sigma_peaks))
+         low_sigma_point=[0 0];
+         high_sigma_point=[0 0];
+         max_value_index=[0 0];
+         max_peak_value=[0 0];
+           disp('There has been no peak located...') ;
+  else
+         low_sigma_point=save_sigma_peaks(1,:);
+         high_sigma_point=save_sigma_peaks(end,:);
+         max_value_index=find(save_sigma_peaks==max(save_sigma_peaks(1:end,1)));
+         max_peak_value=save_sigma_peaks(max_value_index,:);
+ end
  
 %  pause;
+if(isempty(save_sigma_peaks))
+        SNR_max =0;
+else
 SNR_max= (max_peak_value(1:1)/data_threshold);
         SNR_max = 10*log10(SNR_max);
+end
  save_sigma_peaks=[[SNR_max 0];max_peak_value;low_sigma_point;high_sigma_point] %back to saving process -- max value, and both borders for calculated sigma threshold
  num=num2str(SNR_max);
  disp([ ' Signal to noise ratio: '  num '  dB.' ]) 
@@ -436,7 +453,7 @@ SNR_max= (max_peak_value(1:1)/data_threshold);
  plot(time_vector,data)
   scatter (locations,SIG_peak, 'r')
 %   scatter (locations_neg,SIG_peak_neg, 'r')
-  plot (time_vector,threshold_line)
+  plot (time_vector,threshold_line(1:length(time_vector)))
 %   plot (time_vector,threshold_line_neg)
 
   
