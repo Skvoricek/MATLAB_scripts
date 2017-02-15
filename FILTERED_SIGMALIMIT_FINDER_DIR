@@ -350,12 +350,12 @@ hold on
  close(waitbar1)
 % end bypas parameter input            
  %}
-                                noise_start_time='100'
-                                noise_end_time='400 '
+                                noise_start_time='500'
+                                noise_end_time='1000 '
                                 separation='0.1'
-                                Threshold='6'
+                                Threshold='6';
                                 absOn='1'
-                                first_sec_neglect='100'
+                                first_sec_neglect='550'
                                 last_sec_neglect='50'
                                 
                                 
@@ -442,8 +442,13 @@ else
 SNR_max= (max_peak_value(1:1)/data_threshold);
         SNR_max = 10*log10(SNR_max);
 end
- save_sigma_peaks=[[SNR_max 0];max_peak_value;low_sigma_point;high_sigma_point] %back to saving process -- max value, and both borders for calculated sigma threshold
+ save_sigma_peaks=[[SNR_max 0];max_peak_value(1,1);max_peak_value(1,2);low_sigma_point(1,1);low_sigma_point(1,2);high_sigma_point(1,1);high_sigma_point(1,2)] ;%back to saving process -- max value, and both borders for calculated sigma threshold
  num=num2str(SNR_max);
+ if(isempty(save_all_sigma_peaks)
+ save_all_sigma_peaks   =save_sigma_peaks;
+ else
+ save_all_sigma_peaks=[save_all_sigma_peaks;save_all_sigma_peaks];
+ end
  disp([ ' Signal to noise ratio: '  num '  dB.' ]) 
  sigma=num2str(Threshold);
 %  figure
@@ -579,6 +584,8 @@ close all
 end
 close all
  waitbar1 = waitbar(1, 'RELATION IS FINISHED  - get a coffee ;) ', 'Units', 'normalized', 'Position', [0.4 0.2 0.22 0.06]);
-                            pause(1);                        
+ beep = load('handel.mat');
+sound(beep.y, beep.Fs)                           
+ pause(1);                        
  close(waitbar1)
 % clear all
