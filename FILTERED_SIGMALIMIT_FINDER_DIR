@@ -442,10 +442,10 @@ else
 SNR_max= (max_peak_value(1:1)/data_threshold);
         SNR_max = 10*log10(SNR_max);
 end
- save_sigma_peaks=[[SNR_max 0];max_peak_value(1,1);max_peak_value(1,2);low_sigma_point(1,1);low_sigma_point(1,2);high_sigma_point(1,1);high_sigma_point(1,2)] ;%back to saving process -- max value, and both borders for calculated sigma threshold
+ save_sigma_peaks=[SNR_max;max_peak_value(1,1);max_peak_value(1,2);low_sigma_point(1,1);low_sigma_point(1,2);high_sigma_point(1,1);high_sigma_point(1,2)] ;%back to saving process -- max value, and both borders for calculated sigma threshold
  num=num2str(SNR_max);
- if(isempty(save_all_sigma_peaks)
- save_all_sigma_peaks   =save_sigma_peaks;
+ if(isempty(save_all_sigma_peaks))
+ save_all_sigma_peaks =save_sigma_peaks;
  else
  save_all_sigma_peaks=[save_all_sigma_peaks;save_all_sigma_peaks];
  end
