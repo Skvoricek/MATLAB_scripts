@@ -202,5 +202,6 @@ FILTERED_SIGMALIMIT_FINDER_DIR
   - fix of variable clearing
   - implemented case of no peaks (no signal / start / end of event detected)
   - added plot (time, threshold) length check - possible plotting problem solved
-
+  - changed save_sigma_peaks=[[SNR_max 0];max_peak_value(1,1);max_peak_value(1,2);low_sigma_point(1,1);low_sigma_point(1,2);high_sigma_point(1,1);high_sigma_point(1,2)] ;%back to saving process -- max value, and both borders for calculated sigma threshold
+ - added save_all_sigma_peaks (for all files in big cycle)
 Kuba Maršálek - jakub.marsalek@safibra.cz 
