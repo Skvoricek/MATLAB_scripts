@@ -204,4 +204,9 @@ FILTERED_SIGMALIMIT_FINDER_DIR
   - added plot (time, threshold) length check - possible plotting problem solved
   - changed save_sigma_peaks=[[SNR_max 0];max_peak_value(1,1);max_peak_value(1,2);low_sigma_point(1,1);low_sigma_point(1,2);high_sigma_point(1,1);high_sigma_point(1,2)] ;%back to saving process -- max value, and both borders for calculated sigma threshold
  - added save_all_sigma_peaks (for all files in big cycle)
+ *******************
+ 2017-03-23
+ SPECTRAL_FILTRATION_DIR
+ Created automatic tool to run through DIR saving all the output.
+ 
 Kuba Maršálek - jakub.marsalek@safibra.cz 
