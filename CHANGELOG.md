@@ -208,5 +208,10 @@ FILTERED_SIGMALIMIT_FINDER_DIR
  2017-03-23
  SPECTRAL_FILTRATION_DIR
  Created automatic tool to run through DIR saving all the output.
+ *******************
+ 2017-03-28
+ SPECTRAL_FILTRATION_DIR
+ - finished and optimized (longest time takes num2str). Needs CS_header in the same folder)
+ - tool to load WAV or M4A file and according to fs, date and time create the time stamps and standard CSV structure - saving it into the same folder.
  
 Kuba Maršálek - jakub.marsalek@safibra.cz 
