@@ -214,4 +214,13 @@ FILTERED_SIGMALIMIT_FINDER_DIR
  - finished and optimized (longest time takes num2str). Needs CS_header in the same folder)
  - tool to load WAV or M4A file and according to fs, date and time create the time stamps and standard CSV structure - saving it into the same folder.
  
+  *******************
+ 2017-03-29
+ SOUND_TO_CSV_SAVE
+ - created tool to choose WAV and / or M4A files to load them (including dir information - date and time with sampling frequency
+ - it recalculates and creates time stram (date included)
+ - must include CSV_header.csv (source file for the header - can be changed)
+ - takes a long time (tens of minutes) (shown in waitbar) according to number of rows.
+ - output is a CSV_file of the same name as a source WAV or M4A file.
+ 
 Kuba Maršálek - jakub.marsalek@safibra.cz 
