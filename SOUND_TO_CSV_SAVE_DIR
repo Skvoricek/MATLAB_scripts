@@ -171,10 +171,10 @@ export_var_data=[time,num2str(data(1:length(time)))];
 % save('time_signal.txt','export_var','-ascii');
 filename_exp = [filename(1:end-4),'.csv']
 copyfile ('CSV_header.csv' ,filename_exp)
-cd(filepath)
+
 dlmwrite(filename_exp,export_var_data,'-append','delimiter','','roffset',0);
 % type(filename);
-
+cd(filepath)
   close (waitbar1);              
 end
 
