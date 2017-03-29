@@ -28,79 +28,127 @@ time_stamp=1/fs;
 time_vector= zeros(1,(length(data)-1))';
 info = dir(filename)
 formatOut = 'mm-dd-yyyy';
-time_In_usec= 0;
 time=['11-07-2016 00:00:00.000000;';'11-07-2016 00:00:00.000023;'];
 date=datestr(info.date,formatOut);
 hhi=str2num(info.date(12:14)); %initial hours
 mmi=str2num(info.date(16:17)); %initial minutes
 ssi=str2num(info.date(19:20)); %initial seconds
-% info.date
-% time = num2str(zeros(1,26));
 
-% disp('nagenerovat casovy vektor,docitat a vlozit char format cele casove a datove znacky v kompatibilnim formatu od 00-00-00:000000us + 1/fs; předgenerovat casovy vektor (matice pole data_length x 2 (3ti sloupec prazdny ')
-i=2;
+time_In_usec= 0;
+usec_overflow=0; %usec time overflow
+ss_overflow=0;%sec time overflow
+mm_overflow=0;%mm time overflow
+hh_overflow=0;
+% 
+% hhi=1
+% mmi=59
+% ssi=56
+
+
+usec=(time_In_usec);
+ss=ssi;
+mm=mmi;
+hh=hhi;
+
+
+i=1;
 while i<=(length(data)) %%right time stam creation
 %       waitbar1 = waitbar (i/(length(data)));
-     
+
+   waitbar1 = waitbar (i/(length(data)));
    
-time_In_usec=time_In_usec+(1e6/fs);
-% format double;
-hh=int8((time_In_usec/3.6e+9)+hhi);
-% hh=hh+hhi;
-% hh=int8(hh);
-mm=int8((time_In_usec/6e+7)+mmi);
-% mm=mm+mmi;
-% mm=int8(mm);
-ss=int8((time_In_usec/1e+6)+mmi);
-% ss=ss+ssi;
-% ss=int8(ss);
-usec=int32(time_In_usec);
-% usec=int32(usec);
+time_In_usec=time_In_usec+(1e+6/fs);
+% 
+usec=(time_In_usec);
+ss=(ssi+(time_In_usec/1e+6));
+mm=(mmi+(time_In_usec/6e+7));
+hh=(hhi+(time_In_usec/3.6e+9)); 
+
+% pause();
 
 
+
+if  usec >= (1e6)
+    time_In_usec=((usec-(1e+6)));
+    usec=(time_In_usec);
+    usec_overflow = usec_overflow +1;
+    ssi=ssi+1;
+else 
+end
+%     pause();
+    if ssi>=(60)
+        ss=(0);
+        ssi=0;
+        ss_overflow = ss_overflow+1;
+        mmi=mmi+1;
+%         pause();
+    else
+    end
+    
+        if mmi>=(60)
+        mm=0;
+        mmi=0;
+        mm_overflow = mm_overflow+1;
+        hhi=hhi+1;
+        else
+        end
+%         pause();
+            if  hhi>=(25)
+            hh=(0);
+            hhi=0;
+            hh_overflow = hh_overflow+1;
+            date(4:5)=num2str((str2num(date(4:5))+1),'%.2d') % incrementation of the date number (day = day + 1);
+            
+            else
+            end
+        
+        
+
+% pause();
+usec_out= floor(usec);
+ss_out=floor(ssi);
+mm_out=floor(mmi);
+hh_out=floor(hhi);
+
+%//*
+
+%///*
+% pause();
 time(i,(1:10))= num2str(date);
 time(i,(11))= ' ' ;
-time(i,(12:13))= num2str(hh,'%.2d');
+time(i,(12:13))= num2str(hh_out,'%.2d');
 time(i,(14))= ':' ;
-time(i,(15:16))= num2str(mm,'%.2d');
+time(i,(15:16))= num2str(mm_out,'%.2d');
 time(i,(17))= ':' ;
-time(i,(18:19))= num2str(ss,'%.2d');
+time(i,(18:19))= num2str(ss_out,'%.2d');
 time(i,(20))= '.' ;
-time(i,(21:26))= num2str(usec,'%.6d');
+time(i,(21:26))= num2str(usec_out,'%.6d');
 time(i,(27))= ';' ;
-% time_vector(i) = (time(1,1:end));
-
-% close(waitbar1)
-% %    usec=(double(str2double(time{i} (21:26))));str
-% %    ss=(double(str2double(time{i} (18:19))*1e+6)); 
-% %    mm=(double(str2double(time{i} (15:16))*6e+7));
-% %    hh=(double(str2double(time{i} (12:13))*3.6e+9));
-
-
-% % 
-% %    time_In_min(i,1) = time_In_usec*(1/6e+7);  %in minutes 
-%     
-% %cell2mat(time{i}(12:26));
-%    i=i+1;
-%    if i==15000;
+%
+   i=i+1;
+%    if i==10000;
 %    break
 %    end
  end
+close(waitbar1)
 
-% data=y(:,1) + y(:,2); %%mono creation
-% data=data/2; %%normalization
-% pause();
+
+      waitbar1 = waitbar(0.85, 'Saving variables', 'Units', 'normalized', 'Position', [0.4 0.2 0.22 0.06]); %position of waitbar
 export_var_data=[time,num2str(data(1:length(time)))];
 % export_var_total= [export_var_data;data_header]
 % save('time_signal.txt','export_var','-ascii');
 filename = [filename(1:end-4),'.csv']
 copyfile ('CSV_header.csv' ,filename)
-% filename = [filename(1:end-4),'.csv']
-% csvwrite(filename,data_header)zx
-% pause();
-% csvwrite(filename,export_var_data,2,0)
+
 dlmwrite(filename,export_var_data,'-append','delimiter','','roffset',0);
 % type(filename);
+disp('File containing sampling frequency has been saved in root folder.') 
+     close(waitbar1)
+                 waitbar1 = waitbar(1.0, 'FINISH ', 'Units', 'normalized', 'Position', [0.4 0.2 0.22 0.06]); %position of waitbar
+                     pause(1)
+                close(waitbar1)
+                                                                     
+                                                                            
 close all
 
 
