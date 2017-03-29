@@ -205,7 +205,7 @@ FILTERED_SIGMALIMIT_FINDER_DIR
   - changed save_sigma_peaks=[[SNR_max 0];max_peak_value(1,1);max_peak_value(1,2);low_sigma_point(1,1);low_sigma_point(1,2);high_sigma_point(1,1);high_sigma_point(1,2)] ;%back to saving process -- max value, and both borders for calculated sigma threshold
  - added save_all_sigma_peaks (for all files in big cycle)
  *******************
- 2017-03-23
+ 2017-03-23*
  SPECTRAL_FILTRATION_DIR
  Created automatic tool to run through DIR saving all the output.
  *******************
@@ -222,5 +222,13 @@ FILTERED_SIGMALIMIT_FINDER_DIR
  - must include CSV_header.csv (source file for the header - can be changed)
  - takes a long time (tens of minutes) (shown in waitbar) according to number of rows.
  - output is a CSV_file of the same name as a source WAV or M4A file.
+ 
+   *******************
+ 2017-03-29
+ SOUND_TO_CSV_SAVE_DIR	
+ - changed for possible multifile use
+ - the CSV_header.csv must be next to the source .m file 
+ - input m4a / WAV file must be in the separate folder (with nothing else)
+ - uses waitbars to comment the progress
  
 Kuba Maršálek - jakub.marsalek@safibra.cz 
