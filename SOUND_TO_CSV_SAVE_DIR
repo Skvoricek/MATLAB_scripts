@@ -1,0 +1,188 @@
+%% NAČTĚNÍ DAT
+clc; 
+close all;
+clear;
+    
+
+    
+%set(0,'DefaulttextInterpreter','none')   % default nonTeX text interpreter - Graph title appearance
+  set(groot, 'DefaultTextInterpreter', 'none')
+      set(groot, 'DefaultLegendInterpreter', 'none')
+
+source_filepath=cd;
+ [filename,filepath]=uigetfile({'*.*','m4a'},... % manual gie choice of folder (and files inside)
+                      'Select reference Data File ');
+                      cd(filepath);
+                      
+fileList = dir(filepath);                  
+fileList = fileList(~[fileList.isdir]); %remove directories
+[junk, sortorder] = sort([fileList.datenum]);
+fileList = fileList(sortorder); %list is now in ascending date order
+numfiles = numel(fileList);
+In = cell(numfiles,1);
+ 
+% pause();
+for ii = 1:numfiles % data input cycle   
+     waitbar1 = waitbar ((ii/(numfiles)),'Total files progress', 'Units', 'normalized', 'Position', [0.25 0.4 0.25 0.08]);
+     
+    
+    cd(filepath);
+     
+% ANS= importdata('CSV_header.csv', ';' );
+filename=(fileList(ii).name)
+[y,fs] = audioread(filename);
+
+data=y(:,1);
+time_stamp=1/fs;
+time_vector= zeros(1,(length(data)-1))';
+info = dir(filename)
+formatOut = 'mm-dd-yyyy';
+time=['11-07-2016 00:00:00.000000;';'11-07-2016 00:00:00.000023;'];
+date=datestr(info.date,formatOut);
+hhi=str2num(info.date(12:14)); %initial hours
+mmi=str2num(info.date(16:17)); %initial minutes
+ssi=str2num(info.date(19:20)); %initial seconds
+
+time_In_usec= 0;
+usec_overflow=0; %usec time overflow
+ss_overflow=0;%sec time overflow
+mm_overflow=0;%mm time overflow
+hh_overflow=0;
+waitbar2_on=0;
+% 
+% hhi=1
+% mmi=59
+% ssi=56
+
+
+usec=(time_In_usec);
+ss=ssi;
+mm=mmi;
+hh=hhi;
+
+
+i=1;
+temp_i=0;
+while i<=(length(data)) %%right time stam creation
+  
+    
+    if mod(i,(length(data)/100))==0
+        if exist ('waitbar2')==1
+            close (waitbar2)
+        else
+        end
+    waitbar2 = waitbar ((i/length(data)),'Total files progress', 'Units', 'normalized', 'Position', [0.5 0.4 0.25 0.08]);
+%     temp_k=1000;
+    
+   else
+  end
+  
+time_In_usec=time_In_usec+(1e+6/fs);
+% 
+usec=(time_In_usec);
+ss=(ssi+(time_In_usec/1e+6));
+mm=(mmi+(time_In_usec/6e+7));
+hh=(hhi+(time_In_usec/3.6e+9)); 
+
+% pause();
+
+
+
+if  usec >= (1e6)
+    time_In_usec=((usec-(1e+6)));
+    usec=(time_In_usec);
+    usec_overflow = usec_overflow +1;
+    ssi=ssi+1;
+else 
+end
+%     pause();
+    if ssi>=(60)
+        ss=(0);
+        ssi=0;
+        ss_overflow = ss_overflow+1;
+        mmi=mmi+1;
+%         pause();
+    else
+    end
+    
+        if mmi>=(60)
+        mm=0;
+        mmi=0;
+        mm_overflow = mm_overflow+1;
+        hhi=hhi+1;
+        else
+        end
+%         pause();
+            if  hhi>=(25)
+            hh=(0);
+            hhi=0;
+            hh_overflow = hh_overflow+1;
+            date(4:5)=num2str((str2num(date(4:5))+1),'%.2d') % incrementation of the date number (day = day + 1);
+            
+            else
+            end
+        
+        
+
+% pause();
+usec_out= floor(usec);
+ss_out=floor(ssi);
+mm_out=floor(mmi);
+hh_out=floor(hhi);
+
+%//*
+
+%///*
+% pause();
+time(i,(1:10))= num2str(date);
+time(i,(11))= ' ' ;
+time(i,(12:13))= num2str(hh_out,'%.2d');
+time(i,(14))= ':' ;
+time(i,(15:16))= num2str(mm_out,'%.2d');
+time(i,(17))= ':' ;
+time(i,(18:19))= num2str(ss_out,'%.2d');
+time(i,(20))= '.' ;
+time(i,(21:26))= num2str(usec_out,'%.6d');
+time(i,(27))= ';' ;
+%
+%    i=i+1;
+%    if i==10000;
+%    break
+%    end
+   
+%    if exist ('waitbar2')==1
+% %         temp_i=temp_i+1;
+%          if mod(i,200)==0
+%          close(waitbar2)   
+%          temp_i=0;
+%          else
+%          end
+%    else
+%    end
+end
+
+
+
+%       waitbar1 = waitbar(0.85, 'Saving variables', 'Units', 'normalized', 'Position', [0.4 0.2 0.22 0.06]); %position of waitbar
+      cd(source_filepath);
+export_var_data=[time,num2str(data(1:length(time)))];
+% export_var_total= [export_var_data;data_header]
+% save('time_signal.txt','export_var','-ascii');
+filename_exp = [filename(1:end-4),'.csv']
+copyfile ('CSV_header.csv' ,filename_exp)
+cd(filepath)
+dlmwrite(filename_exp,export_var_data,'-append','delimiter','','roffset',0);
+% type(filename);
+
+  close (waitbar1);              
+end
+
+disp('File containing sampling frequency has been saved in root folder.') 
+     
+                 waitbar1 = waitbar(1.0, 'FINISH ', 'Units', 'normalized', 'Position', [0.4 0.2 0.22 0.06]); %position of waitbar
+                     pause(1)
+                close(waitbar1)
+                                                                            
+close all
+
+
