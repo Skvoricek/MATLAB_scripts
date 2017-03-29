@@ -23,7 +23,7 @@ In = cell(numfiles,1);
  
 % pause();
 for ii = 1:numfiles % data input cycle   
-     waitbar1 = waitbar ((ii/(numfiles)),'Total files progress', 'Units', 'normalized', 'Position', [0.25 0.4 0.25 0.08]);
+     waitbar1 = waitbar ((ii/(numfiles)),'Total files progress', 'Units', 'normalized', 'Position', [0.25 0.4 0.20 0.08]);
      
     
     cd(filepath);
@@ -66,14 +66,15 @@ temp_i=0;
 while i<=(length(data)) %%right time stam creation
   
     
-    if mod(i,(length(data)/100))==0
+    if mod(i,round((length(data)/100)))==0
         if exist ('waitbar2')==1
             close (waitbar2)
+            
         else
         end
-    waitbar2 = waitbar ((i/length(data)),'Total files progress', 'Units', 'normalized', 'Position', [0.5 0.4 0.25 0.08]);
+  
 %     temp_k=1000;
-    
+     waitbar2 = waitbar ((i/(length(data))),'Total files progress', 'Units', 'normalized', 'Position', [0.50 0.4 0.20 0.08]);
    else
   end
   
@@ -145,7 +146,7 @@ time(i,(20))= '.' ;
 time(i,(21:26))= num2str(usec_out,'%.6d');
 time(i,(27))= ';' ;
 %
-%    i=i+1;
+   i=i+1;
 %    if i==10000;
 %    break
 %    end
@@ -179,7 +180,7 @@ end
 
 disp('File containing sampling frequency has been saved in root folder.') 
      
-                 waitbar1 = waitbar(1.0, 'FINISH ', 'Units', 'normalized', 'Position', [0.4 0.2 0.22 0.06]); %position of waitbar
+                 waitbar1 = waitbar(1.0, 'FINISH ', 'Units', 'normalized', 'Position', [0.4 0.2 0.20 0.06]); %position of waitbar
                      pause(1)
                 close(waitbar1)
                                                                             
