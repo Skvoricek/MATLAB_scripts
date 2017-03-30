@@ -8,7 +8,8 @@ clear;
   set(groot, 'DefaultTextInterpreter', 'none')
       set(groot, 'DefaultLegendInterpreter', 'none')
        absOn = NaN;
-       
+   slCharacterEncoding('US-ASCII')    
+ source_filepath=cd;      
        data_total=nan;
      
        %absOn = 1;% IF NOT COMENTED - PEAK CALCULATION IS PERFORMED FROM
@@ -27,8 +28,8 @@ data=y(:,1);
 time_stamp=1/fs;
 time_vector= zeros(1,(length(data)-1))';
 info = dir(filename)
-formatOut = 'mm-dd-yyyy';
-time=['11-07-2016 00:00:00.000000;';'11-07-2016 00:00:00.000023;'];
+formatOut = 'dd-mm-yyyy';
+time=['11-07-2016 00:00:00.000000 ;';'11-07-2016 00:00:00.000023 ;'];
 date=datestr(info.date,formatOut);
 hhi=str2num(info.date(12:14)); %initial hours
 mmi=str2num(info.date(16:17)); %initial minutes
@@ -123,10 +124,11 @@ time(i,(17))= ':' ;
 time(i,(18:19))= num2str(ss_out,'%.2d');
 time(i,(20))= '.' ;
 time(i,(21:26))= num2str(usec_out,'%.6d');
-time(i,(27))= ';' ;
+time(i,(27))= ' ' ;
+time(i,(28))= ';' ;
 %
    i=i+1;
-%    if i==10000;
+%    if i==100000;
 %    break
 %    end
  end
@@ -134,14 +136,17 @@ close(waitbar1)
 
 
       waitbar1 = waitbar(0.85, 'Saving variables', 'Units', 'normalized', 'Position', [0.4 0.2 0.22 0.06]); %position of waitbar
+    cd(source_filepath);
 export_var_data=[time,num2str(data(1:length(time)))];
 % export_var_total= [export_var_data;data_header]
 % save('time_signal.txt','export_var','-ascii');
 filename = [filename(1:end-4),'.csv']
+  
 copyfile ('CSV_header.csv' ,filename)
 
 dlmwrite(filename,export_var_data,'-append','delimiter','','roffset',0);
 % type(filename);
+cd(filepath)
 disp('File containing sampling frequency has been saved in root folder.') 
      close(waitbar1)
                  waitbar1 = waitbar(1.0, 'FINISH ', 'Units', 'normalized', 'Position', [0.4 0.2 0.22 0.06]); %position of waitbar
