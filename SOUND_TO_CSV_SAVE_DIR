@@ -36,8 +36,8 @@ data=y(:,1);
 time_stamp=1/fs;
 time_vector= zeros(1,(length(data)-1))';
 info = dir(filename)
-formatOut = 'mm-dd-yyyy';
-time=['11-07-2016 00:00:00.000000;';'11-07-2016 00:00:00.000023;'];
+formatOut = 'dd-mm-yyyy';
+time=['11-07-2016 00:00:00.000000 ;';'11-07-2016 00:00:00.000023 ;'];
 date=datestr(info.date,formatOut);
 hhi=str2num(info.date(12:14)); %initial hours
 mmi=str2num(info.date(16:17)); %initial minutes
@@ -144,7 +144,8 @@ time(i,(17))= ':' ;
 time(i,(18:19))= num2str(ss_out,'%.2d');
 time(i,(20))= '.' ;
 time(i,(21:26))= num2str(usec_out,'%.6d');
-time(i,(27))= ';' ;
+time(i,(27))= ' ' ;
+time(i,(28))= ';' ;
 %
    i=i+1;
 %    if i==10000;
@@ -171,7 +172,6 @@ export_var_data=[time,num2str(data(1:length(time)))];
 % save('time_signal.txt','export_var','-ascii');
 filename_exp = [filename(1:end-4),'.csv']
 copyfile ('CSV_header.csv' ,filename_exp)
-
 dlmwrite(filename_exp,export_var_data,'-append','delimiter','','roffset',0);
 % type(filename);
 cd(filepath)
