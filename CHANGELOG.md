@@ -231,4 +231,10 @@ FILTERED_SIGMALIMIT_FINDER_DIR
  - input m4a / WAV file must be in the separate folder (with nothing else)
  - uses waitbars to comment the progress
  
+    *******************
+ 2017-03-29
+ SOUND_TO_CSV_SAVE_DIR	& SOUND_TO_CSV_SAVE	
+  - date format exchange (dd-mm-yyy), added _space_ after the time stamp 
+  - verified functionality for WAV files taken from direct measurement
+ 
 Kuba Maršálek - jakub.marsalek@safibra.cz 
