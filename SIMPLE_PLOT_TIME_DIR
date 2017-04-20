@@ -69,6 +69,7 @@ time_vector = (0:time_stamp:((length(data)-1)*(time_stamp)))';
         xlabel('Time [min]')
 %         xlabel('Samples [au]')
         title(filename)
+         annotation('textbox', [0.15 0.85 0.19 0.05], 'interpreter','none','FitBoxToText','on', 'String', [' max: ' num2str(max(data)) ', min: ' num2str(min(data)) ', mean: ' num2str(mean(data)) ', stdev: ' num2str(std(data))  ]);
 %         annotation('textbox', [0.15 0.85 0.10 0.05], 'interpreter','none','FitBoxToText','on', 'String', [' Number of peaks:  ' num ' '],'Color', 'r');
   hold off
   %%SAVING PROCESS
