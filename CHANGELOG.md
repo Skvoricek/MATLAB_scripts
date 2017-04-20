@@ -237,4 +237,9 @@ FILTERED_SIGMALIMIT_FINDER_DIR
   - date format exchange (dd-mm-yyy), added _space_ after the time stamp 
   - verified functionality for WAV files taken from direct measurement
  
+ 
+    *******************
+ 2017-04-20
+ SIMPLE_PLOT_TIME_DIR
+  - added annotation box with min, max, mean and stdev
 Kuba Maršálek - jakub.marsalek@safibra.cz 
