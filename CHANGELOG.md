@@ -248,4 +248,5 @@ FILTERED_SIGMALIMIT_FINDER_DIR
 2017-04-25
 
 FILTERED_PEAKFINDER_DIR_ANE
+- reated to ealuate fore irular measurement of FBG anemometer. Filtration turned off, aing 
 Kuba Maršálek - jakub.marsalek@safibra.cz 
