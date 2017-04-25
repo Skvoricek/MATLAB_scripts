@@ -242,4 +242,10 @@ FILTERED_SIGMALIMIT_FINDER_DIR
  2017-04-20
  SIMPLE_PLOT_TIME_DIR
   - added annotation box with min, max, mean and stdev
+
+
+*******************
+2017-04-25
+
+FILTERED_PEAKFINDER_DIR_ANE
 Kuba Maršálek - jakub.marsalek@safibra.cz 
