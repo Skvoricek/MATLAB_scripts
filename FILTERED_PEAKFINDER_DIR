@@ -55,7 +55,9 @@ clear locations;
 clear locations_neg;
 clear threshold_ref;
 clear threshold_line;
+clear threshold_line_neg`
 clear SIG_peak;
+clear time_vector;
 
 
 
@@ -382,8 +384,8 @@ hold on
  plot(time_vector,data)
   scatter (locations,SIG_peak, 'r')
   scatter (locations_neg,SIG_peak_neg, 'r')
-  plot (time_vector,threshold_line)
-  plot (time_vector,threshold_line_neg)
+  plot (time_vector,threshold_line(1:length(time_vector)))
+  plot (time_vector,threshold_line_neg(1:length(time_vector)))
 
   
         legend ('Reconstructed Data','Peak locations','Peak locations','Upper threshold','Lower threshold');
@@ -498,6 +500,7 @@ waitbar1 = waitbar(1, 'Results saving', 'Units', 'normalized', 'Position', [0.4 
                          close(waitbar1)
                          waitbar1 = waitbar(1, 'RELATION IS FINISHED  - get a coffee ;) ', 'Units', 'normalized', 'Position', [0.4 0.2 0.22 0.06]);
                          close(waitbar1)
+                         close all
 end
                          pause(0.2);
                          
@@ -507,5 +510,5 @@ end
 
                          %%CLEARING AND CLOSING ALL
 
-close all
+% close all
 % clear all
