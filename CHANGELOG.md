@@ -254,4 +254,9 @@ FILTERED_PEAKFINDER_DIR_ANE
 2017-04-25
 FILTERED_PEAKFINDER_DIR
 - created evaluation tool for normalized (reproductor) mechanical testing - peak calculation for the whole dirrectory - including the spectral filtration
+
+****************
+2017-04-25
+SIMPLE_PLOT_TIME_STATISTIC_DIR
+- created simple time related plot tool exporting statistical values [mean, stdev, min, max] into txt file
 Kuba Maršálek - jakub.marsalek@safibra.cz 
