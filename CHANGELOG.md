@@ -248,5 +248,10 @@ FILTERED_SIGMALIMIT_FINDER_DIR
 2017-04-25
 
 FILTERED_PEAKFINDER_DIR_ANE
-- reated to ealuate fore irular measurement of FBG anemometer. Filtration turned off, aing 
+- created to evaluate for cirular measurement of FBG anemometer. Filtration turned off 
+
+*******************
+2017-04-25
+FILTERED_PEAKFINDER_DIR
+- created evaluation tool for normalized (reproductor) mechanical testing - peak calculation for the whole dirrectory - including the spectral filtration
 Kuba Maršálek - jakub.marsalek@safibra.cz 
