@@ -1,0 +1,315 @@
+% CREATED AS STATISTICAL TOOL TO DETERMINE LONG TERM STABILITY, P-P; Q-Q
+% PLOTS AND MOST IMPORTANTLY EXPERIMENTAL DISTRIBUTION FUNCTION TO OBTAIN
+% TIME DISTANCE NEEDED FOR THRESHOLD RECALIBRATION
+
+%% NAČTĚNÍ DAT
+clc; 
+close all;
+clear;
+
+    
+%set(0,'DefaulttextInterpreter','none')   % default nonTeX text interpreter - Graph title appearance
+  set(groot, 'DefaultTextInterpreter', 'none')
+      set(groot, 'DefaultLegendInterpreter', 'none')
+     
+     data_total=nan;
+     i_files= 1;
+     number_of_files = 1;
+      % INPUT DATA INTERACTIVE
+%    prompt = {'Počet souborů ke zpracování'};
+%             dlg_title = 'Parameters input';
+%                     num_lines = 1;
+%                     def = {'1'};% inside default values
+%                     options.Resize='on';
+%                     options.WindowStyle='modal';
+%                     options.Interpreter='tex';
+%                     answer=inputdlg(prompt,dlg_title,num_lines,...
+%                                     def);%related to point definition - careful when changed
+% 
+% 
+%                                 number_of_files =answer(1,1); %aproximate position (optical length) of starting (left) evaluation point
+%                                 number_of_files = str2double(number_of_files);
+                                
+                                
+                                
+ %% INPUT DATA INTERACTIVE
+ while i_files<=(number_of_files)
+ 
+   disp('Waiting for user choice - Choose a CSV file.') 
+                                                                             waitbar1 = waitbar(0.15, 'choose input file ', 'Units', 'normalized', 'Position', [0.4 0.2 0.22 0.06]); %position of waitbar
+    [filename,filepath]=uigetfile({'*.*','csv'},...
+                      'Select reference Data File ');
+                      cd(filepath);
+                                                                            close(waitbar1)
+
+%                       pause();
+     data = importdata(filename, ';' );
+data=data.data(:,1);
+
+% plot(data);
+                  
+%  pause();  
+   if data_total == nan;                                                                       
+       data_total = data;
+   else
+%        data=data(2,1:end);
+       data_total = [data_total ;data];
+   end
+                                                                            waitbar1 = waitbar(1, 'CVS file reading ', 'Units', 'normalized', 'Position', [0.4 0.2 0.22 0.06]); %position of waitbar
+                                                                            disp('Reading a CSV file - this operation usually takes a while (according to number of rows).') 
+                                                                            statusbar(0, ['Desktop status: processing  ', filename]);
+                                                                           close(waitbar1)
+                                                                            
+                                                                            
+                                                                            
+first_time= char(filename(1,21:length(filename)-11));%('testing-file-name)'
+
+ i_files = i_files+1;
+ 
+ end
+%% PLOT GENERATION
+
+
+
+ h1=figure('Name','Input data', 'Units', 'normalized','Position', [0.01 0.3 0.98 0.61]);
+
+ disp([ ' ' ' ' ]) 
+ hold on
+ plot (data_total)
+     legend ('Measured data');
+        ylabel('Signal Intensity [Au]')
+        xlabel('Samples')
+        title(filename)
+%         annotation('textbox', [0.15 0.85 0.10 0.05], 'interpreter','none','FitBoxToText','on', 'String', [' Number of peaks:  ' num ' '],'Color', 'r');
+  hold off
+  %%SAVING PROCESS
+filename = filename(1:length(filename)-11);%'testing_file_name' % zkrácení názvu o přípony a formáty
+
+
+%% MAX PER WINDOW DETERMINATION
+% INPUT DATA INTERACTIVE
+   prompt = {'WINDOW SIZE'};
+            dlg_title = 'Parameters input';
+                    num_lines = 1;
+                    def = {'1024'};% inside default values
+                    options.Resize='on';
+                    options.WindowStyle='modal';
+                    options.Interpreter='tex';
+                    answer=inputdlg(prompt,dlg_title,num_lines,...
+                                    def);%related to point definition - careful when changed
+
+                                window_size =answer(1,1); %aproximate position (optical length) of starting (left) evaluation point
+                                window_size = str2double(window_size);
+if rem(length(data),window_size)~=0
+    data=data(1:(length(data)-rem(length(data),window_size)));
+    else
+end
+
+%% EXPERIMENTAL DISTRIBUTION input            
+i=1
+experimental_distribution=zeros(1,(length(data)/window_size));
+while i < (length(data)/window_size)
+experimental_distribution(i)=max(data(i*1:i*((window_size)-1)));
+    i=i+1;
+end
+experimental_distribution=experimental_distribution(:,1:(end-1))';
+% experimental_distribution=data;
+
+% hxx=figure('Name','bar - selected data', 'Units', 'normalized','Position', [0.01 0.3 0.98 0.61]);
+% bar(experimental_distribution);
+% experimental_distribution=x;
+% experimental_distribution
+figure();
+temp_dist_var=bar(experimental_distribution);
+x=temp_dist_var.YData;
+close 
+%% STATISTICAL THRESHOLD CALCULATION
+IRW=prctile(x,0.75)-prctile(x,0.25);
+statistical_threshold=prctile(x,0.95)+IRW;
+statistical_vector = [statistical_threshold statistical_threshold];
+% statistical_vector(1:end)=statistical_threshold;
+%% DISTRIBUTION
+
+h2=figure('Name','Histogram notmal distribution fit', 'Units', 'normalized','Position', [0.01 0.3 0.98 0.61]);
+
+histfit(x,window_size,'Normal')
+
+pd = fitdist(experimental_distribution,'Normal');
+
+a=cdfplot(experimental_distribution);
+h = cdfplot(experimental_distribution);
+[h,stats] = cdfplot(experimental_distribution); %STATISTICS
+
+[f,x] = ecdf(experimental_distribution);
+ecdfhist(f,x);
+
+
+%% pdf, cdf creation
+[f,xi] = ksdensity(experimental_distribution);
+
+h3=figure('Name','PDF and CDF plot', 'Units', 'normalized','Position', [0.01 0.3 0.98 0.61]);
+subplot(2,1,1)
+
+plot(xi,f);
+ylabel('Probability')
+xlabel('Data')
+grid on
+title('Probability density function')
+subplot(2,1,2)
+
+hold on
+
+cdfplot(experimental_distribution)
+ax = gca;
+prob_axis = [min(ax.YTick) max(ax.YTick)];
+line(statistical_vector,prob_axis,'Color','r','LineStyle','-.')
+grid on
+
+hold off
+
+
+% 
+% xlabel('Data')
+% % grid off
+% % axis([-4 8 0 1])
+% title('Cumulative density function')
+% legend ('cdf','Threshold');
+
+%% return level
+h4=figure('Name','Histogram count of input data', 'Units', 'normalized','Position', [0.01 0.3 0.98 0.61]);
+temp_dist_var=bar(experimental_distribution);
+f=temp_dist_var.YData;
+% x=asdf.XData;
+
+[N,edges] = histcounts(f);
+edges=edges(:,(1:end-1));
+x=edges';
+f=N';
+rank = [f; x];
+[srank,index] = sort((f),'descend');
+b =[index,x];
+c=sortrows(b,1);
+c=c(:,2);
+
+h5=figure('Name','Bar distribution', 'Units', 'normalized','Position', [0.01 0.3 0.98 0.61]);
+bar(edges,N);
+xlabel('value')
+ylabel('count')
+title('Bar count distribution')
+grid on
+
+rec_interval=(length(experimental_distribution)+1)./srank(:,1);
+
+
+h6=figure('Name','Return level plot - linear', 'Units', 'normalized','Position', [0.01 0.3 0.98 0.61]);
+stem(rec_interval,c);
+xlabel('Return period [samples]')
+ylabel('Retun level [value]')
+title('Return Level plot')
+grid on
+
+
+h8=figure('Name','Return level plot - logaritmic', 'Units', 'normalized','Position', [0.01 0.3 0.98 0.61]);
+semilogx(rec_interval,c);
+xlabel('Return period [samples]')
+ylabel('Retun level [value]')
+title('Return Level plot')
+grid on
+
+
+
+%% P-P and Q-Q PLOTS
+
+h7=figure('Name','Q-Q and P-P plots', 'Units', 'normalized','Position', [0.01 0.3 0.98 0.61]);
+subplot(2,1,1)
+qqplot(experimental_distribution,pd)
+grid on
+
+subplot(2,1,2)
+hold on
+% figure()
+hprobplot=probplot(pd,experimental_distribution)
+
+ax = gca;
+prob_axis = [min(ax.XTick) max(ax.XTick)*1.001];
+prob_line_axis=[min(ax.YTick) max(ax.YTick)]
+% line(statistical_vector,prob_axis,'Color','r','LineStyle','-.')
+% set(gca,'YTick',[0.01 0.1 0.25 0.4 0.5 0.75 0.95 0.99 1]); 
+% set(gca,'YTickLabel',[0.1]); 
+% yticks([0.01 0.1 0.25 0.4 0.5 0.75 0.95 0.99 1]);
+% yticklabels = [0.01 0.1 0.25 0.4 0.5 0.75 0.95 0.99 1];
+
+grid on
+% bx=gca
+hold off
+pause_time=length(experimental_distribution)*10/1e6;
+pause(pause_time) %time to resale
+ylim(prob_axis)
+pause(pause_time)%time to resale
+ylim('auto')
+
+line(statistical_vector,prob_line_axis,'Color','r','LineStyle','-.')
+
+%% SAVING VARIABLES AND PLOTS
+
+
+% 
+% 
+% 
+% 
+% waitbar1 = waitbar(0, 'saving process ', 'Units', 'normalized', 'Position', [0.4 0.2 0.22 0.06]); %position of waitbar 
+% saving_vector = numberAllocator();
+% if saving_vector(1) == 1
+%                         saveas(h1,['h1_plot_',filename],'png') % saves h plot (last calculated curve) as a png file. (the name is same as the original file - which CANNOT have the same_name.txt in the same folder!
+%                        saveas(h1,['h1_plot_',filename],'fig')
+%                        disp(' Figure 1 saved.') 
+%         else    
+%         end
+% if saving_vector(2)== 1
+%               waitbar(0.2)    
+%        
+%                          saveas(h2,['h2_plot_',filename],'png')
+%                          saveas(h2,['h2_plot_',filename],'fig') 
+%                             disp(' Figure 2 saved.') 
+%         else    
+%         end
+% if saving_vector(3)==1
+%               waitbar(0.4)           
+%           
+%                          saveas(h3,['h3_plot_',filename],'png')
+%                          saveas(h3,['h3_plot_',filename],'fig')            
+%                            disp(' Figure 3 saved.') 
+%         else    
+%         end
+% if saving_vector(4)==1
+%                         waitbar(0.8)    
+%            
+%                          saveas(h4,['h4_plot_',filename],'png')
+%                          saveas(h4,['h4_plot_',filename],'fig')
+%                           disp(' Figure 4 saved.') 
+%         else    
+%         end
+% if saving_vector(5)==1
+%                           waitbar(1)
+%   
+%                            saveas(h5,['h5_plot_',filename],'png')
+%                          saveas(h5,['h5_plot_',filename],'fig')
+%                                      disp(' Figure 5 saved.') 
+%                                      close(waitbar1)
+%                                      
+% else
+%                close(waitbar1) 
+%         end
+% 
+% if isnan(saving_vector)
+%    disp('No figure has been saved...');
+%    close(waitbar1)
+% waitbar1 = waitbar(1, 'Realtion finished', 'Units', 'normalized', 'Position', [0.4 0.2 0.22 0.06]);
+%                          pause(1);
+%                          close(waitbar1)             
+% else
+%    waitbar1 = waitbar(1, 'Realtion finished', 'Units', 'normalized', 'Position', [0.4 0.2 0.22 0.06]);
+%                          pause(1);
+%                          close(waitbar1)
+% end
+% disp('Relation has been finished - go get a coffee ;) ');
