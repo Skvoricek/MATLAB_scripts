@@ -259,4 +259,9 @@ FILTERED_PEAKFINDER_DIR
 2017-04-25
 SIMPLE_PLOT_TIME_STATISTIC_DIR
 - created simple time related plot tool exporting statistical values [mean, stdev, min, max] into txt file
+
+************
+2017-05-05
+STATISTICAL_TEST
+Created test to check statistical distributions of input data, evaluate P-P and Q-Q plots, obtain and draw return level functions.
 Kuba Maršálek - jakub.marsalek@safibra.cz 
