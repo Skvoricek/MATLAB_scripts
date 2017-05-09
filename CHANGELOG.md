@@ -260,8 +260,18 @@ FILTERED_PEAKFINDER_DIR
 SIMPLE_PLOT_TIME_STATISTIC_DIR
 - created simple time related plot tool exporting statistical values [mean, stdev, min, max] into txt file
 
-************
+*****************
 2017-05-05
 STATISTICAL_TEST
-Created test to check statistical distributions of input data, evaluate P-P and Q-Q plots, obtain and draw return level functions.
+- Created test to check statistical distributions of input data, evaluate P-P and Q-Q plots, obtain and draw return level functions.
+
+*****************
+2017-05-09
+DIFF_SIG_TIME_DIR
+ - Created to change data for following evaluation
+ - Saves variables [mean, max, min, std, window size and fs],
+ - Implemented differencial code (data(i)-data(i+1))
+ - Exports eperimental distribution fce (max / mean or so) of input data set over window_size of sampling points in a cycle into txt file
+
+
 Kuba Maršálek - jakub.marsalek@safibra.cz 
