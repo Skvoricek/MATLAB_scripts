@@ -78,7 +78,7 @@ i=1;
     i=i+1;
 end
 data=data(1:(end-2),:); % differences repair( last value)
- disp([ 'je to tu' ]) 
+%  disp([ 'je to tu' ]) 
 
 %% EXPERIMENTAL DISTRIBUTION input            
 
@@ -87,7 +87,7 @@ if rem(length(data),window_size)~=0
     else
 end                             
      
-i=1
+i=1;
 experimental_distribution=zeros(1,(length(data)/window_size));
 while i < (length(data)/window_size)
     
