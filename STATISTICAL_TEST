@@ -19,7 +19,7 @@ clear;
 %    prompt = {'Počet souborů ke zpracování'};
 %             dlg_title = 'Parameters input';
 %                     num_lines = 1;
-%                     def = {'1'};% inside default values
+%                     def = {'1'};% inside default values10.232
 %                     options.Resize='on';
 %                     options.WindowStyle='modal';
 %                     options.Interpreter='tex';
@@ -43,18 +43,18 @@ clear;
                                                                             close(waitbar1)
 
 %                       pause();
-     data = importdata(filename, ';' );
-data=data.data(:,1);
+     data = importdata(filename, ' ' );
+% data=data.data(:,1);
 
 % plot(data);
                   
 %  pause();  
-   if data_total == nan;                                                                       
-       data_total = data;
-   else
-%        data=data(2,1:end);
-       data_total = [data_total ;data];
-   end
+%    if data_total == nan;                                                                       
+%        data_total = data;
+%    else
+% %        data=data(2,1:end);
+%        data_total = [data_total ;data];
+%    end
                                                                             waitbar1 = waitbar(1, 'CVS file reading ', 'Units', 'normalized', 'Position', [0.4 0.2 0.22 0.06]); %position of waitbar
                                                                             disp('Reading a CSV file - this operation usually takes a while (according to number of rows).') 
                                                                             statusbar(0, ['Desktop status: processing  ', filename]);
@@ -75,7 +75,7 @@ first_time= char(filename(1,21:length(filename)-11));%('testing-file-name)'
 
  disp([ ' ' ' ' ]) 
  hold on
- plot (data_total)
+ plot (data)
      legend ('Measured data');
         ylabel('Signal Intensity [Au]')
         xlabel('Samples')
@@ -88,32 +88,35 @@ filename = filename(1:length(filename)-11);%'testing_file_name' % zkrácení ná
 
 %% MAX PER WINDOW DETERMINATION
 % INPUT DATA INTERACTIVE
-   prompt = {'WINDOW SIZE'};
-            dlg_title = 'Parameters input';
-                    num_lines = 1;
-                    def = {'1024'};% inside default values
-                    options.Resize='on';
-                    options.WindowStyle='modal';
-                    options.Interpreter='tex';
-                    answer=inputdlg(prompt,dlg_title,num_lines,...
-                                    def);%related to point definition - careful when changed
-
-                                window_size =answer(1,1); %aproximate position (optical length) of starting (left) evaluation point
-                                window_size = str2double(window_size);
+%    prompt = {'WINDOW SIZE'};
+%             dlg_title = 'Parameters input';
+%                     num_lines = 1;
+%                     def = {'1024'};% inside default values
+%                     options.Resize='on';
+%                     options.WindowStyle='modal';
+%                     options.Interpreter='tex';
+%                     answer=inputdlg(prompt,dlg_title,num_lines,...
+%                                     def);%related to point definition - careful when changed
+% 
+%                                 window_size =answer(1,1); %aproximate position (optical length) of starting (left) evaluation point
+%                                 window_size = str2double(window_size);
+window_size = 1024;
 if rem(length(data),window_size)~=0
     data=data(1:(length(data)-rem(length(data),window_size)));
     else
 end
 
 %% EXPERIMENTAL DISTRIBUTION input            
-i=1
-experimental_distribution=zeros(1,(length(data)/window_size));
-while i < (length(data)/window_size)
-experimental_distribution(i)=max(data(i*1:i*((window_size)-1)));
-    i=i+1;
-end
-experimental_distribution=experimental_distribution(:,1:(end-1))';
-% experimental_distribution=data;
+% i=1
+% experimental_distribution=zeros(1,(length(data)/window_size));
+% while i < (length(data)/window_size)
+% experimental_distribution(i)=max(data(i*1:i*((window_size)-1)));
+%     i=i+1;
+% end
+% experimental_distribution=experimental_distribution(:,1:(end-1))';
+
+experimental_distribution=data;
+clear data;
 
 % hxx=figure('Name','bar - selected data', 'Units', 'normalized','Position', [0.01 0.3 0.98 0.61]);
 % bar(experimental_distribution);
@@ -124,8 +127,8 @@ temp_dist_var=bar(experimental_distribution);
 x=temp_dist_var.YData;
 close 
 %% STATISTICAL THRESHOLD CALCULATION
-IRW=prctile(x,0.75)-prctile(x,0.25);
-statistical_threshold=prctile(x,0.95)+IRW;
+IRW=prctile(x,75)-prctile(x,25);
+statistical_threshold=prctile(x,95)+IRW;
 statistical_vector = [statistical_threshold statistical_threshold];
 % statistical_vector(1:end)=statistical_threshold;
 %% DISTRIBUTION
@@ -209,7 +212,7 @@ title('Return Level plot')
 grid on
 
 
-h8=figure('Name','Return level plot - logaritmic', 'Units', 'normalized','Position', [0.01 0.3 0.98 0.61]);
+h7=figure('Name','Return level plot - logaritmic', 'Units', 'normalized','Position', [0.01 0.3 0.98 0.61]);
 semilogx(rec_interval,c);
 xlabel('Return period [samples]')
 ylabel('Retun level [value]')
@@ -219,8 +222,8 @@ grid on
 
 
 %% P-P and Q-Q PLOTS
-
-h7=figure('Name','Q-Q and P-P plots', 'Units', 'normalized','Position', [0.01 0.3 0.98 0.61]);
+pause(2);
+h8=figure('Name','Q-Q and P-P plots', 'Units', 'normalized','Position', [0.01 0.3 0.98 0.61]);
 subplot(2,1,1)
 qqplot(experimental_distribution,pd)
 grid on
@@ -242,74 +245,174 @@ prob_line_axis=[min(ax.YTick) max(ax.YTick)]
 grid on
 % bx=gca
 hold off
-pause_time=length(experimental_distribution)*10/1e6;
+
+if length(experimental_distribution) > 100000
+    pause_time=length(experimental_distribution)*10/1e6;
+else
+end
+    pause_time=1;
 pause(pause_time) %time to resale
 ylim(prob_axis)
 pause(pause_time)%time to resale
 ylim('auto')
-
+pause(pause_time) %time to resale
 line(statistical_vector,prob_line_axis,'Color','r','LineStyle','-.')
-
+pause(pause_time*2) %time to resale
 %% SAVING VARIABLES AND PLOTS
 
 
-% 
-% 
-% 
-% 
-% waitbar1 = waitbar(0, 'saving process ', 'Units', 'normalized', 'Position', [0.4 0.2 0.22 0.06]); %position of waitbar 
+
+
+
+pause(pause_time*2) %time to resale
+waitbar1 = waitbar(0, 'saving process ', 'Units', 'normalized', 'Position', [0.4 0.2 0.22 0.06]); %position of waitbar 
 % saving_vector = numberAllocator();
-% if saving_vector(1) == 1
-%                         saveas(h1,['h1_plot_',filename],'png') % saves h plot (last calculated curve) as a png file. (the name is same as the original file - which CANNOT have the same_name.txt in the same folder!
-%                        saveas(h1,['h1_plot_',filename],'fig')
-%                        disp(' Figure 1 saved.') 
-%         else    
-%         end
-% if saving_vector(2)== 1
-%               waitbar(0.2)    
-%        
-%                          saveas(h2,['h2_plot_',filename],'png')
-%                          saveas(h2,['h2_plot_',filename],'fig') 
-%                             disp(' Figure 2 saved.') 
-%         else    
-%         end
-% if saving_vector(3)==1
-%               waitbar(0.4)           
-%           
-%                          saveas(h3,['h3_plot_',filename],'png')
-%                          saveas(h3,['h3_plot_',filename],'fig')            
-%                            disp(' Figure 3 saved.') 
-%         else    
-%         end
-% if saving_vector(4)==1
-%                         waitbar(0.8)    
-%            
-%                          saveas(h4,['h4_plot_',filename],'png')
-%                          saveas(h4,['h4_plot_',filename],'fig')
-%                           disp(' Figure 4 saved.') 
-%         else    
-%         end
-% if saving_vector(5)==1
+saving_vector= [1 1 1 1 1 1 1 1 1 1 1 1]
+if saving_vector(1) == 1
+                        saveas(h1,['h1_plot_',filename],'png') % saves h plot (last calculated curve) as a png file. (the name is same as the original file - which CANNOT have the same_name.txt in the same folder!
+                       saveas(h1,['h1_plot_',filename],'fig')
+                       disp(' Figure 1 saved.') 
+        else    
+        end
+if saving_vector(2)== 1
+              waitbar(0.1)    
+       
+                         saveas(h2,['h2_plot_',filename],'png')
+                         saveas(h2,['h2_plot_',filename],'fig') 
+                            disp(' Figure 2 saved.') 
+        else    
+        end
+if saving_vector(3)==1
+              waitbar(0.2)           
+          
+                         saveas(h3,['h3_plot_',filename],'png')
+                         saveas(h3,['h3_plot_',filename],'fig')            
+                           disp(' Figure 3 saved.') 
+        else    
+        end
+if saving_vector(4)==1
+                        waitbar(0.3)    
+           
+                         saveas(h4,['h4_plot_',filename],'png')
+                         saveas(h4,['h4_plot_',filename],'fig')
+                          disp(' Figure 4 saved.') 
+        else    
+        end
+if saving_vector(5)==1
+                          waitbar(0.48)
+  
+                           saveas(h5,['h5_plot_',filename],'png')
+                         saveas(h5,['h5_plot_',filename],'fig')
+                                     disp(' Figure 5 saved.') 
+                                     
+                                     
+else
+               close(waitbar1) 
+end
+
+                       if saving_vector(6)==1
+                          waitbar(0.7)
+  
+                           saveas(h6,['h6_plot_',filename],'png')
+                         saveas(h6,['h6_plot_',filename],'fig')
+                                     disp(' Figure 6 saved.') 
+                                     
+                                     
+else
+               close(waitbar1) 
+                       end
+
+        if saving_vector(7)==1
+                          waitbar(0.8)
+  
+                           saveas(h7,['h7_plot_',filename],'png')
+                         saveas(h7,['h7_plot_',filename],'fig')
+                                     disp(' Figure 7 saved.') 
+                                    
+                                     
+else
+               close(waitbar1) 
+        end
+% 
+        if saving_vector(8)==1
+                          waitbar(1)
+  
+                           saveas(h8,['h8_plot_',filename],'png')
+                         saveas(h8,['h8_plot_',filename],'fig')
+                                     disp(' Figure 8 saved.') 
+                                     
+                                     
+else
+               
+        end
+        close(waitbar1) 
+
+%         if saving_vector(10)==1
 %                           waitbar(1)
 %   
-%                            saveas(h5,['h5_plot_',filename],'png')
-%                          saveas(h5,['h5_plot_',filename],'fig')
-%                                      disp(' Figure 5 saved.') 
+%                            saveas(h10,['h10_plot_',filename],'png')
+%                          saveas(h10,['h10_plot_',filename],'fig')
+%                                      disp(' Figure 10 saved.') 
 %                                      close(waitbar1)
 %                                      
 % else
 %                close(waitbar1) 
 %         end
-% 
-% if isnan(saving_vector)
-%    disp('No figure has been saved...');
-%    close(waitbar1)
-% waitbar1 = waitbar(1, 'Realtion finished', 'Units', 'normalized', 'Position', [0.4 0.2 0.22 0.06]);
-%                          pause(1);
-%                          close(waitbar1)             
+%         if saving_vector(10)==1
+%                           waitbar(1)
+%   
+%                            saveas(h10,['h10_plot_',filename],'png')
+%                          saveas(h10,['h10_plot_',filename],'fig')
+%                                      disp(' Figure 10 saved.') 
+%                                      close(waitbar1)
+%                                      
 % else
-%    waitbar1 = waitbar(1, 'Realtion finished', 'Units', 'normalized', 'Position', [0.4 0.2 0.22 0.06]);
-%                          pause(1);
-%                          close(waitbar1)
-% end
-% disp('Relation has been finished - go get a coffee ;) ');
+%                close(waitbar1) 
+%         end
+%         if saving_vector(11)==1
+%                           waitbar(1)
+%   
+%                            saveas(h11,['h11_plot_',filename],'png')
+%                          saveas(h11,['h11_plot_',filename],'fig')
+%                                      disp(' Figure 11 saved.') 
+%                                      close(waitbar1)
+%                                      
+% else
+%                close(waitbar1) 
+%         end
+%         if saving_vector(12)==1
+%                           waitbar(1)
+%   
+%                            saveas(h12,['h12_plot_',filename],'png')
+%                          saveas(h12,['h12_plot_',filename],'fig')
+%                                      disp(' Figure 12 saved.') 
+%                                      close(waitbar1)
+%                                      
+% else
+%                close(waitbar1) 
+%         end
+%         if saving_vector(13)==1
+%                           waitbar(1)
+%   
+%                            saveas(h13,['h13_plot_',filename],'png')
+%                          saveas(h13,['h13_plot_',filename],'fig')
+%                                      disp(' Figure 13 saved.') 
+%                                      close(waitbar1)
+%                                      
+% else
+%                close(waitbar1) 
+%         end
+%         
+
+if isnan(saving_vector)
+   disp('No figure has been saved...');
+   close(waitbar1)
+waitbar1 = waitbar(1, 'Realtion finished', 'Units', 'normalized', 'Position', [0.4 0.2 0.22 0.06]);
+                         pause(1);
+                         close(waitbar1)             
+else
+   waitbar1 = waitbar(1, 'Realtion finished', 'Units', 'normalized', 'Position', [0.4 0.2 0.22 0.06]);
+                         pause(1);
+                         close(waitbar1)
+end
+disp('Relation has been finished - go get a coffee ;) ');
