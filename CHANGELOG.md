@@ -272,6 +272,11 @@ DIFF_SIG_TIME_DIR
  - Saves variables [mean, max, min, std, window size and fs],
  - Implemented differencial code (data(i)-data(i+1))
  - Exports eperimental distribution fce (max / mean or so) of input data set over window_size of sampling points in a cycle into txt file
-
+ 
+ 
+*****************
+2017-05-10
+STATISTICAL_TEST & DIFF_SIG_TIME_DIR
+-celaning and getting rid of the residual mistakes, fixed figure saving and export
 
 Kuba Maršálek - jakub.marsalek@safibra.cz 
