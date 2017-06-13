@@ -279,4 +279,11 @@ DIFF_SIG_TIME_DIR
 STATISTICAL_TEST & DIFF_SIG_TIME_DIR
 -celaning and getting rid of the residual mistakes, fixed figure saving and export
 
+*****************
+2017-06-13
+MULTIPLE_SIGNAL_VIEWER_ANIMATED
+ - created animation tool for multiple signal viewer (number by choice) (input txt file by choice, sampling frequency parameter). 
+ - can plot multiple siglas (each into separate window with dynamic Y axis adjustment)
+ - can plot all signals into one file and run the time axis with permanent width (taken by seconds)
+ - added computation time comparison into second based animation
 Kuba Maršálek - jakub.marsalek@safibra.cz 
