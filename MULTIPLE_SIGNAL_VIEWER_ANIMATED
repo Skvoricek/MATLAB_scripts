@@ -1,0 +1,164 @@
+%% NAČTĚNÍ DAT
+clc; 
+close all;
+clear;
+
+%% NAČTĚNÍ DAT
+%set(0,'DefaulttextInterpreter','none')   % default nonTeX text interpreter - Graph title appearance
+  set(groot, 'DefaultTextInterpreter', 'none')
+      set(groot, 'DefaultLegendInterpreter', 'none')
+       absOn = NaN;
+       
+       data_total=nan;
+         i= 1; 
+       %absOn = 1;% IF NOT COMENTED - PEAK CALCULATION IS PERFORMED FROM
+%       ABS VALUES OF SIGNAL
+      
+      
+  % INPUT DATA INTERACTIVE
+   prompt = {'Počet souborů ke zpracování'};
+            dlg_title = 'Parameters input';
+                    num_lines = 1;
+                    def = {'7'};% inside default values
+                    options.Resize='on';
+                    options.WindowStyle='modal';
+                    options.Interpreter='tex';
+                    answer=inputdlg(prompt,dlg_title,num_lines,...
+                                    def);%related to point definition - careful when changed
+
+
+                                number_of_files =answer(1,1); %aproximate position (optical length) of starting (left) evaluation point
+                                number_of_files = str2double(number_of_files);
+
+ prompt = {'File name', 'Figure name','offset value'};
+            dlg_title = 'Parameters input',;
+                    num_lines = 1;
+                    def = {'SM-MM-SM polarization','SM-MM-SM polarization','0'};% inside default values
+                    options.Resize='on';
+                    options.WindowStyle='modal';
+                    options.Interpreter='tex';
+                    answer=inputdlg(prompt,dlg_title,num_lines,...
+                                    def);%related to point definition - careful when changed
+ 
+                               filename =answer(1,1); 
+                               filename = char(filename);
+                               figurename = answer(2,1); 
+                               figurename = char(figurename);
+                               offset = answer(3,1); 
+                               offset = str2double(offset);
+h1=figure('Name',filename, 'Units', 'normalized','Position', [0.01 0.3 0.98 0.61]);
+% hold on
+% hold off
+
+  while i<=(number_of_files)
+
+  
+                                                                            disp('Waiting for user choice - Choose a CSV file.') 
+                                                                             waitbar1 = waitbar(0.15, 'choose input file ', 'Units', 'normalized', 'Position', [0.4 0.2 0.22 0.06]); %position of waitbar
+    [filename,filepath]=uigetfile({'*.*','csv'},...
+                      'Select CSV Data File for sampling frequency check');
+                      cd(filepath);
+                                                                            close(waitbar1)
+                                                                            waitbar1 = waitbar(0.55, 'CVS file reading ', 'Units', 'normalized', 'Position', [0.4 0.2 0.22 0.06]); %position of waitbar
+                                                                            disp('Reading a CSV file - this operation usually takes a while (according to number of rows).') 
+                                                                            %statusbar(0, ['Desktop status: processing  ', filename]);
+    
+data = importdata(filename, ';' );
+% data=data.data(:,1);
+data_o = data + (i*offset);
+close(waitbar1)   
+
+%% sampling frequency estimation
+ prompt = {'Sampling frequency of chosen file'};
+            dlg_title = 'Parameters input';
+                    num_lines = 1;
+                    def = {'33.5181'};% inside default values
+                    options.Resize='on';
+                    options.WindowStyle='modal';
+                    options.Interpreter='tex';
+                    answer=inputdlg(prompt,dlg_title,num_lines,...
+                                    def);%related to point definition - careful when changed
+
+
+                                fs =answer(1,1); %aproximate position (optical length) of starting (left) evaluation point
+%                                 pause();
+                                fs = str2double(fs);
+
+
+                                
+time_stamp=1/fs; % time in seconds
+% time_stamp= time_stamp/60; %recalculated to minutes
+time_vector = (0:time_stamp:((length(data)-1)*(time_stamp)))';
+           
+eval(sprintf('time_vector%d = (time_vector);', i));   %dynamická tvorba proměnné v cyklu
+eval(sprintf('signal_%d = (data);', i));    %dynamická tvorba proměnné v cyklu
+time{i}=time_vector;%alokace do proměnných                                                           
+signal_o{i}=(data_o);%alokace do proměnných
+signal{i}=(data);%alokace do proměnných
+%  fi
+          
+%            waitbar1 = waitbar(0.15, 'choose sinput file ', 'Units', 'normalized', 'Position', [0.4 0.2 0.22 0.06]); %position of waitbar
+%            close(waitbar1)                                                                           
+%         	
+    
+ 
+%    plot (time{i}, signal_o{i});
+   i %number of file displ
+    
+%% ANIMATION VARIABLES
+     
+  figure() % put in for more windows
+%   filename{i}=i;
+window_sec = 10;
+ax_shift = floor(window_sec/(1/fs));
+ ylabel(filename); %',num2str(i)]);
+ xlabel('Time [sec]')
+ 
+x{i} = linspace(0,1/fs*length(signal_o{i}),(length(signal_o{i})));
+
+
+color=cell([1 6]);
+color{1} = 'r';
+color{2} = 'g';
+color{3} = 'b';
+color{4} = 'k';
+color{5} = 'm';
+color{6} = 'y';
+if i >6
+h{i} = animatedline('Color','r')
+else;    
+h{i} = animatedline('Color',color{i});
+end
+max_length=0;
+if length(signal_o{i}) > max_length
+max_length = length(signal_o{i});
+max_sig_length_index = i;
+else    
+end 
+ i = i+1;
+
+
+end
+%   close all
+
+  
+for k = 1:max_length;
+    
+    for i = 1:number_of_files;
+       y{i} = signal{i}((k));
+    if k > ax_shift;
+       ax{i} = gca; % current axes
+%        ax{i}.XLim = [x{max_sig_length_index}(k-ax_shift) x{max_sig_length_index}(k)];
+    else
+      end
+                 addpoints(h{i},x{max_sig_length_index}(k),y{i});
+     end
+    
+    drawnow limitrate
+    timediff=toc; % calibation of the time base for the animation
+    pause((1/fs)-timediff);
+    tic;
+end
+    
+   
+  
