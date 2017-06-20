@@ -288,8 +288,10 @@ MULTIPLE_SIGNAL_VIEWER_ANIMATED
  - added computation time comparison into second based animation
  *******************
  2017-06-20
-STATISTICAL_TEST 
+STATISTICAL_TEST  
 - changed filename u(to bethe whole wtring (-4))
 - changed the name of output figures (added _statistics_p_q_RL)
- 
+
+FILTERED_PEAKFINDER
+- changed the borders for computation (10 sec from both - start and end has been neglected. First 41 FFT points has been taken into the computation (according the fs and filter - DC value +- something)
 Kuba Maršálek - jakub.marsalek@safibra.cz 
