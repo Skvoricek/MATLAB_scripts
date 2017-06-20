@@ -260,9 +260,9 @@ final_spectrum = filter2.*abs(X); % filtrace (pro vykresleni spektra
 %%{
 InverseFFT_data=InverseFFT_data+mean_data;
 
-data = data (41:end,1);
-time_vector = time_vector (41:end,1);
-InverseFFT_data = InverseFFT_data (41:end,1);
+data = data (1:end,1);
+time_vector = time_vector (1:end,1);
+InverseFFT_data = InverseFFT_data (1:end,1);
 
 h1=figure('Name','Original vs Filtered time signal', 'Units', 'normalized','Position', [0.01 0.3 0.98 0.61]);
         
@@ -295,7 +295,7 @@ hold on
  
 
  data=InverseFFT_data - (mean(InverseFFT_data));
- data=data(41:end,1);
+ data=data(1:end,1);
  %data=abs(data);
  
  if ii==1
@@ -304,7 +304,7 @@ hold on
    prompt = {'Noise extablishment start time [sec]','Noise extablishment end time [sec]','separation [sec]','Threshold [x noise]','ABSolutní hodnoty signálu?'};
             dlg_title = 'Parameters input - all values in (abs)!';
                     num_lines = 1;
-                    def = {'1 ','2 ','0.8','2','1'};% inside default values
+                    def = {'1 ','2 ','0.8','0.5','1'};% inside default values
                     options.Resize='on';
                     options.WindowStyle='modal';
                     options.Interpreter='tex';
@@ -349,8 +349,8 @@ hold on
       data=abs(data);
       else
       end
-      startEval_peak = 4*fs % eliminace chyby filtrací při počítání peaků (přebuzený max thresholdu (4 vteřiny od začátku))
-      endEvalpeak = 2*fs % eliminace posledního peaku vzniklého filtrací - (2 vteřiny od z od konce)
+      startEval_peak = 10*fs % eliminace chyby filtrací při počítání peaků (přebuzený max thresholdu (4 vteřiny od začátku))
+      endEvalpeak = 10*fs % eliminace posledního peaku vzniklého filtrací - (2 vteřiny od z od konce)
       data = data(startEval_peak:(length(data)-endEvalpeak));
       time_vector=time_vector(startEval_peak:(length(time_vector)-endEvalpeak));
       
