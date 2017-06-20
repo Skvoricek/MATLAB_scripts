@@ -83,7 +83,7 @@ clear;
 %         annotation('textbox', [0.15 0.85 0.10 0.05], 'interpreter','none','FitBoxToText','on', 'String', [' Number of peaks:  ' num ' '],'Color', 'r');
   hold off
   %%SAVING PROCESS
-filename = filename(1:length(filename)-11);%'testing_file_name' % zkrácení názvu o přípony a formáty
+filename = filename(1:length(filename)-4);%'testing_file_name' % zkrácení názvu o přípony a formáty
 
 
 %% MAX PER WINDOW DETERMINATION
@@ -116,6 +116,7 @@ end
 % experimental_distribution=experimental_distribution(:,1:(end-1))';
 
 experimental_distribution=data;
+experimental_distribution=transpose(experimental_distribution);
 clear data;
 
 % hxx=figure('Name','bar - selected data', 'Units', 'normalized','Position', [0.01 0.3 0.98 0.61]);
