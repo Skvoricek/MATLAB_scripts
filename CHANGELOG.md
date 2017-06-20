@@ -286,4 +286,10 @@ MULTIPLE_SIGNAL_VIEWER_ANIMATED
  - can plot multiple siglas (each into separate window with dynamic Y axis adjustment)
  - can plot all signals into one file and run the time axis with permanent width (taken by seconds)
  - added computation time comparison into second based animation
+ *******************
+ 2017-06-20
+STATISTICAL_TEST 
+- changed filename u(to bethe whole wtring (-4))
+- changed the name of output figures (added _statistics_p_q_RL)
+ 
 Kuba Maršálek - jakub.marsalek@safibra.cz 
