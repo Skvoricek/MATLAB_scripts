@@ -62,7 +62,7 @@ clear;
                                                                             
                                                                             
                                                                             
-first_time= char(filename(1,21:length(filename)-11));%('testing-file-name)'
+% first_time= char(filename(1,21:length(filename)-11));%('testing-file-name)'
 
  i_files = i_files+1;
  
@@ -269,40 +269,40 @@ waitbar1 = waitbar(0, 'saving process ', 'Units', 'normalized', 'Position', [0.4
 % saving_vector = numberAllocator();
 saving_vector= [1 1 1 1 1 1 1 1 1 1 1 1]
 if saving_vector(1) == 1
-                        saveas(h1,['h1_plot_',filename],'png') % saves h plot (last calculated curve) as a png file. (the name is same as the original file - which CANNOT have the same_name.txt in the same folder!
-                       saveas(h1,['h1_plot_',filename],'fig')
+                        saveas(h1,['h1_statistics_p_q_RL',filename],'png') % saves h plot (last calculated curve) as a png file. (the name is same as the original file - which CANNOT have the same_name.txt in the same folder!
+                       saveas(h1,['h1_statistics_p_q_RL',filename],'fig')
                        disp(' Figure 1 saved.') 
         else    
         end
 if saving_vector(2)== 1
               waitbar(0.1)    
        
-                         saveas(h2,['h2_plot_',filename],'png')
-                         saveas(h2,['h2_plot_',filename],'fig') 
+                         saveas(h2,['h2_statistics_p_q_RL',filename],'png')
+                         saveas(h2,['h2_statistics_p_q_RL',filename],'fig') 
                             disp(' Figure 2 saved.') 
         else    
         end
 if saving_vector(3)==1
               waitbar(0.2)           
           
-                         saveas(h3,['h3_plot_',filename],'png')
-                         saveas(h3,['h3_plot_',filename],'fig')            
+                         saveas(h3,['h3_statistics_p_q_RL',filename],'png')
+                         saveas(h3,['h3_statistics_p_q_RL',filename],'fig')            
                            disp(' Figure 3 saved.') 
         else    
         end
 if saving_vector(4)==1
                         waitbar(0.3)    
            
-                         saveas(h4,['h4_plot_',filename],'png')
-                         saveas(h4,['h4_plot_',filename],'fig')
+                         saveas(h4,['h4_statistics_p_q_RL',filename],'png')
+                         saveas(h4,['h4_statistics_p_q_RL',filename],'fig')
                           disp(' Figure 4 saved.') 
         else    
         end
 if saving_vector(5)==1
                           waitbar(0.48)
   
-                           saveas(h5,['h5_plot_',filename],'png')
-                         saveas(h5,['h5_plot_',filename],'fig')
+                           saveas(h5,['h5_statistics_p_q_RL',filename],'png')
+                         saveas(h5,['h5_statistics_p_q_RL',filename],'fig')
                                      disp(' Figure 5 saved.') 
                                      
                                      
@@ -313,8 +313,8 @@ end
                        if saving_vector(6)==1
                           waitbar(0.7)
   
-                           saveas(h6,['h6_plot_',filename],'png')
-                         saveas(h6,['h6_plot_',filename],'fig')
+                           saveas(h6,['h6_statistics_p_q_RL',filename],'png')
+                         saveas(h6,['h6_statistics_p_q_RL',filename],'fig')
                                      disp(' Figure 6 saved.') 
                                      
                                      
@@ -325,8 +325,8 @@ else
         if saving_vector(7)==1
                           waitbar(0.8)
   
-                           saveas(h7,['h7_plot_',filename],'png')
-                         saveas(h7,['h7_plot_',filename],'fig')
+                           saveas(h7,['h7_statistics_p_q_RL',filename],'png')
+                         saveas(h7,['h7_statistics_p_q_RL',filename],'fig')
                                      disp(' Figure 7 saved.') 
                                     
                                      
@@ -337,8 +337,8 @@ else
         if saving_vector(8)==1
                           waitbar(1)
   
-                           saveas(h8,['h8_plot_',filename],'png')
-                         saveas(h8,['h8_plot_',filename],'fig')
+                           saveas(h8,['h8_statistics_p_q_RL_',filename],'png')
+                         saveas(h8,['h8_statistics_p_q_RL',filename],'fig')
                                      disp(' Figure 8 saved.') 
                                      
                                      
@@ -350,8 +350,8 @@ else
 %         if saving_vector(10)==1
 %                           waitbar(1)
 %   
-%                            saveas(h10,['h10_plot_',filename],'png')
-%                          saveas(h10,['h10_plot_',filename],'fig')
+%                            saveas(h10,['h10_statistics_p_q_RL',filename],'png')
+%                          saveas(h10,['h10_statistics_p_q_RL',filename],'fig')
 %                                      disp(' Figure 10 saved.') 
 %                                      close(waitbar1)
 %                                      
@@ -361,8 +361,8 @@ else
 %         if saving_vector(10)==1
 %                           waitbar(1)
 %   
-%                            saveas(h10,['h10_plot_',filename],'png')
-%                          saveas(h10,['h10_plot_',filename],'fig')
+%                            saveas(h10,['h10_statistics_p_q_RL',filename],'png')
+%                          saveas(h10,['h10_statistics_p_q_RL',filename],'fig')
 %                                      disp(' Figure 10 saved.') 
 %                                      close(waitbar1)
 %                                      
@@ -372,8 +372,8 @@ else
 %         if saving_vector(11)==1
 %                           waitbar(1)
 %   
-%                            saveas(h11,['h11_plot_',filename],'png')
-%                          saveas(h11,['h11_plot_',filename],'fig')
+%                            saveas(h11,['h11_statistics_p_q_RL',filename],'png')
+%                          saveas(h11,['h11_statistics_p_q_RL',filename],'fig')
 %                                      disp(' Figure 11 saved.') 
 %                                      close(waitbar1)
 %                                      
@@ -383,8 +383,8 @@ else
 %         if saving_vector(12)==1
 %                           waitbar(1)
 %   
-%                            saveas(h12,['h12_plot_',filename],'png')
-%                          saveas(h12,['h12_plot_',filename],'fig')
+%                            saveas(h12,['h12_statistics_p_q_RL',filename],'png')
+%                          saveas(h12,['h12_statistics_p_q_RL',filename],'fig')
 %                                      disp(' Figure 12 saved.') 
 %                                      close(waitbar1)
 %                                      
@@ -394,8 +394,8 @@ else
 %         if saving_vector(13)==1
 %                           waitbar(1)
 %   
-%                            saveas(h13,['h13_plot_',filename],'png')
-%                          saveas(h13,['h13_plot_',filename],'fig')
+%                            saveas(h13,['h13_statistics_p_q_RL',filename],'png')
+%                          saveas(h13,['h13_statistics_p_q_RL',filename],'fig')
 %                                      disp(' Figure 13 saved.') 
 %                                      close(waitbar1)
 %                                      
