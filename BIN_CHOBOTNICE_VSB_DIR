@@ -50,7 +50,7 @@ max_files = 1;
  
 % pause();
 for ii = 1:numfiles % data input cycle   
-     waitbar1 = waitbar ((ii/(numfiles)),'Total files progress', 'Units', 'normalized', 'Position', [0.25 0.4 0.20 0.08]);
+%      waitbar1 = waitbar ((ii/(numfiles)),'Total files progress', 'Units', 'normalized', 'Position', [0.25 0.4 0.20 0.08]);
 
      
 
@@ -62,16 +62,13 @@ cd (filepath1)
 (ii*max_files-(max_files-i_files))
 filename1 = (fileList1(ii*max_files-(max_files-i_files)).name) % show file name
 % X1 = loadData(filename1)
-file = fopen(filename1,'r');
-[V1 count]= fread(file,[3, inf],'float32');
-X1=V1(3,:);
-fclose(file);
 
-%  X1 = loadTime(filename1)
-file = fopen(filename1,'r');
-[V1 count]= fread(file,[3, inf],'uint32');
-X1 = [V1(1,:); V1(2,:)];
-fclose(file);
+fileID=fopen(filename1,'r')
+v1=fread(fileID,[3,inf],'float' );
+fclose(fileID)
+v1=v1(3,1:end);
+% plot (a)
+
 
 
 
@@ -80,42 +77,35 @@ cd (filepath2)
 (ii*max_files-(max_files-i_files))
 filename2 = (fileList2(ii*max_files-(max_files-i_files)).name) % show file name
 % X2 = loadData(filename2)
-file = fopen(filename2,'r');
-[V2 count]= fread(file,[3, inf],'float32');
-X2=V2(3,:);
-fclose(file);
-% X2 = loadTime(filename2)
-file = fopen(filename2,'r');
-[V2 count]= fread(file,[3, inf],'uint32');
-X2 = [V2(1,:); V2(2,:)];
-fclose(file);
+
+fileID=fopen(filename2,'r')
+v2=fread(fileID,[3,inf],'float' );
+fclose(fileID)
+v2=v2(3,1:end);
+% plot (a)
 
 
 
 %% FILE 3
 cd (filepath3)
 (ii*max_files-(max_files-i_files))
-filename = (fileList3(ii*max_files-(max_files-i_files)).name) % show file name
+filename3 = (fileList3(ii*max_files-(max_files-i_files)).name) % show file name
 %  X3 = loadData(filename3)
-file = fopen(filename3,'r');
-[V3 count]= fread(file,[3, inf],'float32');
-X3=V3(3,:);
-fclose(file);
-%  X3 = loadTime(filename3)
-file = fopen(filename3,'r');
-[V3 count]= fread(file,[3, inf],'uint32');
-X3 = [V3(1,:); V3(2,:)];
-fclose(file);
 
+fileID=fopen(filename3,'r')
+v3=fread(fileID,[3,inf],'float' );
+fclose(fileID)
+v3=v3(3,1:end);
+% plot (a)
 
 
 
 %% EQUATION FOR 3X3 DEMODUALTION
 % X = S(:,5);
 % T = S(:,1);
-v1 = X1(1,:);
-v2 = X2(1,:);
-v3 = X3(1,:);
+% v1 = X1(1,:);
+% v2 = X2(1,:);
+% v3 = X3(1,:);
 vMax = [max(v1), max(v2), max(v3)];
 vMin = [min(v1), min(v2), min(v3)];
 a = (vMax + vMin) ./ 2;
@@ -154,7 +144,7 @@ cd(source_filepath);% location change encapsulation end
 if saving_vector(1) == 1
                         saveas(h1,['h1_demodulation',filename1(1:length(filename1)-11)],'png') % saves h plot (last calculated curve) as a png file. (the name is same as the original file - which CANNOT have the same_name.txt in the same folder!
                        saveas(h1,['h1_demodulation',filename1(1:length(filename1)-11)],'fig')
-                       disp(' Figure 1 saved.') 
+                       disp(' Figure saved.') 
         else    
 end
        
