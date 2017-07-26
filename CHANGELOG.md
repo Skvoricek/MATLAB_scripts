@@ -294,4 +294,8 @@ STATISTICAL_TEST
 
 FILTERED_PEAKFINDER
 - changed the borders for computation (10 sec from both - start and end has been neglected. First 41 FFT points has been taken into the computation (according the fs and filter - DC value +- something)
+
+2017-07-26
+BIN_CHOBOTNICE_VSB_DIR
+-bin file reading fixed.
 Kuba Maršálek - jakub.marsalek@safibra.cz 
