@@ -48,10 +48,85 @@ In = cell(numfiles,1);
 i_files =1;
 max_files = 1;
  
+%% COMPUTATION CONSTANTS DRAW OUT 
+% using all the files on the folders.
+
+v1max = zeros (1,numfiles);
+v1min= zeros (1,numfiles);
+
+v2max = zeros (1,numfiles);
+v2min= zeros (1,numfiles);
+
+v3max = zeros (1,numfiles);
+v3min= zeros (1,numfiles);
+for ii = 1:numfiles
+
+   %FILE 1 
+    cd (filepath1)
+(ii*max_files-(max_files-i_files))
+filename1 = (fileList1(ii*max_files-(max_files-i_files)).name) % show file name
+
+fileID=fopen(filename1,'r')
+v1=fread(fileID,[3,inf],'float' );
+v1=v1(3,1:end);
+
+v1max(ii) = max(v1); % constatn obtaining
+v1min(ii) = min(v1); % constatn obtaining
+fclose(fileID)
+
+%FILE 2
+
+
+    cd (filepath2)
+(ii*max_files-(max_files-i_files))
+filename2 = (fileList2(ii*max_files-(max_files-i_files)).name) % show file name
+
+fileID=fopen(filename2,'r')
+v2=fread(fileID,[3,inf],'float' );
+v2=v2(3,1:end);
+
+v2max(ii) = max(v2); % constatn obtaining
+v2min(ii) = min(v2); % constatn obtaining
+fclose(fileID)
+
+
+%FILE 3
+
+
+
+    cd (filepath3)
+(ii*max_files-(max_files-i_files))
+filename3 = (fileList3(ii*max_files-(max_files-i_files)).name) % show file name
+
+fileID=fopen(filename3,'r')
+v3=fread(fileID,[3,inf],'float' );
+v3=v3(3,1:end);
+
+v3max(ii) = max(v3); % constatn obtaining
+v3min(ii) = min(v3); % constatn obtaining
+fclose(fileID)
+
+end
+
+
+
 % pause();
 for ii = 1:numfiles % data input cycle   
 %      waitbar1 = waitbar ((ii/(numfiles)),'Total files progress', 'Units', 'normalized', 'Position', [0.25 0.4 0.20 0.08]);
-
+clear a;
+clear b;
+clear alp;
+clear bet;
+clear den;
+clear gam;
+clear mu;
+clear v;
+clear vMax;
+clear vMin;
+clear Y;
+clear v1;
+clear v2;
+clear v3;
      
 
 % pause();
@@ -106,8 +181,8 @@ v3=v3(3,1:end);
 % v1 = X1(1,:);
 % v2 = X2(1,:);
 % v3 = X3(1,:);
-vMax = [max(v1), max(v2), max(v3)];
-vMin = [min(v1), min(v2), min(v3)];
+vMax = [max(v1max), max(v2max), max(v3max)];
+vMin = [min(v1min), min(v2min), min(v3min)];
 a = (vMax + vMin) ./ 2;
 b = (vMax - vMin) ./ 2;
 alp = a ./ a(1);
@@ -115,7 +190,15 @@ bet = b ./ b(1);
 gam = bet .* sin(2.0944./alp);
 mu = bet .* cos(2.0944./alp);
 
-Y = zeros(1,length(v1));
+if length(v1)<length(v2)
+    Y = zeros(1,length(v1));
+else
+    if length(v2)<length(v1)
+    Y = zeros(1,length(v2));
+    else 
+    Y = zeros(1,length(v3));        
+    end
+end
 % Y = zeros(1,20000);
 for i=1:length(Y)
     v = [v1(i), v2(i), v3(i)] ./ alp;
@@ -132,6 +215,13 @@ end
 % sizefig(1600,900)
 h1 = figure('Name','Demodulation from PG algorithm', 'Units', 'normalized','Position', [0.01 0.3 0.98 0.61]);
 plot(Y)
+h2 = figure('Name','ch1', 'Units', 'normalized','Position', [0.01 0.3 0.98 0.61]);
+plot(v1)
+h3 = figure('Name','ch2', 'Units', 'normalized','Position', [0.01 0.3 0.98 0.61]);
+plot(v2)
+h4 = figure('Name','ch3', 'Units', 'normalized','Position', [0.01 0.3 0.98 0.61]);
+plot(v3)
+
 % set(gca,'fontsize',22)
 % xlabel('samples [-]','fontsize',22);
 % ylabel('phase [rad]','fontsize',22);
@@ -145,9 +235,24 @@ if saving_vector(1) == 1
                         saveas(h1,['h1_demodulation',filename1(1:length(filename1)-11)],'png') % saves h plot (last calculated curve) as a png file. (the name is same as the original file - which CANNOT have the same_name.txt in the same folder!
                        saveas(h1,['h1_demodulation',filename1(1:length(filename1)-11)],'fig')
                        disp(' Figure saved.') 
+                       
+                       saveas(h2,['h2_ch1_demodulation',filename1(1:length(filename1)-11)],'png') % saves h plot (last calculated curve) as a png file. (the name is same as the original file - which CANNOT have the same_name.txt in the same folder!
+                       saveas(h2,['h2_ch1_demodulation',filename1(1:length(filename1)-11)],'fig')
+                       disp(' ch2_Figure saved.') 
+                        
+                       saveas(h3,['h3_ch2_demodulation',filename1(1:length(filename1)-11)],'png') % saves h plot (last calculated curve) as a png file. (the name is same as the original file - which CANNOT have the same_name.txt in the same folder!
+                       saveas(h3,['h3_ch2_demodulation',filename1(1:length(filename1)-11)],'fig')
+                       disp(' ch3_Figure saved.') 
+                        
+                       saveas(h4,['h4_ch3_demodulation',filename1(1:length(filename1)-11)],'png') % saves h plot (last calculated curve) as a png file. (the name is same as the original file - which CANNOT have the same_name.txt in the same folder!
+                       saveas(h4,['h4_ch3_demodulation',filename1(1:length(filename1)-11)],'fig')
+                       disp(' ch4_Figure saved.') 
         else    
 end
-       
+       save_statistics= [vMax,vMin, numfiles];
+       save(['saved_statistics_' filename1 '.txt'],'save_statistics','-ascii','-double') %saves peak positions and amplitudes into txt.file
+                       disp('statistics and results has been successfully saved...');  
+
 ii = ii+1;
 close all
     end
