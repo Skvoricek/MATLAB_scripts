@@ -250,8 +250,11 @@ if saving_vector(1) == 1
         else    
 end
        save_statistics= [vMax,vMin, numfiles];
+       save_demodulation=Y';
        save(['saved_statistics_' filename1 '.txt'],'save_statistics','-ascii','-double') %saves peak positions and amplitudes into txt.file
                        disp('statistics and results has been successfully saved...');  
+       save(['save_demodulation_' filename1 '.txt'],'save_demodulation','-ascii','-double') %save_demodulation into txt file
+                       disp('save_demodulation has been successfully saved...');  
 
 ii = ii+1;
 close all
