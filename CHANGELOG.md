@@ -304,4 +304,5 @@ BIN_CHOBOTNICE_VSB_DIR
 - normalization constants for demodulation eq (Vmin + Vmax ) taken as a max (min) for each channel (ch1;ch2;ch3). This goes into all files in second cycle - the computation.
 - saved picture for each channel additionally
 - save_statistics= [vMax,vMin, numfiles]; (length number of files in channel + 1); into txt file named according to ch1
+- saving demodulation result into txt file (for each file set of computation; Y(ch1,ch2,ch3)
 Kuba Maršálek - jakub.marsalek@safibra.cz 
