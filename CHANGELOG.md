@@ -305,4 +305,9 @@ BIN_CHOBOTNICE_VSB_DIR
 - saved picture for each channel additionally
 - save_statistics= [vMax,vMin, numfiles]; (length number of files in channel + 1); into txt file named according to ch1
 - saving demodulation result into txt file (for each file set of computation; Y(ch1,ch2,ch3)
+*************************
+2017-08-08
+SIGNAL_VIEWER_PLAY
+-loading the csv or waw, plot the signal, ft and spectrum, and playing sound (possible to stop, pause and resume) with sec count in the command window (native - must be reset if played again))
+
 Kuba Maršálek - jakub.marsalek@safibra.cz 
