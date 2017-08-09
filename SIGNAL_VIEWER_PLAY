@@ -122,50 +122,6 @@ data=data/2; %%normalization
   data=data-mean_data;
 
 
- %{ 
-  while i_files<=(number_of_files)
- 
-   disp('Waiting for user choice - Choose a CSV file.') 
-                                                                             waitbar1 = waitbar(0.15, 'choose input file ', 'Units', 'normalized', 'Position', [0.4 0.2 0.22 0.06]); %position of waitbar
-    [filename,filepath]=uigetfile({'*.*','csv'},...
-                      'Select reference Data File ');
-                      cd(filepath);
-                                                                            close(waitbar1)
-
-                      pause();
-[y,fs] = audioread('test.wav');
-%%data = importdata(filename, ';' );
-%%data=data.data(:,1);
-data=y;
-% plot(data);
-                  
-%  pause();  
-   if data_total == nan;                                                                       
-       data_total = data;
-   else
-%        data=data(2,1:end);
-       data_total = [data_total ;data];
-   end
-                                                                            waitbar1 = waitbar(1, 'CVS file reading ', 'Units', 'normalized', 'Position', [0.4 0.2 0.22 0.06]); %position of waitbar
-                                                                            disp('Reading a CSV file - this operation usually takes a while (according to number of rows).') 
-                                                                            statusbar(0, ['Desktop status: processing  ', filename]);
-                                                                            close(waitbar1)
-                                                                            
-                                                                            
-          if i_files ==1                                                                  
-first_time= char(filename(length(filename)-29:length(filename)-11));%('testing-file-name)'
-          else
-          end
- i_files = i_files+1;
- 
-  end
-  %% combined signal processing
-   data=data_total(2:end); % return to original script after "multiple files change" 
-   mean_data=mean(data);
-   data=data-mean_data;
-%}
-% sound(y,fs);
-
 %% INICIALIZATION
  
  
@@ -234,13 +190,21 @@ first_time= char(filename(length(filename)-29:length(filename)-11));%('testing-f
                      
             hold off
             
+             %% normalization 
+       up=1
+       low=-1
+  
+       x=data;
+       norm_x=(x-min(x))*(up-low)/(max(x)-min(x))+low;
+     plot(norm_x);
+
             %% SOUND PLAYING
-   player = audioplayer(data, fs);  
+   player = audioplayer(norm_x, fs);  
    tic
-   play(player)
+%    play(player)
    status=player.Running;
    tic
-   
+    fs = round(fs);
 while(length(status)~= 3)  
 
 pause(1)    
@@ -257,9 +221,13 @@ pause(1)
 % close (waitbar1);
 status=player.Running;
 end
-
+filename=strcat(filename(1:(end-11)),'.wav');
   
-   
+  
     %%SAVING VARIABLES
 % export_var=[time_vector,data];
-% save('time_signal.txt','export_var','-ascii');
+ 
+
+% save('time_signal.txt','norm_x','-ascii');
+	audiowrite(filename,norm_x,fs);
+  disp('All has been saved - Relaton finished') 
