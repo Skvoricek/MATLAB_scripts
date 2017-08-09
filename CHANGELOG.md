@@ -309,5 +309,13 @@ BIN_CHOBOTNICE_VSB_DIR
 2017-08-08
 SIGNAL_VIEWER_PLAY
 -loading the csv or waw, plot the signal, ft and spectrum, and playing sound (possible to stop, pause and resume) with sec count in the command window (native - must be reset if played again))
+*************************
+2017-08-09
+SIGNAL_VIEWER_PLAY
+ - save wav file has the filename.
+ - fs = round(fs) given in the initial window 
+ - autosave of the data commented (to save space and time)
+ - automatic play commented at line 204, can by played manualy - commands comented in the script
+
 
 Kuba Maršálek - jakub.marsalek@safibra.cz 
