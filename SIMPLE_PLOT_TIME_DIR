@@ -29,7 +29,10 @@ In = cell(numfiles,1);
  prompt = {'Sampling frequency of chosen file'};
             dlg_title = 'Parameters input';
                     num_lines = 1;
-                    def = {'0.842935078827349'};% inside default values
+%                     def = {'1.3017431164054740e+03'};% frequency_check_GM71_P10PP01-ch4_fft
+                    def = {'1.5627010420006378e+04'};% GM71_P10PP01-ch3
+%                     def = {'4.1669874509199111e+01'};% GM71_F29PP01-fimt_jelly_01_fft
+%                     def = {'0.842935078827349'};% inside default values
                     options.Resize='on';
                     options.WindowStyle='modal';
                     options.Interpreter='tex';
@@ -43,11 +46,21 @@ In = cell(numfiles,1);
 
 
 for ii = 1:numfiles % data input cycle
-%     waitbar1 = waitbar(1, 'Realtion finished', 'Units', 'normalized', 'Position', [0.4 0.2 0.22 0.06]);
-%                          pause(1);
+
+    
     cd(filepath);
+%DATA CSV    
 data = importdata(fileList(ii).name, ';' );
 data=data.data(:,1);
+% end DATA CSV
+
+% % DATA BIN
+% fileID=fopen(fileList(ii).name,'r')
+% data=fread(fileID,[3,inf],'float' );
+% fclose(fileID)
+% data=data(3,1:end);
+% %end DATA BIN
+
 ii %show file number
 filename = (fileList(ii).name) % show file name
 first_time= char(filename(1,21:length(filename)-11));%('testing-file-name)'
@@ -55,6 +68,8 @@ first_time= char(filename(1,21:length(filename)-11));%('testing-file-name)'
 time_stamp=1/fs;
 time_stamp= time_stamp/60; %recalculated to minutes
 time_vector = (0:time_stamp:((length(data)-1)*(time_stamp)))';                              
+
+
 
  %% PLOT GENERATION
 
@@ -65,7 +80,7 @@ time_vector = (0:time_stamp:((length(data)-1)*(time_stamp)))';
  plot (time_vector, data)
 % plot (data_total)
         legend ('Measured signal');
-        ylabel('Wind speed [m/s]')
+        ylabel('Singal intensity')
         xlabel('Time [min]')
 %         xlabel('Samples [au]')
         title(filename)
