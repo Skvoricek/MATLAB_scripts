@@ -316,10 +316,15 @@ SIGNAL_VIEWER_PLAY
  - fs = round(fs) given in the initial window 
  - autosave of the data commented (to save space and time)
  - automatic play commented at line 204, can by played manualy - commands comented in the script
-
+************************
 2017-10-16
 SIMPLE_PLOT_TIME_DIR
  - added possibility to read binary files (in a code - use comment to make the choice)
+*************************
+
+2017-10-24
+SIMPLE_PLOT_TIME_DIR
+- added statistical values to be exported in txt
 
 
 Kuba Maršálek - jakub.marsalek@safibra.cz 
