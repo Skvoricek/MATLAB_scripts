@@ -49,17 +49,30 @@ for ii = 1:numfiles % data input cycle
 
     
     cd(filepath);
-%DATA CSV    
-data = importdata(fileList(ii).name, ';' );
-data=data.data(:,1);
-% end DATA CSV
+% %DATA CSV    
+% data = importdata(fileList(ii).name, ';' );
+% data=data.data(:,1);
+% % end DATA CSV
 
-% % DATA BIN
-% fileID=fopen(fileList(ii).name,'r')
-% data=fread(fileID,[3,inf],'float' );
-% fclose(fileID)
-% data=data(3,1:end);
-% %end DATA BIN
+% DATA BIN
+fileID=fopen(fileList(ii).name,'r')
+data=fread(fileID,[3,inf],'float' );
+fclose(fileID)
+data=data(3,1:end);
+
+%end DATA BIN
+
+ %% SIGNAL RECALCULATION (Differences)
+data=data';
+ L=1;
+ while L < (length(data)-1)
+
+    data(L)= data(L+1)-data(L);
+    L=L+1;
+end
+data=data(1:(end-2),:); % differences repair( last value)
+%  disp([ 'je to tu' ]) 
+% END SIGNAL RECALCULATION (Differences)
 
 ii %show file number
 filename = (fileList(ii).name) % show file name
@@ -68,6 +81,8 @@ first_time= char(filename(1,21:length(filename)-11));%('testing-file-name)'
 time_stamp=1/fs;
 time_stamp= time_stamp/60; %recalculated to minutes
 time_vector = (0:time_stamp:((length(data)-1)*(time_stamp)))';                              
+
+
 
 
 
@@ -112,6 +127,15 @@ waitbar1 = waitbar(waitbar_amount, 'saving process ', 'Units', 'normalized', 'Po
 %                          pause(1);
 %                          close(waitbar1)
 close all
+%SAVING STATISTICS
+save_mean=(mean(data));
+save_std=(std(data));
+save_min=(min(data));
+save_max=(max(data));
+save_variables = [save_mean save_std save_min save_max];
+save(['saved_statistics_' filename '.txt'],'save_variables','-ascii','-double');
+% END SAVING STATISTICS
+
 end%input file end cycle
 waitbar1 = waitbar(1, 'Realtion finished', 'Units', 'normalized', 'Position', [0.4 0.2 0.22 0.06]);
                          pause(1);
