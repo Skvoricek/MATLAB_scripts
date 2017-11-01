@@ -325,6 +325,11 @@ SIMPLE_PLOT_TIME_DIR
 2017-10-24
 SIMPLE_PLOT_TIME_DIR
 - added statistical values to be exported in txt
+****************************
+2017-11-01
+BIN_CHOBOTNICE_VSB_DIR
+- added resampling of the demodulation data (1MHz to 20kHz)
+- txt and fig export of resampled_demodulation
 
 
 Kuba Maršálek - jakub.marsalek@safibra.cz 
