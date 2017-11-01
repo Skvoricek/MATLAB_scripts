@@ -250,11 +250,24 @@ if saving_vector(1) == 1
         else    
 end
        save_statistics= [vMax,vMin, numfiles];
-       save_demodulation=Y';
+       
+       save_demodulation_raw=Y';
+       save_demodulatin_resample = resample(y,1e6,20000); 
+       
+       h6 = figure('Name','Demodulation from PG algorithm_20kHz', 'Units', 'normalized','Position', [0.01 0.3 0.98 0.61]);
+        plot(save_demodulatin_resample )
+        
+        
+        saveas(h6,['h6_Demodulation from PG algorithm_20kHz',filename1(1:length(filename1)-11)],'png') % saves h plot (last calculated curve) as a png file. (the name is same as the original file - which CANNOT have the same_name.txt in the same folder!
+                       saveas(h4,['h4_ch3_demodulation',filename1(1:length(filename1)-11)],'fig')
+                       disp(' h6_Figure saved.') 
+       
        save(['saved_statistics_' filename1 '.txt'],'save_statistics','-ascii','-double') %saves peak positions and amplitudes into txt.file
                        disp('statistics and results has been successfully saved...');  
        save(['save_demodulation_' filename1 '.txt'],'save_demodulation','-ascii','-double') %save_demodulation into txt file
                        disp('save_demodulation has been successfully saved...');  
+        save(['resampled_demodulation' filename1 '.txt'],'save_demodulatin_resample','-ascii','-double') %saves peak positions and amplitudes into txt.file
+                       disp('save_demodulatin_resample has been successfully saved...');  
 
 ii = ii+1;
 close all
