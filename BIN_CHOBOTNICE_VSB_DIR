@@ -252,7 +252,7 @@ end
        save_statistics= [vMax,vMin, numfiles];
        
        save_demodulation_raw=Y';
-       save_demodulatin_resample = resample(y,1e6,20000); 
+       save_demodulatin_resample = resample(save_demodulation_raw,1e6,20000); 
        
        h6 = figure('Name','Demodulation from PG algorithm_20kHz', 'Units', 'normalized','Position', [0.01 0.3 0.98 0.61]);
         plot(save_demodulatin_resample )
