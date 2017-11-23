@@ -50,20 +50,22 @@ for ii = 1:numfiles % data input cycle
     
     cd(filepath);
 % %DATA CSV    
-% data = importdata(fileList(ii).name, ';' );
-% data=data.data(:,1);
-% % end DATA CSV
 
-% DATA BIN
-fileID=fopen(fileList(ii).name,'r')
-data=fread(fileID,[3,inf],'float' );
-fclose(fileID)
-data=data(3,1:end);
+    data = importdata(fileList(ii).name, ';' );
+    data=data.data(:,1);
 
-%end DATA BIN
+% end DATA CSV
+
+% % DATA BIN
+%     fileID=fopen(fileList(ii).name,'r')
+%     data=fread(fileID,[3,inf],'float' );
+%     fclose(fileID)
+%     data=data(3,1:end);
+%     data=data';
+% %end DATA BIN
 
  %% SIGNAL RECALCULATION (Differences)
-data=data';
+
  L=1;
  while L < (length(data)-1)
 
@@ -126,25 +128,32 @@ waitbar1 = waitbar(waitbar_amount, 'saving process ', 'Units', 'normalized', 'Po
 %    waitbar1 = waitbar(1, 'Realtion finished', 'Units', 'normalized', 'Position', [0.4 0.2 0.22 0.06]);
 %                          pause(1);
 %                          close(waitbar1)
-close all
+    close all
 %SAVING STATISTICS
-save_mean=(mean(data));
-save_std=(std(data));
-save_min=(min(data));
-save_max=(max(data));
-save_variables = [save_mean save_std save_min save_max];
-save(['saved_statistics_' filename '.txt'],'save_variables','-ascii','-double');
+    save_mean=(mean(data));
+    save_std=(std(data));
+    save_min=(min(data));
+    save_max=(max(data));
+    save_variables = [save_mean save_std save_min save_max];
+    save(['saved_statistics_' filename '.txt'],'save_variables','-ascii','-double');
 % END SAVING STATISTICS
 
-%SAVE WAV
-disp('All has been saved - Relaton finished') 
-filename=strcat(filename(1:(end-11)),'.wav');
-Fs=round(fs);
-audiowrite(filename,data,Fs);
+%% SAVE WAV
+    % AUDIO NORMALIZATION
+           up=1
+           low=-1
+           x=data;
+           norm_x=(x-min(x))*(up-low)/(max(x)-min(x))+low;
+         plot(norm_x);
+    % END AUDIO NORMALIZATION
 
+    disp('All has been saved - Relaton finished') 
+    filename=strcat(filename(1:(end-11)),'.wav');
+    Fs=round(fs);
+    audiowrite(filename,norm_x,Fs);
 %END SAVE WAV
-  
-end%input file end cycle
+
+  end%input file end cycle
 waitbar1 = waitbar(1, 'Realtion finished', 'Units', 'normalized', 'Position', [0.4 0.2 0.22 0.06]);
                          pause(1);
                          
