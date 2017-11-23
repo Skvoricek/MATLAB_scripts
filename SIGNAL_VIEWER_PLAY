@@ -11,7 +11,7 @@ clear;
        
        data_total=nan;
      i_files= 1; 
-       %absOn = 1;% IF NOT COMENTED - PEAK CALCULATION IS PERFORMED FROM
+       %absOn = 1;% IF NOT COMENTED - PEAK CALCULATION IS PERFOReMED FROM
 %       ABS VALUES OF SIGNAL
       
       
@@ -56,6 +56,7 @@ if file_type(1) == 1
                                 fs =answer(1,1); %aproximate position (optical length) of starting (left) evaluation point
                                 fs = str2double(fs);
 else
+    
 end
 
   while i_files<=(number_of_files)
@@ -86,7 +87,25 @@ if file_type(2)== 1
 [y,fs] = audioread(filename);
 data=y(:,1) + y(:,2); %%mono creation
 data=data/2; %%normalization
-        else    
+else
+    
+    disp('Waiting for user choice - Choose a BIN file.') 
+                                                                             waitbar1 = waitbar(0.15, 'choose input file ', 'Units', 'normalized', 'Position', [0.4 0.2 0.22 0.06]); %position of waitbar
+    [filename,filepath]=uigetfile({'*.*','bin'},...
+                      'Select reference BIN File ');
+                      cd(filepath);
+                                                                            close(waitbar1)
+    % DATA BIN
+fileID=fopen(filename,'r')
+data=fread(fileID,[3,inf],'float' );
+fclose(fileID)
+data=data(3,1:end);
+data=data';
+
+fs=1.562721904628683e+04
+
+%end DATA BIN
+% end BIN FILE INPUT
         end
 
       
@@ -118,9 +137,22 @@ data=data/2; %%normalization
   end
   %% combined signal processing
   data=data_total(2:end); % return to original script after "multiple files change" 
-   mean_data=mean(data);
-  data=data-mean_data;
+  
+  %% diference distribution fce
+  i=1;
+  while i <(length(data));
+  data(i)=data(i)-data(i+1);
+  i=i+1;
+  end
+  data = data(1:end-1);
+%   mean_data=mean(data);
+  %% 
+   
+  
+%    data=data-mean_data;
 
+  
+%   data
 
 %% INICIALIZATION
  
