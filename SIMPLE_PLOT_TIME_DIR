@@ -1,51 +1,38 @@
+% CREATED for simple verification of obtained signal. Changed from
+% SIMPLE_PLOT_TIME_20170120; where the goal is to have a script able to
+% take all files from dirrectory and save the graph with time according to
+% the sampling frequency for each file without the need to open each and
+% every file manualy.
+
 %% NAČTĚNÍ DAT
 clc; 
 close all;
 clear;
+
     
-%% NAČTĚNÍ DAT
 %set(0,'DefaulttextInterpreter','none')   % default nonTeX text interpreter - Graph title appearance
   set(groot, 'DefaultTextInterpreter', 'none')
       set(groot, 'DefaultLegendInterpreter', 'none')
-       absOn = NaN;
-       
-       data_total=nan;
-     i_files= 1; 
-       %absOn = 1;% IF NOT COMENTED - PEAK CALCULATION IS PERFOReMED FROM
-%       ABS VALUES OF SIGNAL
-      
-      
-  % INPUT DATA INTERACTIVE
-   prompt = {'Počet souborů ke zpracování'};
+                             
+ [filename,filepath]=uigetfile({'*.*','csv'},... % manual gie choice of folder (and files inside)
+                      'Select reference Data File ');
+                      cd(filepath);
+                      
+fileList = dir(filepath);                  
+fileList = fileList(~[fileList.isdir]); %remove directories
+[junk, sortorder] = sort([fileList.datenum]);
+fileList = fileList(sortorder); %list is now in ascending date order
+numfiles = numel(fileList);
+In = cell(numfiles,1);
+
+   %% sampling frequency estimation
+ prompt = {'Sampling frequency of chosen file'};
             dlg_title = 'Parameters input';
                     num_lines = 1;
-                    def = {'1'};% inside default values
-                    options.Resize='on';
-                    options.WindowStyle='modal';
-                    options.Interpreter='tex';
-                    answer=inputdlg(prompt,dlg_title,num_lines,...
-                                    def);%related to point definition - careful when changed
-
-
-                                number_of_files =answer(1,1); %aproximate position (optical length) of starting (left) evaluation point
-                                number_of_files = str2double(number_of_files);
-% %       Soubory  ke zpracování                        
-  %% CSV vs WAV file
-
-file_type = filetype();
-if file_type(1) == 1
-    
-    %%INPUT DATA INTERACTIVE
-   prompt = {'Sampling period'};
-            dlg_title = 'Parameters input';
-                    num_lines = 1;
-%                     %32kHz
-%                     def = {'3.1253618438178957e+04'};% inside default values
-                    %16kHz
-                    def = {'1.562721904628683e+04'};% inside default values
-%                     %4kHz
-%                     def = {3.906790075824176e+03'};% inside default values
-                    
+%                     def = {'1.3017431164054740e+03'};% frequency_check_GM71_P10PP01-ch4_fft
+                    def = {'1.5627010420006378e+04'};% GM71_P10PP01-ch3
+%                     def = {'4.1669874509199111e+01'};% GM71_F29PP01-fimt_jelly_01_fft
+%                     def = {'0.842935078827349'};% inside default values
                     options.Resize='on';
                     options.WindowStyle='modal';
                     options.Interpreter='tex';
@@ -54,212 +41,115 @@ if file_type(1) == 1
 
 
                                 fs =answer(1,1); %aproximate position (optical length) of starting (left) evaluation point
+%                                 pause();
                                 fs = str2double(fs);
-else
-    
-end
 
-  while i_files<=(number_of_files)
- 
-if file_type(1) == 1
-             
-      disp('Waiting for user choice - Choose a CSV file.') 
-                                                                             waitbar1 = waitbar(0.15, 'choose input file ', 'Units', 'normalized', 'Position', [0.4 0.2 0.22 0.06]); %position of waitbar
-    [filename,filepath]=uigetfile({'*.*','csv'},...
-                      'Select reference Data File ');
-                      cd(filepath);
-                                                                            close(waitbar1)
- % 
-                                                                            
-%                       pause();
-     data = importdata(filename, ';' );
-     data=data.data(:,1);
- else    
-        end
-if file_type(2)== 1
+
+for ii = 1:numfiles % data input cycle
+
     
-    disp('Waiting for user choice - Choose a WAV file.') 
-                                                                             waitbar1 = waitbar(0.15, 'choose input file ', 'Units', 'normalized', 'Position', [0.4 0.2 0.22 0.06]); %position of waitbar
-    [filename,filepath]=uigetfile({'*.*','wav'},...
-                      'Select reference WAV File ');
-                      cd(filepath);
-                                                                            close(waitbar1)
-[y,fs] = audioread(filename);
-data=y(:,1) + y(:,2); %%mono creation
-data=data/2; %%normalization
-else
-    
-    disp('Waiting for user choice - Choose a BIN file.') 
-                                                                             waitbar1 = waitbar(0.15, 'choose input file ', 'Units', 'normalized', 'Position', [0.4 0.2 0.22 0.06]); %position of waitbar
-    [filename,filepath]=uigetfile({'*.*','bin'},...
-                      'Select reference BIN File ');
-                      cd(filepath);
-                                                                            close(waitbar1)
-    % DATA BIN
-fileID=fopen(filename,'r')
+    cd(filepath);
+% %DATA CSV    
+% data = importdata(fileList(ii).name, ';' );
+% data=data.data(:,1);
+% % end DATA CSV
+
+% DATA BIN
+fileID=fopen(fileList(ii).name,'r')
 data=fread(fileID,[3,inf],'float' );
 fclose(fileID)
 data=data(3,1:end);
-data=data';
-
-fs=1.562721904628683e+04
 
 %end DATA BIN
-% end BIN FILE INPUT
-        end
 
-      
-% plot(data);
-                  
-%  pause();  
-   if data_total == nan;                                                                       
-       data_total = data;
-   else
-%        data=data(2,1:end);
-       data_total = [data_total ;data];
-   end
-                                                                            waitbar1 = waitbar(1, ' File reading ', 'Units', 'normalized', 'Position', [0.4 0.2 0.22 0.06]); %position of waitbar
-                                                                            disp('File reading - this operation usually takes a while (according to size).') 
-                                                                            statusbar(0, ['Desktop status: processing  ', filename]);
-                                                                            close(waitbar1)
-                                                                            
-                                                                            
-          if i_files == 1 
-    if file_type(1) == 1
-    first_time = char(filename(length(filename)-29:length(filename)-11));%('testing-file-name)'
-    else
-    first_time=char( );    
-    end
-          else
-          end
- i_files = i_files+1;
- 
-  end
-  %% combined signal processing
-  data=data_total(2:end); % return to original script after "multiple files change" 
-  
-  %% diference distribution fce
-  i=1;
-  while i <(length(data));
-  data(i)=data(i)-data(i+1);
-  i=i+1;
-  end
-  data = data(1:end-1);
-%   mean_data=mean(data);
-  %% 
-   
-  
-%    data=data-mean_data;
+ %% SIGNAL RECALCULATION (Differences)
+data=data';
+ L=1;
+ while L < (length(data)-1)
 
-  
-%   data
-
-%% INICIALIZATION
- 
- 
-%{
- %}
-%%{
-        wwidth=256;
-        win=hamming(wwidth); % použité okno
-        overlap=fix(wwidth/2); % překryv 
-        time_stamp=1/fs;
-        time_vector= (0:time_stamp:((length(data)-1)*(time_stamp)))';
-        
-        
-            h1=figure ('name','Reference', 'Units', 'normalized','Position', [0.01 0.3 0.98 0.61]); % position normalized to the screen dimensions
-                    set(0,'defaulttextinterpreter','none')   
-                    hold on
-                        plot(time_vector,data)
-                        xlabel('time [sec]')
-                        ylabel('signal [Au]')
-                        title(filename)
-                        
-                        legend('measured_signal')
-%                          4annotation('textbox', [0.15 0.85 0.19 0.05], 'interpreter','none','FitBoxToText','on', 'String');
-                              hold off
-                        %plot([output,recoat],[threshold_ref,threshold_ref],'m')
-                        %scatter(opticallength_ref(locsnew_ref),ERpeaknew_ref,'r')
-                        hold off
-                        
-%% FFT COMPUTATION      
-      
-   t = 0:1/fs:1; % Time vector of 1 second 
-        %overlap=0;
-        X = fft(data,length(data));
-        absx = abs(X);
-        %X=absx;
-        f1 = (0:length(data)/2-1)*fs/length(data); 
-        
-        %absx = absx';save fft2.txt absx -ASCII; 
- %% PLOT
-        
-    h2= figure('Name','Spektrum', 'Units', 'normalized','Position', [0.01 0.3 0.98 0.61]); % position normalized to the screen dimensions);
-        init_plot_val=5;
-        hold on
-        plot(f1(init_plot_val:end),X(init_plot_val:(length(X)/2)));
-        xlabel('frequency [Hz]')
-        ylabel('spectral density [Au]')
-          title(filename)
-          
-               legend('FFT of the signal')
-               %annotation('textbox', [0.15 0.85 0.19 0.05], 'interpreter','none','FitBoxToText','on', 'String', [' Start Time:  ' first_time '']);
-                             
-        hold off
-     
-        
-        h3=figure ('name','Spectrogram', 'Units', 'normalized','Position', [0.01 0.3 0.98 0.61]); % position normalized to the screen dimensions
-           hold on
-                    spectrogram(data,hamming(1024),overlap,wwidth,fs,'yaxis'); 
-                    colormap(bone);
-%                     xlabel('time [sec]')
-%                     ylabel('IFFT signal [Au]')
-                    title(filename)
-                        
-%                      legend(['Spectrogram of ' filename '  '  ''])
-%                      annotation('textbox', [0.15 0.85 0.24 0.05], 'interpreter','tex','FitBoxToText','on', 'String', [' Pass Filter: ' fmll '\leftrightarrow ' fmhh]);
-                         
-                     
-            hold off
-            
-             %% normalization 
-       up=1
-       low=-1
-  
-       x=data;
-       norm_x=(x-min(x))*(up-low)/(max(x)-min(x))+low;
-     plot(norm_x);
-
-            %% SOUND PLAYING
-   player = audioplayer(norm_x, fs);  
-   tic
-%    play(player)
-   status=player.Running;
-   tic
-    fs = round(fs);
-while(length(status)~= 3)  
-
-pause(1)    
-   sprintf('%s sec',num2str(round(toc)))
-
-  % start the playback
-% play(player);
-% pause the playback
-% pause(player);
-% resume the playback
-% resume(player)
-% stop the playback
-% stop(player)
-% close (waitbar1);
-status=player.Running;
+    data(L)= data(L+1)-data(L);
+    L=L+1;
 end
-filename=strcat(filename(1:(end-11)),'.wav');
-  
-  
-    %%SAVING VARIABLES
-% export_var=[time_vector,data];
- 
+data=data(1:(end-2),:); % differences repair( last value)
+%  disp([ 'je to tu' ]) 
+% END SIGNAL RECALCULATION (Differences)
 
-% save('time_signal.txt','norm_x','-ascii');
-	audiowrite(filename,norm_x,fs);
-  disp('All has been saved - Relaton finished') 
+ii %show file number
+filename = (fileList(ii).name) % show file name
+first_time= char(filename(1,21:length(filename)-11));%('testing-file-name)'
+           
+time_stamp=1/fs;
+time_stamp= time_stamp/60; %recalculated to minutes
+time_vector = (0:time_stamp:((length(data)-1)*(time_stamp)))';                              
+
+
+
+
+
+ %% PLOT GENERATION
+
+ h1=figure('Name','Measured signal', 'Units', 'normalized','Position', [0.01 0.3 0.98 0.61]);
+
+ disp([ ' ' ' ' ]) 
+ hold on
+ plot (time_vector, data)
+% plot (data_total)
+        legend ('Measured signal');
+        ylabel('Singal intensity')
+        xlabel('Time [min]')
+%         xlabel('Samples [au]')
+        title(filename)
+         annotation('textbox', [0.15 0.85 0.19 0.05], 'interpreter','none','FitBoxToText','on', 'String', [' max: ' num2str(max(data)) ', min: ' num2str(min(data)) ', mean: ' num2str(mean(data)) ', stdev: ' num2str(std(data))  ]);
+%         annotation('textbox', [0.15 0.85 0.10 0.05], 'interpreter','none','FitBoxToText','on', 'String', [' Number of peaks:  ' num ' '],'Color', 'r');
+  hold off
+  %%SAVING PROCESS
+filename = filename(1:length(filename)-11);%'testing_file_name' % zkrácení názvu o přípony a formáty
+
+waitbar_amount = ii/numfiles;
+waitbar1 = waitbar(waitbar_amount, 'saving process ', 'Units', 'normalized', 'Position', [0.4 0.2 0.22 0.06]); %position of waitbar 
+% saving_vector = numberAllocator();
+% if saving_vector(1) == 1
+%                         saveas(h1,['h1_plot_',filename],'png') % saves h plot (last calculated curve) as a png file. (the name is same as the original file - which CANNOT have the same_name.txt in the same folder!
+%                        saveas(h1,['h1_plot_',filename],'fig')
+%                        disp(' Figure 1 saved.') 
+%         else    
+%         end
+%    waitbar1= waitbar(waitbar_amount);
+       
+                         saveas(h1,['h1_plot_',filename],'png')
+                         saveas(h1,['h1_plot_',filename],'fig') 
+                         
+                            disp([,filename, ' has been saved']);
+   close(waitbar1)
+         
+% else
+%    waitbar1 = waitbar(1, 'Realtion finished', 'Units', 'normalized', 'Position', [0.4 0.2 0.22 0.06]);
+%                          pause(1);
+%                          close(waitbar1)
+close all
+%SAVING STATISTICS
+save_mean=(mean(data));
+save_std=(std(data));
+save_min=(min(data));
+save_max=(max(data));
+save_variables = [save_mean save_std save_min save_max];
+save(['saved_statistics_' filename '.txt'],'save_variables','-ascii','-double');
+% END SAVING STATISTICS
+
+%SAVE WAV
+disp('All has been saved - Relaton finished') 
+filename=strcat(filename(1:(end-11)),'.wav');
+Fs=round(fs);
+audiowrite(filename,data,Fs);
+
+%END SAVE WAV
+  
+end%input file end cycle
+waitbar1 = waitbar(1, 'Realtion finished', 'Units', 'normalized', 'Position', [0.4 0.2 0.22 0.06]);
+                         pause(1);
+                         
+% end
+disp('Relation has been finished - go get a coffee ;) ');
+
+
+close(waitbar1)           
