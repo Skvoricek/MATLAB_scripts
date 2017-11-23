@@ -331,5 +331,10 @@ BIN_CHOBOTNICE_VSB_DIR
 - added resampling of the demodulation data (1MHz to 20kHz)
 - txt and fig export of resampled_demodulation
 
-
+*******************
+2017-11-04
+SIGNAL_VIEWER_PLAY 
+ -  added binary files (in case no file is chosen and "LOAD" button is being clicked dirrecty)
+ 
+ 
 Kuba Maršálek - jakub.marsalek@safibra.cz 
