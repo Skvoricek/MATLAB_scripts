@@ -337,4 +337,8 @@ SIGNAL_VIEWER_PLAY
  -  added binary files (in case no file is chosen and "LOAD" button is being clicked dirrecty)
  
  
+*******************
+2017-11-23
+SIMPLE_PLOT_TIME_DIR
+- added expirt in wav format.
 Kuba Maršálek - jakub.marsalek@safibra.cz 
