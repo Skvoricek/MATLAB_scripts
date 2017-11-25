@@ -1,0 +1,115 @@
+%% NAÈTÌNÍ DAT
+clc; 
+close all;
+clear;
+
+    
+%set(0,'DefaulttextInterpreter','none')   % default nonTeX text interpreter - Graph title appearance
+  set(groot, 'DefaultTextInterpreter', 'none')
+      set(groot, 'DefaultLegendInterpreter', 'none')
+                             
+ [filename,filepath]=uigetfile({'*.*','txt'},... % manual gie choice of folder (and files inside)
+                      'Select reference Data File ');
+                      cd(filepath);
+                      
+fileList = dir(filepath);                  
+fileList = fileList(~[fileList.isdir]); %remove directories
+[junk, sortorder] = sort([fileList.datenum]);
+fileList = fileList(sortorder); %list is now in ascending date order
+numfiles = numel(fileList);
+In = cell(numfiles,1);
+
+%%DATA input
+for ii = 1:numfiles % data input cycle
+clear data_z;
+    
+   filename = fileList(ii).name; 
+    cd(filepath);
+% %DATA CSV    
+data = importdata(fileList(ii).name, '	' );
+data_x=data(:,2);
+data_y=data(:,1);
+% % end DATA CSV
+
+ h1=figure('Name','Measured signal', 'Units', 'normalized','Position', [0.01 0.3 0.98 0.61]);
+
+ disp([ ' ' ' ' ]) 
+ hold on
+ plot (data_x, data_y)
+% plot (data_total)
+        legend ('Measured signal');
+        ylabel('Peak level')
+        xlabel('Time [min]')
+%         xlabel('Samples [au]')
+        title(filename)
+         annotation('textbox', [0.15 0.85 0.19 0.05], 'interpreter','none','FitBoxToText','on', 'String', [' max: ' num2str(round(max(data_y))) ', min: ' num2str(round(min(data_y))) ', mean: ' num2str(round(mean(data_y))) ', stdev: ' num2str(round(std(data_y))) ', peaks: ' num2str((length(data_y)))   ]);
+%         annotation('textbox', [0.15 0.85 0.10 0.05], 'interpreter','none','FitBoxToText','on', 'String', [' Number of peaks:  ' num ' '],'Color', 'r');
+  hold off
+h2=figure('Name','Histogram', 'Units', 'normalized','Position', [0.01 0.3 0.98 0.61]);
+ disp([ ' ' ' ' ]) 
+    hist (data_x,1000);
+    ylabel('Peak level [signal intensity AU]')
+    xlabel('Count')
+  title(filename)
+
+
+%dynamical variable creation
+
+data_z(1:length(data_y))=ii;    
+data_z=data_z';
+
+    genvarname('speach_',  num2str(ii));
+    eval(['speach_' num2str(ii) '= [data_y,data_x,data_z]'])
+%end dynamical variable creation
+
+
+    
+
+  
+  %%SAVING PROCESS
+filename = filename(1:length(filename)-4);%'testing_file_name' % zkrácení názvu o pøípony a formáty
+
+                            saveas(h1,['h1_peak_value_',filename],'png')
+                            saveas(h1,['h1_peak_value_',filename],'fig') 
+                         
+                            saveas(h2,['h2_histogram_',filename],'png')
+                            saveas(h2,['h2_histogram_',filename],'fig') 
+              %%CLOSING ALL
+              close all
+
+
+end
+%% 3D representation
+
+h3=figure('Name','3d representation', 'Units', 'normalized','Position', [0.01 0.3 0.98 0.61]);
+
+ disp([ ' ' ' ' ]) 
+ hold on
+ for k = 1:ii% data input cycle
+%     if k ==4;
+%     else
+% %        eval(['(speach_' num2str(k) '(1:end,2)) = ((speach_' num2str(k) '(1:end,2))-min((speach_' num2str(k) '(:,2))))'])
+%       eval(['plot3((speach_' num2str(k) '(1:end,2)),(speach_' num2str(k) '(1:end,1)),(speach_' num2str(k) '(1:end,3)))'])
+%     end
+
+eval(['speach_' num2str(k) '(:,2)=(speach_' num2str(k) '(:,2)-min(speach_' num2str(k) '(:,2)))'])
+eval(['scatter3((speach_' num2str(k) '(1:end,2)),(speach_' num2str(k) '(1:end,1)),(speach_' num2str(k) '(1:end,3)))'])
+ end
+%  plot (data_x, data_y)
+
+ 
+% plot (data_total)
+%         legend ('Measured signal');
+        ylabel('Peak level')
+        xlabel('Time [min]')
+%         xlabel('Samples [au]')
+%         title(filename)
+%          annotation('textbox', [0.15 0.85 0.19 0.05], 'interpreter','none','FitBoxToText','on', 'String', [' max: ' num2str(round(max(data_y))) ', min: ' num2str(round(min(data_y))) ', mean: ' num2str(round(mean(data_y))) ', stdev: ' num2str(round(std(data_y))) ', peaks: ' num2str((length(data_y)))   ]);
+%         annotation('textbox', [0.15 0.85 0.10 0.05], 'interpreter','none','FitBoxToText','on', 'String', [' Number of peaks:  ' num ' '],'Color', 'r');
+% plot3(X1,Y1,Z1,...)
+  
+hold off
+%% end 3D representation
+
+saveas(h3,['3D_representation',filename],'fig')
+%                             saveas(h2,['h2_histogram_',filename],'fig') 
