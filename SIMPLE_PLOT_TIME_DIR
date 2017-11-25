@@ -4,7 +4,7 @@
 % the sampling frequency for each file without the need to open each and
 % every file manualy.
 
-%% NAČTĚNÍ DAT
+%% NAÈTÌNÍ DAT
 clc; 
 close all;
 clear;
@@ -51,17 +51,17 @@ for ii = 1:numfiles % data input cycle
     cd(filepath);
 % %DATA CSV    
 
-    data = importdata(fileList(ii).name, ';' );
-    data=data.data(:,1);
+%     data = importdata(fileList(ii).name, ';' );
+%     data=data.data(:,1);
 
 % end DATA CSV
 
 % % DATA BIN
-%     fileID=fopen(fileList(ii).name,'r')
-%     data=fread(fileID,[3,inf],'float' );
-%     fclose(fileID)
-%     data=data(3,1:end);
-%     data=data';
+    fileID=fopen(fileList(ii).name,'r')
+    data=fread(fileID,[3,inf],'float' );
+    fclose(fileID)
+    data=data(3,1:end);
+    data=data';
 % %end DATA BIN
 
  %% SIGNAL RECALCULATION (Differences)
@@ -104,8 +104,26 @@ time_vector = (0:time_stamp:((length(data)-1)*(time_stamp)))';
          annotation('textbox', [0.15 0.85 0.19 0.05], 'interpreter','none','FitBoxToText','on', 'String', [' max: ' num2str(max(data)) ', min: ' num2str(min(data)) ', mean: ' num2str(mean(data)) ', stdev: ' num2str(std(data))  ]);
 %         annotation('textbox', [0.15 0.85 0.10 0.05], 'interpreter','none','FitBoxToText','on', 'String', [' Number of peaks:  ' num ' '],'Color', 'r');
   hold off
+  
+  
+    hold off
+  
+  h2=figure('Name','Measured signal', 'Units', 'normalized','Position', [0.01 0.3 0.98 0.61]);
+
+ disp([ ' ' ' ' ]) 
+ hold on
+ h2 = histogram(data,2000,'BinLimits',[-1e6,1e6])  % 1000 bins in limits 6,7e6 -- 7,7e6
+ 
+ 
+ 
+ title(filename)
+%          annotation('textbox', [0.15 0.85 0.19 0.05], 'interpreter','none','FitBoxToText','on', 'String', [' max: ' num2str(max(data)) ', min: ' num2str(min(data)) ', mean: ' num2str(mean(data)) ', stdev: ' num2str(std(data))  ]);
+%         annotation('textbox', [0.15 0.85 0.10 0.05], 'interpreter','none','FitBoxToText','on', 'String', [' Number of peaks:  ' num ' '],'Color', 'r');
+  hold off
+  
+  
   %%SAVING PROCESS
-filename = filename(1:length(filename)-11);%'testing_file_name' % zkrácení názvu o přípony a formáty
+filename = filename(1:length(filename)-11);%'testing_file_name' % zkrácení názvu o pøípony a formáty
 
 waitbar_amount = ii/numfiles;
 waitbar1 = waitbar(waitbar_amount, 'saving process ', 'Units', 'normalized', 'Position', [0.4 0.2 0.22 0.06]); %position of waitbar 
@@ -118,12 +136,16 @@ waitbar1 = waitbar(waitbar_amount, 'saving process ', 'Units', 'normalized', 'Po
 %         end
 %    waitbar1= waitbar(waitbar_amount);
        
+                      
                          saveas(h1,['h1_plot_',filename],'png')
                          saveas(h1,['h1_plot_',filename],'fig') 
+                          saveas(h2,['h2_hist_',filename],'png')
+                         saveas(h2,['h2_hist_',filename],'fig') 
                          
                             disp([,filename, ' has been saved']);
    close(waitbar1)
-         
+     binedges=h2.BinEdges;
+hist_values=h2.Values;    
 % else
 %    waitbar1 = waitbar(1, 'Realtion finished', 'Units', 'normalized', 'Position', [0.4 0.2 0.22 0.06]);
 %                          pause(1);
@@ -136,9 +158,14 @@ waitbar1 = waitbar(waitbar_amount, 'saving process ', 'Units', 'normalized', 'Po
     save_max=(max(data));
     save_variables = [save_mean save_std save_min save_max];
     save(['saved_statistics_' filename '.txt'],'save_variables','-ascii','-double');
+   
+    
+    save(['Bin_edges_' filename '.txt'],'binedges','-ascii','-double') %saves sampling frequency, mean timeStamp , standard deviation of timeStamp and statistical number of samples into txt.file
+    save(['hist_values_' filename '.txt'],'hist_values','-ascii','-double') %saves sampling frequency, mean timeStamp , standard deviation of timeStamp and statistical number of samples into txt.file
 % END SAVING STATISTICS
 
 %% SAVE WAV
+
     % AUDIO NORMALIZATION
            up=1
            low=-1
@@ -148,7 +175,8 @@ waitbar1 = waitbar(waitbar_amount, 'saving process ', 'Units', 'normalized', 'Po
     % END AUDIO NORMALIZATION
 
     disp('All has been saved - Relaton finished') 
-    filename=strcat(filename(1:(end-11)),'.wav');
+%     filename=strcat(filename(1:(end-11)),'.wav');
+filename=strcat(filename(1:(end)),'.wav');
     Fs=round(fs);
     audiowrite(filename,norm_x,Fs);
 %END SAVE WAV
