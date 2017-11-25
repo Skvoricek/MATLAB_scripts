@@ -350,4 +350,6 @@ SIMPLE_PLOT_TIME_DIR
 - added expirt in wav format.
 - added export of histogram and its proporties (edges and values)
 
+PLOT_GRAPHS_HIST_3D
+- imports peak values and positions, export the histograms and 3D plot representation (dynamic)
 Kuba Maršálek - jakub.marsalek@safibra.cz 
