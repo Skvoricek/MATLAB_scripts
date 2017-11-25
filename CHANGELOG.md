@@ -340,12 +340,14 @@ SIGNAL_VIEWER_PLAY
 *******************
 2017-11-23
 SIMPLE_PLOT_TIME_DIR
-- added expirt in wav format.
+- added export in wav format.
 ************************
 2017-11-25
 SIGNAL_PLOT_MICROPHONE_NET
-
 -takes 4 signals from destinations, applies DIFF, computes spectrogram and plots thoose on joined x-axes (paralel and spectrogram in subplot), raw diff in one figure
 
+SIMPLE_PLOT_TIME_DIR
+- added expirt in wav format.
+- added export of histogram and its proporties (edges and values)
 
 Kuba Maršálek - jakub.marsalek@safibra.cz 
