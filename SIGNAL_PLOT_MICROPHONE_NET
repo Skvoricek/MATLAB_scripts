@@ -82,6 +82,20 @@ fileList4 = fileList4(sortorder); %list is now in ascending date order
 numfiles = numel(fileList4);
 In = cell(numfiles,1);
 
+%file 5                    
+ [filenam5,filepath5]=uigetfile({'*.*','bin'},... % manual gie choice of folder (and files inside)
+                      'Select reference Data File - 5');
+                      cd(source_filepath);
+                                            
+                      
+                        fileList5 = dir(filepath5);                  
+fileList5 = fileList5(~[fileList5.isdir]); %remove directories
+[junk, sortorder] = sort([fileList5.datenum]);
+fileList5 = fileList5(sortorder); %list is now in ascending date order
+numfiles = numel(fileList5);
+In = cell(numfiles,1);
+
+
 %end files localization
 
 i_files =1;
@@ -167,6 +181,8 @@ clear Y;
 clear v1;
 clear v2;
 clear v3;
+clear v4;
+clear v5;
 %% **************************************
 
      
@@ -268,6 +284,28 @@ v4=v4';
         % END SIGNAL RECALCULATION (Differences)
 % plot (a)
 
+%% FILE 5
+cd (filepath5)
+(ii*max_files-(max_files-i_files))
+filename5 = (fileList5(ii*max_files-(max_files-i_files)).name) % show file name
+% X1 = loadData(filename1)
+
+fileID=fopen(filename5,'r')
+v5=fread(fileID,[3,inf],'float' );
+fclose(fileID)
+v5=v5(3,1:end);
+v5=v5';
+        %% SIGNAL RECALCULATION (Differences)
+         L=1;
+         while L < (length(v5)-1)
+            v5(L)= v5(L+1)-v5(L);
+            L=L+1;
+        end
+        v5=v5(1:(end-2),:); % differences repair( last value)
+        disp([ 'V1 diferences finished' ]) 
+        % END SIGNAL RECALCULATION (Differences)
+% plot (a)
+
 
 %% time stamp creation
 
@@ -315,14 +353,21 @@ plot (time_vector, v4)
 %         title(filename)
 %          annotation('textbox', [0.15 0.85 0.19 0.05], 'interpreter','none','FitBoxToText','on', 'String', [' max: ' num2str(max(data)) ', min: ' num2str(min(data)) ', mean: ' num2str(mean(data)) ', stdev: ' num2str(std(data))  ]);
 
-    legend (filename1,filename2,filename3,filename4);
+
+plot (time_vector, v5)
+%         legend (filename5);
+        ylabel('Singal intensity')
+        xlabel('Time [sec]')
+%         title(filename)
+%          annotation('textbox', [0.15 0.85 0.19 0.05], 'interpreter','none','FitBoxToText','on', 'String', [' max: ' num2str(max(data)) ', min: ' num2str(min(data)) ', mean: ' num2str(mean(data)) ', stdev: ' num2str(std(data))  ]);
+    legend (filename1,filename2,filename3,filename4,filename5);
   hold off
   
   
  h2=figure ('name','Spectrogram', 'Units', 'normalized','Position', [0.01 0.3 0.98 0.61]); % position normalized to the screen dimensions
            hold on
            
-      ah(1)=  subplot(4,1,1);
+      ah(1)=  subplot(5,1,1);
                        spectrogram(v1,hamming(1024),256,512,fs,'yaxis'); 
                     colormap(hot);
 %                     ylabel('signal [Au]')  
@@ -331,7 +376,7 @@ plot (time_vector, v4)
                     linkaxes(ah,'x');
                     title(filename1);
             %          annotation('textbox', [0.15 0.85 0.19 0.05], 'interpreter','none','FitBoxToText','on', 'String', [' max: ' num2str(max(data)) ', min: ' num2str(min(data)) ', mean: ' num2str(mean(data)) ', stdev: ' num2str(std(data))  ]);
-         ah(2)=  subplot(4,1,2); 
+         ah(2)=  subplot(5,1,2); 
                       spectrogram(v2,hamming(1024),256,512,fs,'yaxis'); 
                     colormap(hot);
 %                     ylabel('signal [Au]')  
@@ -341,7 +386,7 @@ plot (time_vector, v4)
                 title(filename2);
         %          annotation('textbox', [0.15 0.85 0.19 0.05], 'interpreter','none','FitBoxToText','on', 'String', [' max: ' num2str(max(data)) ', min: ' num2str(min(data)) ', mean: ' num2str(mean(data)) ', stdev: ' num2str(std(data))  ]);
  
-        ah(3)=  subplot(4,1,3);
+        ah(3)=  subplot(5,1,3);
                         spectrogram(v3,hamming(1024),256,512,fs,'yaxis'); 
                     colormap(hot);
 %                     ylabel('signal [Au]')  
@@ -351,7 +396,7 @@ plot (time_vector, v4)
                     title(filename3);
             %          annotation('textbox', [0.15 0.85 0.19 0.05], 'interpreter','none','FitBoxToText','on', 'String', [' max: ' num2str(max(data)) ', min: ' num2str(min(data)) ', mean: ' num2str(mean(data)) ', stdev: ' num2str(std(data))  ]);
 
-      ah(4)=    subplot(4,1,4);
+      ah(4)=    subplot(5,1,4);
                  spectrogram(v4,hamming(1024),256,512,fs,'yaxis'); 
                     colormap(hot);
 %                     ylabel('signal [Au]')  
@@ -361,11 +406,21 @@ plot (time_vector, v4)
                         title(filename4);
                 %          annotation('textbox', [0.15 0.85 0.19 0.05], 'interpreter','none','FitBoxToText','on', 'String', [' max: ' num2str(max(data)) ', min: ' num2str(min(data)) ', mean: ' num2str(mean(data)) ', stdev: ' num2str(std(data))  ]);
 
+       ah(5)=    subplot(5,1,5);
+                 spectrogram(v5,hamming(1024),256,512,fs,'yaxis'); 
+                    colormap(hot);
+%                     ylabel('signal [Au]')  
+%                     xlabel('time [sec]')  
+      
+                        linkaxes(ah,'x');
+                        title(filename5);
+                %          annotation('textbox', [0.15 0.85 0.19 0.05], 'interpreter','none','FitBoxToText','on', 'String', [' max: ' num2str(max(data)) ', min: ' num2str(min(data)) ', mean: ' num2str(mean(data)) ', stdev: ' num2str(std(data))  ]);
+          
 %                                                        legend(['Spectrogram of ' filename '  '  ''])
 
 h3=figure ('name','Paralel signals', 'Units', 'normalized','Position', [0.01 0.3 0.98 0.61]); % position normalized to the screen dimensions
            
-         bh(1)=  subplot(4,1,1); 
+         bh(1)=  subplot(5,1,1); 
            
                 plot (time_vector, v1)
         %         legend (filename1);
@@ -376,7 +431,7 @@ h3=figure ('name','Paralel signals', 'Units', 'normalized','Position', [0.01 0.3
         %          annotation('textbox', [0.15 0.85 0.19 0.05], 'interpreter','none','FitBoxToText','on', 'String', [' max: ' num2str(max(data)) ', min: ' num2str(min(data)) ', mean: ' num2str(mean(data)) ', stdev: ' num2str(std(data))  ]);
          
          
-         bh(2)=  subplot(4,1,2); 
+         bh(2)=  subplot(5,1,2); 
 
                 plot (time_vector, v2)
         %         legend (filename1);
@@ -389,7 +444,7 @@ h3=figure ('name','Paralel signals', 'Units', 'normalized','Position', [0.01 0.3
                              
                  
            
-      bh(3)=     subplot(4,1,3);
+      bh(3)=     subplot(5,1,3);
 
                 plot (time_vector, v3)
         %         legend (filename1);
@@ -402,7 +457,7 @@ h3=figure ('name','Paralel signals', 'Units', 'normalized','Position', [0.01 0.3
                             
            
                     
-      bh(4)=     subplot(4,1,4);
+      bh(4)=     subplot(5,1,4);
 
                 plot (time_vector, v4)
         %         legend (filename1);
@@ -412,7 +467,18 @@ h3=figure ('name','Paralel signals', 'Units', 'normalized','Position', [0.01 0.3
         title(filename4);
         %          annotation('textbox', [0.15 0.85 0.19 0.05], 'interpreter','none','FitBoxToText','on', 'String', [' max: ' num2str(max(data)) ', min: ' num2str(min(data)) ', mean: ' num2str(mean(data)) ', stdev: ' num2str(std(data))  ]);
          
-           
+      
+         bh(5)=     subplot(5,1,4);
+
+                plot (time_vector, v5)
+        %         legend (filename1);
+                ylabel('Singal intensity')
+                xlabel('Time [sec]')
+                linkaxes(bh,'x');
+        title(filename5);
+        %          annotation('textbox', [0.15 0.85 0.19 0.05], 'interpreter','none','FitBoxToText','on', 'String', [' max: ' num2str(max(data)) ', min: ' num2str(min(data)) ', mean: ' num2str(mean(data)) ', stdev: ' num2str(std(data))  ]);
+         
+        
 saving_vector = [1 1]; % manual saving of h1 and h2 and h3
 cd(source_filepath);% location change encapsulation end
 
