@@ -1,0 +1,723 @@
+%% DATA IMPORT
+clc; 
+close all;
+clear;
+    
+
+    
+%set(0,'DefaulttextInterpreter','none')   % default nonTeX text interpreter - Graph title appearance
+  set(groot, 'DefaultTextInterpreter', 'none')
+      set(groot, 'DefaultLegendInterpreter', 'none')
+
+
+source_filepath=cd;
+
+ prompt = {'Sampling frequency of chosen file'};
+            dlg_title = 'Parameters input';
+                    num_lines = 1;
+%                     def = {'1.3017431164054740e+03'};% frequency_check_GM71_P10PP01-ch4_fft
+                    def = {'1.5627010420006378e+04'};% GM71_P10PP01-ch3
+%                     def = {'4.1669874509199111e+01'};% GM71_F29PP01-fimt_jelly_01_fft
+%                     def = {'0.842935078827349'};% inside default values
+                    options.Resize='on';
+                    options.WindowStyle='modal';
+                    options.Interpreter='tex';
+                    answer=inputdlg(prompt,dlg_title,num_lines,...
+                                    def);%related to point definition - careful when changed
+
+
+                                fs =answer(1,1); %aproximate position (optical length) of starting (left) evaluation point
+%                                 pause();
+                                fs = str2double(fs);
+
+
+%file 1
+ [filename1,filepath1]=uigetfile({'*.*','bin'},... % manual gie choice of folder (and files inside)
+                      'Select reference Data File - 1 ');
+                      cd(source_filepath);
+                      
+                      fileList1 = dir(filepath1);                  
+fileList1 = fileList1(~[fileList1.isdir]); %remove directories
+[junk, sortorder] = sort([fileList1.datenum]);
+fileList1 = fileList1(sortorder); %list is now in ascending date order
+numfiles = numel(fileList1);
+In = cell(numfiles,1);
+                      
+%file 2
+ [filename2,filepath2]=uigetfile({'*.*','bin'},... % manual gie choice of folder (and files inside)
+                      'Select reference Data File - 2');
+                      cd(source_filepath);
+
+                      fileList2 = dir(filepath2);                  
+fileList2 = fileList2(~[fileList2.isdir]); %remove directories
+[junk, sortorder] = sort([fileList2.datenum]);
+fileList2 = fileList2(sortorder); %list is now in ascending date order
+numfiles = numel(fileList2);
+In = cell(numfiles,1);
+
+
+%file 3
+ [filename3,filepath3]=uigetfile({'*.*','bin'},... % manual gie choice of folder (and files inside)
+                      'Select reference Data File - 3');
+                      cd(source_filepath);
+                                            
+                      
+                        fileList3 = dir(filepath3);                  
+fileList3 = fileList3(~[fileList3.isdir]); %remove directories
+[junk, sortorder] = sort([fileList3.datenum]);
+fileList3 = fileList3(sortorder); %list is now in ascending date order
+numfiles = numel(fileList3);
+In = cell(numfiles,1);
+
+%file 4                    
+ [filenam4,filepath4]=uigetfile({'*.*','bin'},... % manual gie choice of folder (and files inside)
+                      'Select reference Data File - 4');
+                      cd(source_filepath);
+                                            
+                      
+                        fileList4 = dir(filepath4);                  
+fileList4 = fileList4(~[fileList4.isdir]); %remove directories
+[junk, sortorder] = sort([fileList4.datenum]);
+fileList4 = fileList4(sortorder); %list is now in ascending date order
+numfiles = numel(fileList4);
+In = cell(numfiles,1);
+
+%file 5                    
+ [filenam5,filepath5]=uigetfile({'*.*','bin'},... % manual gie choice of folder (and files inside)
+                      'Select reference Data File - 5');
+                      cd(source_filepath);
+                                            
+                      
+                        fileList5 = dir(filepath5);                  
+fileList5 = fileList5(~[fileList5.isdir]); %remove directories
+[junk, sortorder] = sort([fileList5.datenum]);
+fileList5 = fileList5(sortorder); %list is now in ascending date order
+numfiles = numel(fileList5);
+In = cell(numfiles,1);
+
+
+%end files localization
+
+i_files =1;
+max_files = 1;
+ 
+%% COMPUTATION CONSTANTS DRAW OUT 
+% using all the files on the folders.
+% 
+% v1max = zeros (1,numfiles);
+% v1min= zeros (1,numfiles);
+% 
+% v2max = zeros (1,numfiles);
+% v2min= zeros (1,numfiles);
+% 
+% v3max = zeros (1,numfiles);
+% v3min= zeros (1,numfiles);
+% 
+% for ii = 1:numfiles
+% 
+%    %FILE 1 
+%     cd (filepath1)
+% (ii*max_files-(max_files-i_files))
+% filename1 = (fileList1(ii*max_files-(max_files-i_files)).name) % show file name
+% 
+% fileID=fopen(filename1,'r')
+% v1=fread(fileID,[3,inf],'float' );
+% v1=v1(3,1:end);
+% 
+% v1max(ii) = max(v1); % constatn obtaining
+% v1min(ii) = min(v1); % constatn obtaining
+% fclose(fileID)
+% 
+% %FILE 2
+% 
+% 
+%     cd (filepath2)
+% (ii*max_files-(max_files-i_files))
+% filename2 = (fileList2(ii*max_files-(max_files-i_files)).name) % show file name
+% 
+% fileID=fopen(filename2,'r')
+% v2=fread(fileID,[3,inf],'float' );
+% v2=v2(3,1:end);
+% 
+% v2max(ii) = max(v2); % constatn obtaining
+% v2min(ii) = min(v2); % constatn obtaining
+% fclose(fileID)
+% 
+% 
+% %FILE 3
+% 
+% 
+% 
+%     cd (filepath3)
+% (ii*max_files-(max_files-i_files))
+% filename3 = (fileList3(ii*max_files-(max_files-i_files)).name) % show file name
+% 
+% fileID=fopen(filename3,'r')
+% v3=fread(fileID,[3,inf],'float' );
+% v3=v3(3,1:end);
+% 
+% v3max(ii) = max(v3); % constatn obtaining
+% v3min(ii) = min(v3); % constatn obtaining
+% fclose(fileID)
+% 
+% end
+
+
+
+% pause();
+for ii = 1:numfiles % data input cycle   
+%      waitbar1 = waitbar ((ii/(numfiles)),'Total files progress', 'Units', 'normalized', 'Position', [0.25 0.4 0.20 0.08]);
+clear a;
+clear b;
+clear alp;
+clear bet;
+clear den;
+clear gam;
+clear mu;
+clear v;
+clear vMax;
+clear vMin;
+clear Y;
+clear v1;
+clear v2;
+clear v3;
+clear v4;
+clear v5;
+%% **************************************
+
+     
+
+% pause();
+% first_time= char(filename(1,21:length(filename)-11))
+     
+%% FILE 1
+cd (filepath1)
+(ii*max_files-(max_files-i_files))
+filename1 = (fileList1(ii*max_files-(max_files-i_files)).name) % show file name
+% X1 = loadData(filename1)
+
+fileID=fopen(filename1,'r')
+v1=fread(fileID,[3,inf],'float' );
+fclose(fileID)
+v1=v1(3,1:end);
+v1=v1';
+            %% SIGNAL RECALCULATION (Differences)
+             L=1;
+             while L < (length(v1)-1)
+                v1(L)= v1(L+1)-v1(L);
+                L=L+1;
+            end
+            v1=v1(1:(end-2),:); % differences repair( last value)
+            disp([ 'V1 diferences finished' ]) 
+        % END SIGNAL RECALCULATION (Differences)
+% plot (a)
+
+
+% pause;
+
+%% FILE 2
+cd (filepath2)
+(ii*max_files-(max_files-i_files))
+filename2 = (fileList2(ii*max_files-(max_files-i_files)).name) % show file name
+% X2 = loadData(filename2)
+
+fileID=fopen(filename2,'r')
+v2=fread(fileID,[3,inf],'float' );
+fclose(fileID)
+v2=v2(3,1:end);
+v2=v2';
+% plot (a)
+        %% SIGNAL RECALCULATION (Differences)
+         L=1;
+         while L < (length(v2)-1)
+            v2(L)= v2(L+1)-v2(L);
+            L=L+1;
+        end
+        v2=v2(1:(end-2),:); % differences repair( last value)
+         disp([ 'v2 diferences finished' ]) 
+        % END SIGNAL RECALCULATION (Differences)
+
+
+
+%% FILE 3
+cd (filepath3)
+(ii*max_files-(max_files-i_files))
+filename3 = (fileList3(ii*max_files-(max_files-i_files)).name) % show file name
+%  X3 = loadData(filename3)
+
+fileID=fopen(filename3,'r')
+v3=fread(fileID,[3,inf],'float' );
+fclose(fileID)
+v3=v3(3,1:end);
+v3=v3';
+% plot (a)
+        %% SIGNAL RECALCULATION (Differences)
+         L=1;
+         while L < (length(v3)-1)
+            v3(L)= v3(L+1)-v3(L);
+            L=L+1;
+        end
+        v3=v3(1:(end-2),:); % differences repair( last value)
+        disp([ 'v3 diferences finished' ]) 
+        % END SIGNAL RECALCULATION (Differences)
+
+
+%% FILE 4
+cd (filepath4)
+(ii*max_files-(max_files-i_files))
+filename4 = (fileList4(ii*max_files-(max_files-i_files)).name) % show file name
+% X1 = loadData(filename1)
+
+fileID=fopen(filename4,'r')
+v4=fread(fileID,[3,inf],'float' );
+fclose(fileID)
+v4=v4(3,1:end);
+v4=v4';
+        %% SIGNAL RECALCULATION (Differences)
+         L=1;
+         while L < (length(v4)-1)
+            v4(L)= v4(L+1)-v4(L);
+            L=L+1;
+        end
+        v4=v4(1:(end-2),:); % differences repair( last value)
+        disp([ 'V1 diferences finished' ]) 
+        % END SIGNAL RECALCULATION (Differences)
+% plot (a)
+
+%% FILE 5
+cd (filepath5)
+(ii*max_files-(max_files-i_files))
+filename5 = (fileList5(ii*max_files-(max_files-i_files)).name) % show file name
+% X1 = loadData(filename1)
+
+fileID=fopen(filename5,'r')
+v5=fread(fileID,[3,inf],'float' );
+fclose(fileID)
+v5=v5(3,1:end);
+v5=v5';
+        %% SIGNAL RECALCULATION (Differences)
+         L=1;
+         while L < (length(v5)-1)
+            v5(L)= v5(L+1)-v5(L);
+            L=L+1;
+        end
+        v5=v5(1:(end-2),:); % differences repair( last value)
+        disp([ 'V1 diferences finished' ]) 
+        % END SIGNAL RECALCULATION (Differences)
+% plot (a)
+
+
+%% time stamp creation
+
+first_time= char(filename1(1,(length(filename1)-29):length(filename1)-11));%('testing-file-name)'
+           
+time_stamp=1/fs; %in seconds
+% time_stamp= time_stamp/60; %recalculated to minutes
+
+time_vector = (0:time_stamp:((length(v1)-1)*(time_stamp)))';                              
+
+%% plot generation
+% 
+% 
+%  h1=figure('Name','Measured signal - all channels', 'Units', 'normalized','Position', [0.01 0.3 0.98 0.61]);
+% 
+%  disp([ ' ' ' ' ]) 
+%  hold on
+%  plot (time_vector, v1)
+% %         legend (filename1);
+%         ylabel('Singal intensity')
+%         xlabel('Time [sec]')
+% %         title(filename)
+% %          annotation('textbox', [0.15 0.85 0.19 0.05], 'interpreter','none','FitBoxToText','on', 'String', [' max: ' num2str(max(data)) ', min: ' num2str(min(data)) ', mean: ' num2str(mean(data)) ', stdev: ' num2str(std(data))  ]);
+%          
+%  plot (time_vector, v2)
+% %         legend (filename2);
+%         ylabel('Singal intensity')
+%         xlabel('Time [sec]')
+% %         title(filename)
+% %          annotation('textbox', [0.15 0.85 0.19 0.05], 'interpreter','none','FitBoxToText','on', 'String', [' max: ' num2str(max(data)) ', min: ' num2str(min(data)) ', mean: ' num2str(mean(data)) ', stdev: ' num2str(std(data))  ]);
+%  
+%          
+% plot (time_vector, v3)
+% %         legend (filename3);
+%         ylabel('Singal intensity')
+%         xlabel('Time [sec]')
+% %         title(filename)
+% %          annotation('textbox', [0.15 0.85 0.19 0.05], 'interpreter','none','FitBoxToText','on', 'String', [' max: ' num2str(max(data)) ', min: ' num2str(min(data)) ', mean: ' num2str(mean(data)) ', stdev: ' num2str(std(data))  ]);
+%  
+%          
+% plot (time_vector, v4)
+% %         legend (filename4);
+%         ylabel('Singal intensity')
+%         xlabel('Time [sec]')
+% %         title(filename)
+% %          annotation('textbox', [0.15 0.85 0.19 0.05], 'interpreter','none','FitBoxToText','on', 'String', [' max: ' num2str(max(data)) ', min: ' num2str(min(data)) ', mean: ' num2str(mean(data)) ', stdev: ' num2str(std(data))  ]);
+% 
+% 
+% plot (time_vector, v5)
+% %         legend (filename5);
+%         ylabel('Singal intensity')
+%         xlabel('Time [sec]')
+% %         title(filename)
+% %          annotation('textbox', [0.15 0.85 0.19 0.05], 'interpreter','none','FitBoxToText','on', 'String', [' max: ' num2str(max(data)) ', min: ' num2str(min(data)) ', mean: ' num2str(mean(data)) ', stdev: ' num2str(std(data))  ]);
+%     legend (filename1,filename2,filename3,filename4,filename5);
+%   hold off
+%   
+%   
+%  h2=figure ('name','Spectrogram', 'Units', 'normalized','Position', [0.01 0.3 0.98 0.61]); % position normalized to the screen dimensions
+%            hold on
+%            
+%       ah(1)=  subplot(5,1,1);
+%                        spectrogram(v1,hamming(1024),256,512,fs,'yaxis'); 
+%                     colormap(hot);
+% %                     ylabel('signal [Au]')  
+% %                     xlabel('time [sec]')  
+%       
+%                     linkaxes(ah,'x');
+%                     title(filename1);
+%             %          annotation('textbox', [0.15 0.85 0.19 0.05], 'interpreter','none','FitBoxToText','on', 'String', [' max: ' num2str(max(data)) ', min: ' num2str(min(data)) ', mean: ' num2str(mean(data)) ', stdev: ' num2str(std(data))  ]);
+%          ah(2)=  subplot(5,1,2); 
+%                       spectrogram(v2,hamming(1024),256,512,fs,'yaxis'); 
+%                     colormap(hot);
+% %                     ylabel('signal [Au]')  
+% %                     xlabel('time [sec]')  
+%       
+%                     linkaxes(ah,'x');
+%                 title(filename2);
+%         %          annotation('textbox', [0.15 0.85 0.19 0.05], 'interpreter','none','FitBoxToText','on', 'String', [' max: ' num2str(max(data)) ', min: ' num2str(min(data)) ', mean: ' num2str(mean(data)) ', stdev: ' num2str(std(data))  ]);
+%  
+%         ah(3)=  subplot(5,1,3);
+%                         spectrogram(v3,hamming(1024),256,512,fs,'yaxis'); 
+%                     colormap(hot);
+% %                     ylabel('signal [Au]')  
+% %                     xlabel('time [sec]')  
+%       
+%                         linkaxes(ah,'x');
+%                     title(filename3);
+%             %          annotation('textbox', [0.15 0.85 0.19 0.05], 'interpreter','none','FitBoxToText','on', 'String', [' max: ' num2str(max(data)) ', min: ' num2str(min(data)) ', mean: ' num2str(mean(data)) ', stdev: ' num2str(std(data))  ]);
+% 
+%       ah(4)=    subplot(5,1,4);
+%                  spectrogram(v4,hamming(1024),256,512,fs,'yaxis'); 
+%                     colormap(hot);
+% %                     ylabel('signal [Au]')  
+% %                     xlabel('time [sec]')  
+%       
+%                         linkaxes(ah,'x');
+%                         title(filename4);
+%                 %          annotation('textbox', [0.15 0.85 0.19 0.05], 'interpreter','none','FitBoxToText','on', 'String', [' max: ' num2str(max(data)) ', min: ' num2str(min(data)) ', mean: ' num2str(mean(data)) ', stdev: ' num2str(std(data))  ]);
+% 
+%        ah(5)=    subplot(5,1,5);
+%                  spectrogram(v5,hamming(1024),256,512,fs,'yaxis'); 
+%                     colormap(hot);
+% %                     ylabel('signal [Au]')  
+% %                     xlabel('time [sec]')  
+%       
+%                         linkaxes(ah,'x');
+%                         title(filename5);
+%                 %          annotation('textbox', [0.15 0.85 0.19 0.05], 'interpreter','none','FitBoxToText','on', 'String', [' max: ' num2str(max(data)) ', min: ' num2str(min(data)) ', mean: ' num2str(mean(data)) ', stdev: ' num2str(std(data))  ]);
+%           
+% %                                                        legend(['Spectrogram of ' filename '  '  ''])
+% 
+% h3=figure ('name','Paralel signals', 'Units', 'normalized','Position', [0.01 0.3 0.98 0.61]); % position normalized to the screen dimensions
+%            
+%          bh(1)=  subplot(5,1,1); 
+%            
+%                 plot (time_vector, v1)
+%         %         legend (filename1);
+%                 ylabel('Singal intensity')
+%                 xlabel('Time [sec]')
+%                 linkaxes(bh,'x');
+%         title(filename1);
+%         %          annotation('textbox', [0.15 0.85 0.19 0.05], 'interpreter','none','FitBoxToText','on', 'String', [' max: ' num2str(max(data)) ', min: ' num2str(min(data)) ', mean: ' num2str(mean(data)) ', stdev: ' num2str(std(data))  ]);
+%          
+%          
+%          bh(2)=  subplot(5,1,2); 
+% 
+%                 plot (time_vector, v2)
+%         %         legend (filename1);
+%                 ylabel('Singal intensity')
+%                 xlabel('Time [sec]')
+%                 linkaxes(bh,'x');
+%         title(filename2);
+%         %          annotation('textbox', [0.15 0.85 0.19 0.05], 'interpreter','none','FitBoxToText','on', 'String', [' max: ' num2str(max(data)) ', min: ' num2str(min(data)) ', mean: ' num2str(mean(data)) ', stdev: ' num2str(std(data))  ]);
+%          
+%                              
+%                  
+%            
+%       bh(3)=     subplot(5,1,3);
+% 
+%                 plot (time_vector, v3)
+%         %         legend (filename1);
+%                 ylabel('Singal intensity')
+%                 xlabel('Time [sec]')
+%                 linkaxes(bh,'x');
+%         title(filename3);
+%         %          annotation('textbox', [0.15 0.85 0.19 0.05], 'interpreter','none','FitBoxToText','on', 'String', [' max: ' num2str(max(data)) ', min: ' num2str(min(data)) ', mean: ' num2str(mean(data)) ', stdev: ' num2str(std(data))  ]);
+%          
+%                             
+%            
+%                     
+%       bh(4)=     subplot(5,1,4);
+% 
+%                 plot (time_vector, v4)
+%         %         legend (filename1);
+%                 ylabel('Singal intensity')
+%                 xlabel('Time [sec]')
+%                 linkaxes(bh,'x');
+%         title(filename4);
+%         %          annotation('textbox', [0.15 0.85 0.19 0.05], 'interpreter','none','FitBoxToText','on', 'String', [' max: ' num2str(max(data)) ', min: ' num2str(min(data)) ', mean: ' num2str(mean(data)) ', stdev: ' num2str(std(data))  ]);
+%          
+%       
+%          bh(5)=     subplot(5,1,4);
+% 
+%                 plot (time_vector, v5)
+%         %         legend (filename1);
+%                 ylabel('Singal intensity')
+%                 xlabel('Time [sec]')
+%                 linkaxes(bh,'x');
+%         title(filename5);
+%         %          annotation('textbox', [0.15 0.85 0.19 0.05], 'interpreter','none','FitBoxToText','on', 'String', [' max: ' num2str(max(data)) ', min: ' num2str(min(data)) ', mean: ' num2str(mean(data)) ', stdev: ' num2str(std(data))  ]);
+%          
+%         
+saving_vector = [0 0]; % manual saving of h1 and h2 and h3
+cd(source_filepath);% location change encapsulation end
+
+if saving_vector(1) == 1
+                        saveas(h1,['h1_all_channels_together',filename1(1:length(filename1)-11)],'png') % saves h plot (last calculated curve) as a png file. (the name is same as the original file - which CANNOT have the same_name.txt in the same folder!
+                       saveas(h1,['h1_all_channels_together',filename1(1:length(filename1)-11)],'fig')
+                       disp(' all channels Figure saved.')
+                       
+%                        
+                       saveas(h2,['h2_spectrogram',filename1(1:length(filename1)-11)],'png') % saves h plot (last calculated curve) as a png file. (the name is same as the original file - which CANNOT have the same_name.txt in the same folder!
+                       saveas(h2,['h2_spectrogram',filename1(1:length(filename1)-11)],'fig')
+                       disp(' spectrogram Figure saved.') 
+%                         
+                       saveas(h3,['h3_all_paralel',filename1(1:length(filename1)-11)],'png') % saves h plot (last calculated curve) as a png file. (the name is same as the original file - which CANNOT have the same_name.txt in the same folder!
+                       saveas(h3,['h3_all_paralel',filename1(1:length(filename1)-11)],'fig')
+                       disp(' All paralel Figure saved.') 
+%                         
+%                        saveas(h4,['h4_ch3_demodulation',filename1(1:length(filename1)-11)],'png') % saves h plot (last calculated curve) as a png file. (the name is same as the original file - which CANNOT have the same_name.txt in the same folder!
+%                        saveas(h4,['h4_ch3_demodulation',filename1(1:length(filename1)-11)],'fig')
+%                        disp(' ch4_Figure saved.') 
+        else    
+end
+%        
+
+%% AUTOCORELATION FUNCTION
+while (1)
+   
+    
+    clear low_event_1
+    clear high_event_1
+    clear event_1
+    clear event_2
+    clear noise_event_1
+    clear noise_event_2
+    clear difference
+    clear difference_distacne
+    clear ll
+    clear threshold_line_1
+    clear threshold_line_2
+    
+    
+ prompt = {'Event_name'};
+            dlg_title = 'Parameters input';
+                    num_lines = 1;
+                  def = {'intensitty'};% 
+                  def = {'proslov'};% 
+                    options.Resize='on';
+                    options.WindowStyle='modal';
+                    options.Interpreter='tex';
+                    answer=inputdlg(prompt,dlg_title,num_lines,...
+                                    def);%related to point definition - careful when changed
+
+
+                                name =answer(1,1); %aproximate position (optical length) of starting (left) evaluation point
+%                                 pause();
+                                
+    
+    %% EVENT DEFINITION
+h1=figure('Name','Measured signal - all channels', 'Units', 'normalized','Position', [0.01 0.3 0.98 0.61]);
+
+ disp([ ' ' ' ' ]) 
+ hold on
+ plot (v1)
+%         legend (filename1);
+        ylabel('Singal intensity')
+        xlabel('Sample_number')
+%         title(filename)
+%          annotation('textbox', [0.15 0.85 0.19 0.05], 'interpreter','none','FitBoxToText','on', 'String', [' max: ' num2str(max(data)) ', min: ' num2str(min(data)) ', mean: ' num2str(mean(data)) ', stdev: ' num2str(std(data))  ]);
+         
+pause();
+        %% BOUDARIES DEFINITION
+coordinates_event_1 = ans;
+low_event_1 = min(coordinates_event_1(:,1));
+high_event_1 = max(coordinates_event_1(:,1));
+    
+xcorr_window_length = 4; %window duration in seconds
+xcorr_window_length= fs*xcorr_window_length;%window duration in samples
+
+event_1=v1(low_event_1:high_event_1);
+event_1=event_1/(max(abs(event_1)));
+        %% OBTAINING REST OF THE SINGAL FOR AUTOCORELATION
+ sensors=5;
+ 
+ for number_of_microphones = 1:(sensors-1)
+     if number_of_microphones==1;
+
+         
+     event_2=v2(low_event_1:(low_event_1+xcorr_window_length));
+     event_2=event_2/(max(abs(event_2))); 
+
+     else  if number_of_microphones==2;
+             
+     event_2=v3(low_event_1:(low_event_1+xcorr_window_length));
+     event_2=event_2/(max(abs(event_2))); 
+             else  if number_of_microphones==3;
+             
+     event_2=v4(low_event_1:(low_event_1+xcorr_window_length));
+     event_2=event_2/(max(abs(event_2))); 
+         else  if number_of_microphones==4;
+             
+     event_2=v5(low_event_1:(low_event_1+xcorr_window_length));
+    event_2=event_2/(max(abs(event_2))); 
+         else
+             end
+             end
+         end
+     end
+     
+             
+ save_filename = strcat('Corelation_function','_',name,'_',num2str(number_of_microphones));
+       
+% 
+% event3=v3(low_event_1:(low_event_1+xcorr_window_length));
+% event4=v4(low_event_1:(low_event_1+xcorr_window_length));
+% event5=v5(low_event_1:(low_event_1+xcorr_window_length));
+
+% xcorrwindow=512 % reconstruction of the crosscorrelation function
+
+% RMMplot=zeros(1,length(event_1)+length(v2)-1); % inicialization
+% RMMplot=RMMplot';
+
+%% Computation of the curves
+% for kk = 1:(length(event_1));
+
+%      v1xcorr=event_1(kk*xcorrwindow:(1+kk)*xcorrwindow,:);
+%      v2xcorr=event_2(kk*xcorrwindow:(1+kk)*xcorrwindow,:);
+%     [Rmm,lags] = xcorr( v1xcorr, v2xcorr,'none');
+
+    [Rmm,lags] = xcorr( event_1, event_2,'none');
+    [val, idx] = max((Rmm));
+    
+%       RMMmax_value(kk)=val;
+       RMMmax_value=val;
+      
+      a=lags; temp_delay=a(idx);
+%       RMMtime_delay(kk)=temp_delay;
+      RMMtime_delay=temp_delay;
+%         kk=kk+xcorrwindow;
+    %     hold off
+    
+    %% mechanical impacts
+    noise_samples=100; %samples to noise calculation
+    sigma=5; % level of confidence
+ 
+    noise_event_1 = max(event_1(1:noise_samples))*sigma;
+    noise_event_2  = max(event_2(1:noise_samples))*sigma;
+   % Searching cyclus event_1 
+   clear ll;
+    for ll = 1:(length(event_1));
+    
+        if event_1(ll)<noise_event_1
+            ll=ll+1;
+        else
+            event_1_start_time=ll; % number of sample
+            break
+        end
+    end
+    
+    if noise_event_2>1;
+        noise_event_2=0.8;
+    else
+    end
+         % Searching cyclus event_2
+         clear ll;
+    for ll = 1:(length(event_2));
+    
+        if event_2(ll)<noise_event_2
+            ll=ll+1;
+        else
+            event_2_start_time=ll; % number of sample
+            break
+        end
+    end
+
+    time_difference = (event_2_start_time-event_1_start_time)/fs
+    difference_distance = time_difference*344
+    figurename=strcat(save_filename,'_','Signal');
+    figurename=figurename{1}
+    
+    h6=figure('Name',figurename, 'Units', 'normalized','Position', [0.01 0.3 0.98 0.61]);
+title(figurename)  
+ disp([ ' ' ' ' ]) 
+ 
+    subplot(2,1,1);
+            hold on
+            plot (event_1)
+                threshold_line_1 (1:length(event_1))= noise_event_1;
+                plot (threshold_line_1)
+            hold off
+              ylabel('Function_1')
+              
+    subplot(2,1,2);
+            hold on
+            plot(event_2)
+                  threshold_line_2 (1:length(event_2))= noise_event_2;
+                    plot (threshold_line_2)
+            hold off
+                ylabel('Function_2')
+                
+ [val, idx] = max(RMMmax_value); % determining max value of group RMM function
+ Rmm2_event_1_time_delay=RMMtime_delay(idx)/fs
+ Rmm2_event_distance=Rmm2_event_1_time_delay*344
+ 
+  figurename=strcat(save_filename{1},'Cross-correlation function');
+  
+   h7=figure('Name',figurename, 'Units', 'normalized','Position', [0.01 0.3 0.98 0.61]);
+
+   plot(lags/fs,(Rmm)));
+title(figurename)  
+   
+   pd = fitdist(Rmm,'Normal');
+   Rmm2_normal_mu=pd.mu
+   Rmm2_normal_sigma=pd.sigma
+%       plot(lags,(Rmm)));
+  
+    Save_results= [num2str(Rmm2_event_distance),num2str(difference_distance), num2str(Rmm2_normal_mu),num2str(Rmm2_normal_sigma)];
+    Save_results= [num2str(Rmm2_event_distance),num2str(difference_distance), num2str(Rmm2_normal_mu),num2str(Rmm2_normal_sigma)];
+     Save_results= [Rmm2_event_distance,difference_distance,Rmm2_normal_mu,Rmm2_normal_sigma]
+%        save_demodulation=Y';
+       save(['Save_results_' save_filename{1} '.txt'],'Save_results','-ascii','-double') %saves peak positions and amplitudes into txt.file
+                       disp('statistics and results has been successfully saved...');  
+%        save(['save_demodulation_' filename1 '.txt'],'save_demodulation','-ascii','-double') %save_demodulation into txt file
+%                        disp('save_demodulation has been successfully saved...');  
+   
+ saveas(h6,['Event_Signals',save_filename{1}],'png') % saves h plot (last calculated curve) as a png file. (the name is same as the original file - which CANNOT have the same_name.txt in the same folder!
+                       saveas(h6,['Event_Signals',save_filename{1}],'fig')
+                       disp(' All paralel Figure saved.')
+ 
+ saveas(h7,['Cross-correlation_function',save_filename{1}],'png') % saves h plot (last calculated curve) as a png file. (the name is same as the original file - which CANNOT have the same_name.txt in the same folder!
+                       saveas(h7,['Event_Signals',save_filename{1}],'fig')
+                       disp(' All paralel Figure saved.') 
+%                         
+ number_of_microphones=number_of_microphones+1;
+ close all
+%                         
+ end
+pause();
+end
+
+% ii = ii+1;
+% % close all
+    end
