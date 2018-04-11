@@ -68,11 +68,20 @@ for k=1:event_count;
             else
                 if k==4
                 else
+                    events(1,k)=cell2mat(cmd_matrix(56,3));
+                    events(2,k)=cell2mat(cmd_matrix(61,3));
                         if k==5
-                            
+                            events(1,k)=cell2mat(cmd_matrix(65,3));
+                            events(2,k)=cell2mat(cmd_matrix(70,3));
                         else
+                            if k==6
+                                events(1,k)=cell2mat(cmd_matrix(74,3));
+                                events(2,k)=cell2mat(cmd_matrix(79,3));
+                            
+                            else
                             disp('there is more event count then 5')
                             pasue();
+                            end
                         end
                     end
                 end
@@ -191,11 +200,20 @@ for k=1:event_count;
             else
                 if k==4
                 else
+                    events(1,k)=cell2mat(cmd_matrix(56,3));
+                    events(2,k)=cell2mat(cmd_matrix(61,3));
                         if k==5
-                            
+                            events(1,k)=cell2mat(cmd_matrix(65,3));
+                            events(2,k)=cell2mat(cmd_matrix(70,3));
                         else
+                            if k==6
+                                events(1,k)=cell2mat(cmd_matrix(74,3));
+                                events(2,k)=cell2mat(cmd_matrix(79,3));
+                            
+                            else
                             disp('there is more event count then 5')
                             pasue();
+                            end
                         end
                     end
                 end
@@ -300,11 +318,20 @@ for k=1:event_count;
             else
                 if k==4
                 else
+                    events(1,k)=cell2mat(cmd_matrix(56,3));
+                    events(2,k)=cell2mat(cmd_matrix(61,3));
                         if k==5
-                            
+                            events(1,k)=cell2mat(cmd_matrix(65,3));
+                            events(2,k)=cell2mat(cmd_matrix(70,3));
                         else
+                            if k==6
+                                events(1,k)=cell2mat(cmd_matrix(74,3));
+                                events(2,k)=cell2mat(cmd_matrix(79,3));
+                            
+                            else
                             disp('there is more event count then 5')
                             pasue();
+                            end
                         end
                     end
                 end
