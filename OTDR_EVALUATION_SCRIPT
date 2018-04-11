@@ -1,0 +1,397 @@
+%% jakub.marsalek@safibra.cz 2016-01-23 - vytvoøeno ve spojitosti s projektem ADSPEM_CK_TACR
+% v rámco work package 5 - TDM testing
+%% INTRODUCTION
+%skript je vytvoøen za ùèelem vykreslování spekter z FBG / PG jednotky.
+
+   %% Naplnení daty
+   %% NAÈTÌNÍ DAT
+clc; 
+close all;
+clear;
+
+
+% default_filepath=cd; %not needed
+    
+%set(0,'DefaulttextInterpreter','none')   % default nonTeX text interpreter - Graph title appearance
+  set(groot, 'DefaultTextInterpreter', 'none')
+      set(groot, 'DefaultLegendInterpreter', 'none')
+                             
+ [filename,filepath]=uigetfile({'*.*','csv'},... % manual gie choice of folder (and files inside)
+                      'Select reference Data File ');
+                      cd(filepath);
+                      
+fileList = dir(filepath);                  
+fileList = fileList(~[fileList.isdir]); %remove directories
+[junk, sortorder] = sort([fileList.datenum]);
+fileList = fileList(sortorder); %list is now in ascending date order
+numfiles = numel(fileList);
+In = cell(numfiles,1);
+
+relative=0;% relative comparison OFF
+% relative=1;% relative comparison ON
+
+
+
+for i = 2:numfiles % data input cycle - first delimread function neglected
+%    
+cd(filepath);
+
+             i %show file number
+filename = (fileList(i).name); % show file name                                                                disp('Reading a txt file - this operation usually takes a while (according to number of rows).') 
+     filename=filename(1:end-4)                                                                       %statusbar(0, ['Desktop status: processing  ', filename]);
+ext_txt='.txt';
+ext_csv='.csv';
+           filename_out=strcat(filename,ext_txt);                                                            
+           filename_out2=strcat(filename,ext_csv);
+           
+out=delimread (filename_out,' ','mixed') %dìlící znak dvì mezery, input "numebr and text"
+out2=delimread (filename_out2,'  ','num');                                                                              
+
+cmd_matrix= (out.mixed);
+range=cell2mat(cmd_matrix(12,4));
+%% event detection
+event_count=cell2mat(cmd_matrix(26,2));
+events=zeros(2,event_count);
+
+for k=1:event_count;
+    if k==1
+        events(1,k)=cell2mat(cmd_matrix(29,3));
+        events(2,k)=cell2mat(cmd_matrix(34,3));
+    else
+        if k==2
+              events(1,k)=cell2mat(cmd_matrix(38,3));
+              events(2,k)=cell2mat(cmd_matrix(43,3));
+        else
+            if k==3
+                 events(1,k)=cell2mat(cmd_matrix(47,3));
+                 events(2,k)=cell2mat(cmd_matrix(52,3));
+            else
+                if k==4
+                else
+                        if k==5
+                            
+                        else
+                            disp('there is more event count then 5')
+                            pasue();
+                        end
+                    end
+                end
+            end
+        end
+    
+    end
+
+%% ploting
+attenuation = (out2.num(1,1:end));
+attenuation =((attenuation/1000).*-1)';
+
+distance_vector= (0:range/length(attenuation):(range));   
+distance_vector=distance_vector(1,1:(end-1))';
+
+eval(sprintf('attenuation%d = (attenuation(1:end,1));', i));   %dynamická tvorba promìnné v cyklu
+eval(sprintf('distance_vector%d = (distance_vector(1:end,1));', i));    %dynamická tvorba promìnné v cyklu
+eval(sprintf('filename%d = (filename);', i));    %dynamická tvorba promìnné v cyklu
+eval(sprintf('events%d = (events);', i));    %dynamická tvorba promìnné v cyklu
+% close(waitbar1)                                                                           
+       
+
+    
+   if i==2;
+       if relative==0;
+       h1=figure('Name','OTDR-comparison', 'Units', 'normalized','Position', [0.01 0.3 0.98 0.61]);    
+                     else
+              h1=figure('Name','OTDR-comparison-relative', 'Units', 'normalized','Position', [0.01 0.3 0.98 0.61]);
+              
+              ref_attenuation=attenuation;
+              ref_distance_vector=distance_vector;
+              
+       end
+            events_all=zeros(2,(numfiles-1)/2)*event_count;
+            
+           
+%       else
+   end
+    
+ events_all()
+   
+if relative==0;
+       title( 'Absolute comparison ')
+           ylabel('relative attenuation [dB]')
+           xlabel('Distance [m]')
+%         xlabel('Samples [au]')
+    
+              else
+              title( 'Relative comparison - to the first file')  
+                ylabel('Attenuation [dB]')
+           xlabel('Distance [m]')
+          
+           attenuation=attenuation-ref_attenuation;
+%            distance_vector=distance_vector-ref_distance_vector;
+%         xlabel('Samples [au]')
+    
+       end
+ 
+ hold on
+     
+    
+plot (distance_vector, attenuation);
+
+  
+  %%SAVING PROCESS
+    
+    
+    
+
+    i = i+2
+
+% ii=ii+1;
+end
+
+legend ('measurement_0','measurement_1','measurement_2','measurement_3','measurement_4','measurement_5','measurement_6','measurement_7','measurement_8','measurement_9','measurement_10','Location','NorthEastOutside');  
+hold off
+
+saveas(h1,['h1_absolute_comparison',filename],'png') % saves h plot (last calculated curve) as a png file. (the name is same as the original file - which CANNOT have the same_name.txt in the same folder!
+                       saveas(h1,['h1_absolute_comparison',filename],'fig')
+                       disp(' Figure 1 saved.') 
+%%event plotting
+
+for i = 2:numfiles % data input cycle - first delimread function neglected
+%    
+cd(filepath);
+
+             i %show file number
+filename = (fileList(i).name); % show file name                                                                disp('Reading a txt file - this operation usually takes a while (according to number of rows).') 
+     filename=filename(1:end-4)                                                                       %statusbar(0, ['Desktop status: processing  ', filename]);
+ext_txt='.txt';
+ext_csv='.csv';
+           filename_out=strcat(filename,ext_txt);                                                            
+           filename_out2=strcat(filename,ext_csv);
+           
+out=delimread (filename_out,' ','mixed') %dìlící znak dvì mezery, input "numebr and text"
+out2=delimread (filename_out2,'  ','num');                                                                              
+
+cmd_matrix= (out.mixed);
+range=cell2mat(cmd_matrix(12,4));
+%% event detection
+event_count=cell2mat(cmd_matrix(26,2));
+events=zeros(2,event_count);
+
+for k=1:event_count;
+    if k==1
+        events(1,k)=cell2mat(cmd_matrix(29,3));
+        events(2,k)=cell2mat(cmd_matrix(34,3));
+    else
+        if k==2
+              events(1,k)=cell2mat(cmd_matrix(38,3));
+              events(2,k)=cell2mat(cmd_matrix(43,3));
+        else
+            if k==3
+                 events(1,k)=cell2mat(cmd_matrix(47,3));
+                 events(2,k)=cell2mat(cmd_matrix(52,3));
+            else
+                if k==4
+                else
+                        if k==5
+                            
+                        else
+                            disp('there is more event count then 5')
+                            pasue();
+                        end
+                    end
+                end
+            end
+        end
+    
+    end
+
+%% ploting
+attenuation = (out2.num(1,1:end));
+attenuation =((attenuation/1000).*-1)';
+
+distance_vector= (0:range/length(attenuation):(range));   
+distance_vector=distance_vector(1,1:(end-1))';
+
+eval(sprintf('attenuation%d = (attenuation(1:end,1));', i));   %dynamická tvorba promìnné v cyklu
+eval(sprintf('distance_vector%d = (distance_vector(1:end,1));', i));    %dynamická tvorba promìnné v cyklu
+eval(sprintf('filename%d = (filename);', i));    %dynamická tvorba promìnné v cyklu
+eval(sprintf('events%d = (events);', i));    %dynamická tvorba promìnné v cyklu
+% close(waitbar1)                                                                           
+       
+
+    
+   if i==2;
+       if relative==0;
+       h2=figure('Name','OTDR events', 'Units', 'normalized','Position', [0.01 0.3 0.98 0.61]);    
+                     else
+              h2=figure('Name','OTDR events', 'Units', 'normalized','Position', [0.01 0.3 0.98 0.61]);
+              
+              ref_attenuation=attenuation;
+              ref_distance_vector=distance_vector;
+              
+       end
+            events_all=zeros(2,(numfiles-1)/2)*event_count;
+            
+           
+%       else
+   end
+    
+%
+
+ hold on
+     yaxes= events (1,:) %distance location
+     xaxes= events (2,:) % attenuation in [dB]
+    
+     title( 'OTDR event detection')
+           ylabel('Attenuation [dB]')
+           xlabel('Distance [m]')
+%   
+scatter (yaxes, xaxes,'filled');
+
+  
+
+    i = i+2
+
+
+end
+legend ('measurement_0','measurement_1','measurement_2','measurement_3','measurement_4','measurement_5','measurement_6','measurement_7','measurement_8','measurement_9','measurement_10','Location','NorthEastOutside');  
+hold off
+
+saveas(h2,['h2_events_comparison',filename],'png') % saves h plot (last calculated curve) as a png file. (the name is same as the original file - which CANNOT have the same_name.txt in the same folder!
+                       saveas(h2,['h2_events_comparison',filename],'fig')
+                       disp(' Figure 2 saved.') 
+                       
+   
+
+relative =1
+
+for i = 2:numfiles % data input cycle - first delimread function neglected
+%    
+cd(filepath);
+
+             i %show file number
+filename = (fileList(i).name); % show file name                                                                disp('Reading a txt file - this operation usually takes a while (according to number of rows).') 
+     filename=filename(1:end-4)                                                                       %statusbar(0, ['Desktop status: processing  ', filename]);
+ext_txt='.txt';
+ext_csv='.csv';
+           filename_out=strcat(filename,ext_txt);                                                            
+           filename_out2=strcat(filename,ext_csv);
+           
+out=delimread (filename_out,' ','mixed') %dìlící znak dvì mezery, input "numebr and text"
+out2=delimread (filename_out2,'  ','num');                                                                              
+
+cmd_matrix= (out.mixed);
+range=cell2mat(cmd_matrix(12,4));
+%% event detection
+event_count=cell2mat(cmd_matrix(26,2));
+events=zeros(2,event_count);
+
+for k=1:event_count;
+    if k==1
+        events(1,k)=cell2mat(cmd_matrix(29,3));
+        events(2,k)=cell2mat(cmd_matrix(34,3));
+    else
+        if k==2
+              events(1,k)=cell2mat(cmd_matrix(38,3));
+              events(2,k)=cell2mat(cmd_matrix(43,3));
+        else
+            if k==3
+                 events(1,k)=cell2mat(cmd_matrix(47,3));
+                 events(2,k)=cell2mat(cmd_matrix(52,3));
+            else
+                if k==4
+                else
+                        if k==5
+                            
+                        else
+                            disp('there is more event count then 5')
+                            pasue();
+                        end
+                    end
+                end
+            end
+        end
+    
+    end
+
+%% ploting
+attenuation = (out2.num(1,1:end));
+attenuation =((attenuation/1000).*-1)';
+
+distance_vector= (0:range/length(attenuation):(range));   
+distance_vector=distance_vector(1,1:(end-1))';
+
+eval(sprintf('attenuation%d = (attenuation(1:end,1));', i));   %dynamická tvorba promìnné v cyklu
+eval(sprintf('distance_vector%d = (distance_vector(1:end,1));', i));    %dynamická tvorba promìnné v cyklu
+eval(sprintf('filename%d = (filename);', i));    %dynamická tvorba promìnné v cyklu
+eval(sprintf('events%d = (events);', i));    %dynamická tvorba promìnné v cyklu
+% close(waitbar1)                                                                           
+       
+
+    
+   if i==2;
+       if relative==0;
+       h3=figure('Name','OTDR-comparison', 'Units', 'normalized','Position', [0.01 0.3 0.98 0.61]);    
+                     else
+              h3=figure('Name','OTDR-comparison-relative', 'Units', 'normalized','Position', [0.01 0.3 0.98 0.61]);
+              
+              ref_attenuation=attenuation;
+              ref_distance_vector=distance_vector;
+              
+       end
+            events_all=zeros(2,(numfiles-1)/2)*event_count;
+            
+           
+%       else
+   end
+    
+ events_all()
+   
+if relative==0;
+       title( 'Absolute comparison ')
+           ylabel('relative attenuation [dB]')
+           xlabel('Distance [m]')
+%         xlabel('Samples [au]')
+    
+              else
+              title( 'Relative comparison - to the first file')  
+                ylabel('Attenuation [dB]')
+           xlabel('Distance [m]')
+          
+           attenuation=attenuation-ref_attenuation;
+%            distance_vector=distance_vector-ref_distance_vector;
+%         xlabel('Samples [au]')
+    
+       end
+ 
+ hold on
+     
+    
+plot (distance_vector, attenuation);
+
+  
+  %%SAVING PROCESS
+    
+    
+    
+
+    i = i+2
+
+% ii=ii+1;
+end
+legend ('measurement_0','measurement_1','measurement_2','measurement_3','measurement_4','measurement_5','measurement_6','measurement_7','measurement_8','measurement_9','measurement_10','Location','NorthEastOutside');  
+hold off
+
+saveas(h3,['h3_relative_comparison',filename],'png') % saves h plot (last calculated curve) as a png file. (the name is same as the original file - which CANNOT have the same_name.txt in the same folder!
+                       saveas(h3,['h3_relative_comparison',filename],'fig')
+                           disp(' Figure 3 saved.') 
+                           
+                           
+   close all
+ waitbar1 = waitbar(1, 'RELATION IS FINISHED  - get a coffee ;) ', 'Units', 'normalized', 'Position', [0.4 0.2 0.22 0.06]);
+   disp(' RELATION IS FINISHED  - get a coffee ;) ') 
+                            pause(1);                        
+ close(waitbar1)
+% clear all
+                    
+                       
+   
