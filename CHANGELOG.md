@@ -352,4 +352,14 @@ SIMPLE_PLOT_TIME_DIR
 
 PLOT_GRAPHS_HIST_3D
 - imports peak values and positions, export the histograms and 3D plot representation (dynamic)
+
+*************************
+2018-04-11
+OTDR_EVALUATION_SCRIPT
+ - created script to load data from Saf;OTDR module and measurements - 
+ - plotting multiple measurement curves and events
+ - data are in absolute and relative comparison; relative is measured to the first file
+
+
 Kuba Maršálek - jakub.marsalek@safibra.cz 
+
