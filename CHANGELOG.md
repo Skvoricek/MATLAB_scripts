@@ -359,7 +359,8 @@ OTDR_EVALUATION_SCRIPT
  - created script to load data from Saf;OTDR module and measurements - 
  - plotting multiple measurement curves and events
  - data are in absolute and relative comparison; relative is measured to the first file
-
+ - repaired amount of data plotting (double of i variables in dynamic creation fixed)
+ - added partial clearing of variables between the figures
 
 Kuba Maršálek - jakub.marsalek@safibra.cz 
 
