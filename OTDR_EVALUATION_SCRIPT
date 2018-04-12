@@ -142,9 +142,11 @@ if relative==0;
  
  hold on
      
-    
+ if mod(i,2) == 0 % taking just every second variable to plot
+     
 plot (distance_vector, attenuation);
-
+ else
+ end
   
   %%SAVING PROCESS
     
@@ -162,7 +164,13 @@ hold off
 saveas(h1,['h1_absolute_comparison',filename],'png') % saves h plot (last calculated curve) as a png file. (the name is same as the original file - which CANNOT have the same_name.txt in the same folder!
                        saveas(h1,['h1_absolute_comparison',filename],'fig')
                        disp(' Figure 1 saved.') 
-%%event plotting
+
+
+%% celaring variables
+% pause()
+clearvars -except filename filepath fileList In numfiles  relative
+% pause()              
+%% end celaring variables
 
 for i = 2:numfiles % data input cycle - first delimread function neglected
 %    
@@ -263,7 +271,14 @@ eval(sprintf('events%d = (events);', i));    %dynamická tvorba promìnné v cyk
            ylabel('Attenuation [dB]')
            xlabel('Distance [m]')
 %   
+  
+ if mod(i,2) == 0 % taking just every second variable to plot
+     
 scatter (yaxes, xaxes,'filled');
+ else
+ end
+  
+
 
   
 
@@ -271,7 +286,7 @@ scatter (yaxes, xaxes,'filled');
 
 
 end
-legend ('measurement_0','measurement_1','measurement_2','measurement_3','measurement_4','measurement_5','measurement_6','measurement_7','measurement_8','measurement_9','measurement_10','Location','NorthEastOutside');  
+legend ('measurement_0','measurement_1','measurement_2','measurement_3','measurement_4','measurement_5','measurement_6','measurement_7','measurement_8','measurement_9','measurement_10','measurement_11','Location','NorthEastOutside');  
 hold off
 
 saveas(h2,['h2_events_comparison',filename],'png') % saves h plot (last calculated curve) as a png file. (the name is same as the original file - which CANNOT have the same_name.txt in the same folder!
@@ -279,6 +294,10 @@ saveas(h2,['h2_events_comparison',filename],'png') % saves h plot (last calculat
                        disp(' Figure 2 saved.') 
                        
    
+%% celaring variables
+clearvars -except filename filepath fileList In numfiles relative
+                     
+%% end celaring variables
 
 relative =1
 
@@ -392,8 +411,14 @@ if relative==0;
  
  hold on
      
-    
+ 
+ if mod(i,2) == 0 % taking just every second variable to plot
+     
 plot (distance_vector, attenuation);
+ else
+ end
+    
+
 
   
   %%SAVING PROCESS
@@ -405,7 +430,7 @@ plot (distance_vector, attenuation);
 
 % ii=ii+1;
 end
-legend ('measurement_0','measurement_1','measurement_2','measurement_3','measurement_4','measurement_5','measurement_6','measurement_7','measurement_8','measurement_9','measurement_10','Location','NorthEastOutside');  
+legend ('measurement_0','measurement_1','measurement_2','measurement_3','measurement_4','measurement_5','measurement_6','measurement_7','measurement_8','measurement_9','measurement_10','measurement_11','Location','NorthEastOutside');  
 hold off
 
 saveas(h3,['h3_relative_comparison',filename],'png') % saves h plot (last calculated curve) as a png file. (the name is same as the original file - which CANNOT have the same_name.txt in the same folder!
