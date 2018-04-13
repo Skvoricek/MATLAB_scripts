@@ -361,6 +361,6 @@ OTDR_EVALUATION_SCRIPT
  - data are in absolute and relative comparison; relative is measured to the first file
  - repaired amount of data plotting (double of i variables in dynamic creation fixed)
  - added partial clearing of variables between the figures
-
+ - added file_list export into txt file (of displayed data in order from measurement 0..1..2..etc)
 Kuba Maršálek - jakub.marsalek@safibra.cz 
 
