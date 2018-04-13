@@ -41,6 +41,14 @@ filename = (fileList(i).name); % show file name                                 
      filename=filename(1:end-4)                                                                       %statusbar(0, ['Desktop status: processing  ', filename]);
 ext_txt='.txt';
 ext_csv='.csv';
+
+
+if i==2; 
+add='  ;';
+filename_list=strcat(filename,add)
+else
+filename_list=strcat(filename_list,add,filename)
+end
            filename_out=strcat(filename,ext_txt);                                                            
            filename_out2=strcat(filename,ext_csv);
            
@@ -50,6 +58,7 @@ out2=delimread (filename_out2,'  ','num');
 cmd_matrix= (out.mixed);
 range=cell2mat(cmd_matrix(12,4));
 %% event detection
+
 event_count=cell2mat(cmd_matrix(26,2));
 events=zeros(2,event_count);
 
@@ -164,7 +173,15 @@ hold off
 saveas(h1,['h1_absolute_comparison',filename],'png') % saves h plot (last calculated curve) as a png file. (the name is same as the original file - which CANNOT have the same_name.txt in the same folder!
                        saveas(h1,['h1_absolute_comparison',filename],'fig')
                        disp(' Figure 1 saved.') 
-
+                      
+                       
+%TEXT FILE SAVING
+%                        filename_list= num2str(filename_list);%format transfer for saving
+save('filename_list.txt','filename_list','-ascii')
+fid = fopen('filename_list.txt', 'wt');
+fprintf(fid, '%s\n', filename_list);
+fclose(fid);
+%end TEXT FILE SAVING                       
 
 %% celaring variables
 % pause()
