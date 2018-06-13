@@ -11,7 +11,7 @@ clear;
 
 %% INPUT NUMBER OF modules
 
-number_of_modules = 1;
+number_of_modules = 25;
 %% END INPUT NUMBER OF modules
 
 %set(0,'DefaulttextInterpreter','none')   % default nonTeX text interpreter - Graph title appearance
@@ -38,6 +38,8 @@ source_matrix = char(source_matrix.') ;
 
 M1 ='new_module';
 S1 ='new_sensor';
+G1 = 'group0';
+I1 = 'inputx';
 
 
 
@@ -47,45 +49,39 @@ source_matrix=source_matrix(63:end-2); % last encapsulating } goding away.
 X=source_matrix;
 footer = source_matrix(end-2:end);% footer last encapsulating }  including spaces.
 
-% %% START MODULES NAME ONLY
-% %changing modules name only (input is one sensor from layer one
-% for i=1:(number_of_modules-1)
-% 
-% M2 ='new_module_';
-% ii=num2str(i);
-% 
-% source_matrix(9) = ii; %changing group name number label
-% source_matrix(32) = ii; %changing group name number label
-% 
-% 
-% M3=strcat(M2,ii);
-%  Y = strrep(source_matrix, M1, M3);
-%  X=[X Y];
-%  
-% end
-%    %% END MODULES NAME ONLY    
-% %% START MODULES AND SENSORS GENERATION
-% %changing modules and names of the input sensor (input is multiple sensors
-% %from layer one)
+
+%% START MODULES AND SENSORS GENERATION
+%changing modules and names of the input sensor (input is multiple sensors
+%from layer one)
 
 
 for i=1:(number_of_modules-1)
 
 M2 ='new_module_';
+S2 ='new_sensor_';
+G2 = 'group';
+I2 = 'inputx_';
+
+
 ii=num2str(i);
 
-source_matrix(9) = ii; %changing group name number label
-source_matrix(32) = ii; %changing group name number label
+% source_matrix(9) = ii; %changing group name number label
+% source_matrix(32) = ii; %changing group name number label
 
 
-M3=strcat(M2,ii);
- Y = strrep(source_matrix, M1, M3);
- 
- 
-    S2 ='new_sensor_';
-    S3=strcat(S2,ii);
- 
-    Y = strrep(Y, S1, S3);
+    M3=strcat(M2,ii);
+    Y = strrep(source_matrix, M1, M3);
+    
+       S3=strcat(S2,ii); % comment this if the sensor input should remain only one 
+       Y = strrep(Y, S1, S3);% comment this if the sensor input should remain only one 
+
+               G3=strcat(G2,ii);
+               Y = strrep(Y, G1, G3);
+
+
+                        I3=strcat(I2,ii);
+                        Y = strrep(Y, I1, I3);
+
  X=[X Y];
  
 end
