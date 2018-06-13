@@ -11,7 +11,7 @@ clear;
 
 %% INPUT NUMBER OF SENSORS
 
-number_of_sensors = 75;
+number_of_sensors = 25;
 %% END INPUT NUMBER OF SENSORS
 
 
@@ -36,7 +36,7 @@ number_of_sensors = 75;
 % In = cell(numfiles,1);
 
 
-fid = fopen('sensors_source_fft2.conf') ;
+fid = fopen('sensors_source.conf') ;
 source_matrix = fread(fid) ;
 fclose(fid) ;
 
