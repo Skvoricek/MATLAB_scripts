@@ -1,0 +1,105 @@
+%% NAÈTÌNÍ DAT
+clc; 
+close all;
+clear;
+
+
+
+
+
+
+
+%% INPUT NUMBER OF modules
+
+number_of_modules = 1;
+%% END INPUT NUMBER OF modules
+
+%set(0,'DefaulttextInterpreter','none')   % default nonTeX text interpreter - Graph title appearance
+  set(groot, 'DefaultTextInterpreter', 'none')
+      set(groot, 'DefaultLegendInterpreter', 'none')
+                             
+%  [filename,filepath]=uigetfile({'*.*','csv'},... % manual gie choice of folder (and files inside)
+%                       'Select reference Data File ');
+%                       cd(filepath);
+%                       
+% fileList = dir(filepath);                  ;
+% fileList = fileList(~[fileList.isdir]); %remove directories
+% [junk, sortorder] = sort([fileList.datenum]);
+% fileList = fileList(sortorder); %list is now in ascending date order
+% numfiles = numel(fileList);
+% In = cell(numfiles,1);
+
+
+fid = fopen('modules_source.cfg') ;
+source_matrix = fread(fid) ;
+fclose(fid) ;
+
+source_matrix = char(source_matrix.') ;
+
+M1 ='new_module';
+S1 ='new_sensor';
+
+
+
+
+header=source_matrix(1:62); %header root group and module descrition separation
+source_matrix=source_matrix(63:end-2); % last encapsulating } goding away.
+X=source_matrix;
+footer = source_matrix(end-2:end);% footer last encapsulating }  including spaces.
+
+% %% START MODULES NAME ONLY
+% %changing modules name only (input is one sensor from layer one
+% for i=1:(number_of_modules-1)
+% 
+% M2 ='new_module_';
+% ii=num2str(i);
+% 
+% source_matrix(9) = ii; %changing group name number label
+% source_matrix(32) = ii; %changing group name number label
+% 
+% 
+% M3=strcat(M2,ii);
+%  Y = strrep(source_matrix, M1, M3);
+%  X=[X Y];
+%  
+% end
+%    %% END MODULES NAME ONLY    
+% %% START MODULES AND SENSORS GENERATION
+% %changing modules and names of the input sensor (input is multiple sensors
+% %from layer one)
+
+
+for i=1:(number_of_modules-1)
+
+M2 ='new_module_';
+ii=num2str(i);
+
+source_matrix(9) = ii; %changing group name number label
+source_matrix(32) = ii; %changing group name number label
+
+
+M3=strcat(M2,ii);
+ Y = strrep(source_matrix, M1, M3);
+ 
+ 
+    S2 ='new_sensor_';
+    S3=strcat(S2,ii);
+ 
+    Y = strrep(Y, S1, S3);
+ X=[X Y];
+ 
+end
+   %% END MODULES AND SENSORS GENERATION
+
+
+SUM=X;
+% replace string S1 with string S2
+
+Almost_total_sum = [header X];
+Total_sum=[Almost_total_sum  footer];
+% Total_sum=SUM;
+
+fid2 = fopen('modules.cfg','wt') ;
+fwrite(fid2,Total_sum);
+fclose (fid2) ;
+
