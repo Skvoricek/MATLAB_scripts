@@ -1,0 +1,67 @@
+%% NAÈTÌNÍ DAT
+clc; 
+close all;
+clear;
+
+
+
+
+
+
+
+%% INPUT NUMBER OF SENSORS
+
+number_of_sensors = 75;
+%% END INPUT NUMBER OF SENSORS
+
+
+
+
+
+
+    
+%set(0,'DefaulttextInterpreter','none')   % default nonTeX text interpreter - Graph title appearance
+  set(groot, 'DefaultTextInterpreter', 'none')
+      set(groot, 'DefaultLegendInterpreter', 'none')
+                             
+%  [filename,filepath]=uigetfile({'*.*','csv'},... % manual gie choice of folder (and files inside)
+%                       'Select reference Data File ');
+%                       cd(filepath);
+%                       
+% fileList = dir(filepath);                  ;
+% fileList = fileList(~[fileList.isdir]); %remove directories
+% [junk, sortorder] = sort([fileList.datenum]);
+% fileList = fileList(sortorder); %list is now in ascending date order
+% numfiles = numel(fileList);
+% In = cell(numfiles,1);
+
+
+fid = fopen('sensors_source_fft2.conf') ;
+source_matrix = fread(fid) ;
+fclose(fid) ;
+
+source_matrix = char(source_matrix.') ;
+S1 ='new_sensor';
+
+
+
+X=source_matrix;
+
+for i=1:(number_of_sensors-1)
+
+S2 ='new_sensor_';
+ii=num2str(i);
+
+S3=strcat(S2,ii);
+ Y = strrep(source_matrix, S1, S3);
+
+ X=[X Y];
+      end
+SUM=X;
+% replace string S1 with string S2
+
+ 
+fid2 = fopen('sensors.conf','wt') ;
+fwrite(fid2,SUM) ;
+fclose (fid2) ;
+
