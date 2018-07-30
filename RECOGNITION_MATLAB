@@ -12,13 +12,17 @@ vid=VideoReader(filename);
  numFrames = vid.NumberOfFrames;
  n=numFrames;
  lines_in_file = 40;
+ start = 1
+ endd =n/4
+ 
 %  for i = 1:23:(23*lines_in_file)
-for i = 1:21:n
+for i = start:21:endd
  frames = read(vid,i);
 %  imwrite(frames,['Image' int2str(i), '.jpg']);
 %  im(i)=image(frames);
  
-         if i ==1
+         if i == start
+            
              A = read(vid,i);
              Measurement_img= A;
          else
@@ -26,7 +30,9 @@ for i = 1:21:n
          end
 i/23
  end
- imwrite(Measurement_img,['Measurement_img_final.png']);
+ imwrite(Measurement_img,['Measurement_img_final-14.jpg']);
 %  A = read(vid,10);
 %  B= read(vid,20);
 %  Measurement_img= cat(1,A,B);
+f = warndlg('*******DONE*********')
+close (f)
