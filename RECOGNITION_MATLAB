@@ -1,0 +1,32 @@
+clc
+clear
+close all
+% businessCard = imread('uto_matlab_detection.PNG');
+filename='OFLS_tem_measurement_2018-07-27at16-39-29_final.mp4' % reálné jiný formát (první ve VLC)
+% zdrojové video špatného formátu
+% filename='test_2.mp4' % nové video správného formátu
+% filename='OFLS_tem_measurement_2018-07-27at5-44-28.mp4'
+% v = VideoReader('OFLS_tem_measurement_2018-07-27_at_13-42-26.mp4')
+ 
+vid=VideoReader(filename);
+ numFrames = vid.NumberOfFrames;
+ n=numFrames;
+ lines_in_file = 40;
+%  for i = 1:23:(23*lines_in_file)
+for i = 1:21:n
+ frames = read(vid,i);
+%  imwrite(frames,['Image' int2str(i), '.jpg']);
+%  im(i)=image(frames);
+ 
+         if i ==1
+             A = read(vid,i);
+             Measurement_img= A;
+         else
+             Measurement_img = cat (1,Measurement_img,frames);
+         end
+i/23
+ end
+ imwrite(Measurement_img,['Measurement_img_final.png']);
+%  A = read(vid,10);
+%  B= read(vid,20);
+%  Measurement_img= cat(1,A,B);
