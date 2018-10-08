@@ -1,0 +1,282 @@
+%% jakub.marsalek@safibra.cz 2018-10-08 - Made for FBGuard mikro palication
+%using the FBGinterrogator 4x4 channels - settings for 2 channel Temp and
+%mechanical cycles experiment
+
+clc
+close all
+clear all
+
+%% INTRODUCTION
+%skript je vytvoøen za ucelem vykreslování dat z FBGinterrogatoru. V prvni
+%fazi jen 2 kanaly, s moznym rozsirenim
+
+%% NAÈTENÍ DAT
+
+ set(groot, 'DefaultTextInterpreter', 'none')
+      set(groot, 'DefaultLegendInterpreter', 'none')
+  % INPUT DATA INTERACTIVE
+   prompt = {'Poèet souborù ke zpracování'};
+            dlg_title = 'Parameters input';
+                    num_lines = 1;
+                    def = {'1'};% inside default values
+                    options.Resize='on';
+                    options.WindowStyle='modal';
+                    options.Interpreter='tex';
+                    answer=inputdlg(prompt,dlg_title,num_lines,...
+                                    def);%related to point definition - careful when changed
+
+
+                                number_of_files =answer(1,1); %aproximate position (optical length) of starting (left) evaluation point
+                                number_of_files = str2double(number_of_files);
+
+ii=1;
+        
+    %% Naplnení daty
+    
+while ii<=(number_of_files)
+
+  
+                                                                            disp('Waiting for user choice - Choose a CSV file.') 
+                                                                             waitbar1 = waitbar(0.15, 'choose input file ', 'Units', 'normalized', 'Position', [0.4 0.2 0.22 0.06]); %position of waitbar
+    [filename,filepath]=uigetfile({'*.*','csv'},...
+                      'Select CSV Data File for sampling frequency check');
+                      cd(filepath);
+                                                                            close(waitbar1)
+                                                                            waitbar1 = waitbar(0.55, 'CVS file reading ', 'Units', 'normalized', 'Position', [0.4 0.2 0.22 0.06]); %position of waitbar
+                                                                            disp('Reading a CSV file - this operation usually takes a while (according to number of rows).') 
+                                                                            %statusbar(0, ['Desktop status: processing  ', filename]);
+    
+
+out=delimread (filename,';','mixed') %dìlící znak dvì mezery, input "mixed"
+                                                                              
+eval(sprintf('time%d = (out.mixed(1:end,1));', i));   %dynamická tvorba promìnné v cyklu
+eval(sprintf('power%d = (out.mixed(1:end,19));', i));    %dynamická tvorba promìnné v cyklu
+eval(sprintf('wavelegth%d = (out.mixed(1:end,23));', i));    %dynamická tvorba promìnné v cyklu
+%  
+
+%% ch2;S1
+time_plot = cell2mat(out.mixed(1:end,1));
+    time_plot = datetime(time_plot,'InputFormat','yyyy/MM/dd HH:mm:ss'); % change of input format
+power_plot = cell2mat(out.mixed(1:end,19)); %ch2;S1
+    power_plot =str2num(power_plot(1:end,1:2));
+wavelength_plot = cell2mat(out.mixed(1:end,23));%ch2;S1
+%               close all
+                                                                    close(waitbar1)                                                                           
+        	
+    
+                                                                    
+    h1=figure('Name','Wavelength', 'Units', 'normalized','Position', [0.01 0.3 0.98 0.61]);
+    plot (time_plot, wavelength_plot)
+     ylabel('Wavelength [nm]')
+        xlabel('datetime []')
+           title(filename);
+           legend ('ch2;S1 - Temp 28°C');
+    
+    h2=figure('Name','Power [%]', 'Units', 'normalized','Position', [0.01 0.3 0.98 0.61]);
+    plot (time_plot, power_plot)
+     ylabel('Power [%]')
+        xlabel('datetime []')
+           title(filename);
+           legend ('ch2;S1 - Temp 28°C');
+           
+ %% SIGNAL RECALCULATION (Differences)
+%CH1
+i=1;
+data = time_plot;
+data=datenum(data)*24*60*60;
+ while i < (length(data)-1)
+    data(i)= data(i+1)-data(i);
+    i=i+1;
+end
+diff_time_plot=data(1:(end-2),:); % differences repair( last value)
+ disp([ 'je to tu CH1' ]) 
+           
+ i=1;
+data = power_plot;
+ while i < (length(data)-1)
+
+    data(i)= data(i+1)-data(i);
+    i=i+1;
+end
+diff_power_plot=data(1:(end-2),:); % differences repair( last value)
+ disp([ 'je to tu CH1' ]) 
+ 
+ 
+ i=1;
+data = wavelength_plot;
+ while i < (length(data)-1)
+
+    data(i)= data(i+1)-data(i);
+    i=i+1;
+end
+diff_wavelength_plot=data(1:(end-2),:); % differences repair( last value)
+ disp([ 'je to tu CH1' ]) 
+
+ % ch1;S1   - differences      
+                                                                                                                    
+                                                                    
+    h10=figure('Name','Time_diff', 'Units', 'normalized','Position', [0.01 0.3 0.98 0.61]);
+    plot (diff_time_plot)
+     ylabel('Time_differnece')
+        xlabel('samples')
+           title(filename);
+           legend ('ch1;S1 - time_diff');
+        	    
+                                                                    
+    h11=figure('Name','Wavelength_diff', 'Units', 'normalized','Position', [0.01 0.3 0.98 0.61]);
+    plot (time_plot(1:end-2), diff_wavelength_plot)
+     ylabel('Wavelength [nm]')
+        xlabel('datetime []')
+           title(filename);
+           legend ('ch1;S1 - cycle_diff');
+    
+    h21=figure('Name','Power_diff', 'Units', 'normalized','Position', [0.01 0.3 0.98 0.61]);
+    plot (time_plot(1:end-2), diff_power_plot)
+     ylabel('Power [%]')
+        xlabel('datetime []')
+           title(filename);   
+           legend ('ch1;S1 - cycle_diff');
+          
+           
+  %% ch1;S1         
+   time_plot = cell2mat(out.mixed(1:end,1));
+    time_plot = datetime(time_plot,'InputFormat','yyyy/MM/dd HH:mm:ss'); % change of input format
+power_plot = cell2mat(out.mixed(1:end,11)); %ch1;S1
+    power_plot =str2num(power_plot(1:end,1:2));
+wavelength_plot = cell2mat(out.mixed(1:end,15));%ch1;S1
+                                                                                                                      
+%PLOTS        	    
+                                                                    
+    h3=figure('Name','Wavelength', 'Units', 'normalized','Position', [0.01 0.3 0.98 0.61]);
+    plot (time_plot, wavelength_plot)
+     ylabel('Wavelength [nm]')
+        xlabel('datetime []')
+           title(filename);
+           legend ('ch1;S1 - cycle');
+    
+    h4=figure('Name','Power [%]', 'Units', 'normalized','Position', [0.01 0.3 0.98 0.61]);
+    plot (time_plot, power_plot)
+     ylabel('Power [%]')
+        xlabel('datetime []')
+           title(filename);   
+           legend ('ch1;S1 - cycle');
+        
+%% SIGNAL RECALCULATION (Differences)
+%CH1
+i=1;
+data = time_plot;
+data=datenum(data)*24*60*60;
+ while i < (length(data)-1)
+    data(i)= data(i+1)-data(i);
+    i=i+1;
+end
+diff_time_plot=data(1:(end-2),:); % differences repair( last value)
+ disp([ 'je to tu CH1' ]) 
+           
+ i=1;
+data = power_plot;
+ while i < (length(data)-1)
+
+    data(i)= data(i+1)-data(i);
+    i=i+1;
+end
+diff_power_plot=data(1:(end-2),:); % differences repair( last value)
+ disp([ 'je to tu CH1' ]) 
+ 
+ 
+ i=1;
+data = wavelength_plot;
+ while i < (length(data)-1)
+
+    data(i)= data(i+1)-data(i);
+    i=i+1;
+end
+diff_wavelength_plot=data(1:(end-2),:); % differences repair( last value)
+ disp([ 'je to tu CH1' ]) 
+
+ % ch1;S1   - differences      
+                                                                                                                    
+                                                                    
+    h30=figure('Name','Time_diff', 'Units', 'normalized','Position', [0.01 0.3 0.98 0.61]);
+    plot (diff_time_plot)
+     ylabel('Time_differnece')
+        xlabel('samples')
+           title(filename);
+           legend ('ch1;S1 - time_diff');
+        	    
+                                                                    
+    h31=figure('Name','Wavelength_diff', 'Units', 'normalized','Position', [0.01 0.3 0.98 0.61]);
+    plot (time_plot(1:end-2), diff_wavelength_plot)
+     ylabel('Wavelength [nm]')
+        xlabel('datetime []')
+           title(filename);
+           legend ('ch1;S1 - cycle_diff');
+    
+    h41=figure('Name','Power_diff', 'Units', 'normalized','Position', [0.01 0.3 0.98 0.61]);
+    plot (time_plot(1:end-2), diff_power_plot)
+     ylabel('Power [%]')
+        xlabel('datetime []')
+           title(filename);   
+           legend ('ch1;S1 - cycle_diff');
+
+      
+
+%% Saving of the pictures
+saving_vector = 1;
+filename = filename(1:end-4)
+if saving_vector(1) == 1
+                        saveas(h1,['h1_plot_',filename],'png') % saves h plot (last calculated curve) as a png file. (the name is same as the original file - which CANNOT have the same_name.txt in the same folder!
+                        saveas(h1,['h1_plot_',filename],'fig')
+                       disp(' Figure 1 saved.') 
+                       
+                       saveas(h2,['h2_plot_',filename],'png') % saves h plot (last calculated curve) as a png file. (the name is same as the original file - which CANNOT have the same_name.txt in the same folder!
+                       saveas(h2,['h2_plot_',filename],'fig')
+                       disp(' Figure 2 saved.') 
+                       
+                       saveas(h3,['h3_plot_',filename],'png') % saves h plot (last calculated curve) as a png file. (the name is same as the original file - which CANNOT have the same_name.txt in the same folder!
+                       saveas(h3,['h3_plot_',filename],'fig')
+                       disp(' Figure 3 saved.') 
+                       
+                       saveas(h4,['h4_plot_',filename],'png') % saves h plot (last calculated curve) as a png file. (the name is same as the original file - which CANNOT have the same_name.txt in the same folder!
+                       saveas(h4,['h4_plot_',filename],'fig')
+                       disp(' Figure 4 saved.') 
+                       
+                       saveas(h30,['h30_plot_',filename],'png') % saves h plot (last calculated curve) as a png file. (the name is same as the original file - which CANNOT have the same_name.txt in the same folder!
+                       saveas(h30,['h30_plot_',filename],'fig')
+                       disp(' Figure 30 saved.') 
+                       
+                       saveas(h31,['h31_plot_',filename],'png') % saves h plot (last calculated curve) as a png file. (the name is same as the original file - which CANNOT have the same_name.txt in the same folder!
+                       saveas(h31,['h31_plot_',filename],'fig')
+                       disp(' Figure 31 saved.') 
+                       
+                       saveas(h41,['h41_plot_',filename],'png') % saves h plot (last calculated curve) as a png file. (the name is same as the original file - which CANNOT have the same_name.txt in the same folder!
+                       saveas(h41,['h41_plot_',filename],'fig')
+                       disp(' Figure 41 saved.') 
+        else    
+end
+   
+         
+
+
+                  waitbar1 = waitbar(0.85, 'Saving variables', 'Units', 'normalized', 'Position', [0.4 0.2 0.22 0.06]); %position of waitbar
+%% SAVING VARIABLES
+                  %ve stejném poøadí jsou uloženy promìnné v txt(shora)
+% variables= [mean(data) max(data) min(data) std(data) fs window_size];
+%    save(['Variables_' filename '.txt'],'variables','-ascii','-double') %saves sampling frequency, mean timeStamp , standard deviation of timeStamp and statistical number of samples into txt.file
+%    disp('File containing sampling frequency has been saved in root folder.') 
+                                                                               close(waitbar1)
+                                                                               waitbar1 = waitbar(1.0, 'FINISH ', 'Units', 'normalized', 'Position', [0.4 0.2 0.22 0.06]); %position of waitbar
+                                                                            pause(1)
+                                                                               close(waitbar1)
+                                                                     
+
+close all
+
+                         
+   ii=ii+1; 
+ end
+disp('Relation has been finished - go get a coffee ;) ');
+waitbar1 = waitbar(1, 'Realtion finished', 'Units', 'normalized', 'Position', [0.4 0.2 0.22 0.06]);
+                         pause(1);
+close(waitbar1)           
+    
