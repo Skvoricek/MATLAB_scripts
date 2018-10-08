@@ -49,9 +49,9 @@ while ii<=(number_of_files)
 
 out=delimread (filename,';','mixed') %dìlící znak dvì mezery, input "mixed"
                                                                               
-eval(sprintf('time%d = (out.mixed(1:end,1));', i));   %dynamická tvorba promìnné v cyklu
-eval(sprintf('power%d = (out.mixed(1:end,19));', i));    %dynamická tvorba promìnné v cyklu
-eval(sprintf('wavelegth%d = (out.mixed(1:end,23));', i));    %dynamická tvorba promìnné v cyklu
+eval(sprintf('time%d = (out.mixed(1:end,1));', ii));   %dynamická tvorba promìnné v cyklu
+eval(sprintf('power%d = (out.mixed(1:end,19));', ii));    %dynamická tvorba promìnné v cyklu
+eval(sprintf('wavelegth%d = (out.mixed(1:end,23));', ii));    %dynamická tvorba promìnné v cyklu
 %  
 
 %% ch2;S1
