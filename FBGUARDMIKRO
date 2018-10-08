@@ -55,11 +55,11 @@ eval(sprintf('wavelegth%d = (out.mixed(1:end,23));', ii));    %dynamická tvorba
 %  
 
 %% ch2;S1
-time_plot = cell2mat(out.mixed(1:end,1));
+time_plot = cell2mat(out.mixed(2:end,1));
     time_plot = datetime(time_plot,'InputFormat','yyyy/MM/dd HH:mm:ss'); % change of input format
-power_plot = cell2mat(out.mixed(1:end,19)); %ch2;S1
+power_plot = cell2mat(out.mixed(2:end,19)); %ch2;S1
     power_plot =str2num(power_plot(1:end,1:2));
-wavelength_plot = cell2mat(out.mixed(1:end,23));%ch2;S1
+wavelength_plot = cell2mat(out.mixed(2:end,23));%ch2;S1
 %               close all
                                                                     close(waitbar1)                                                                           
         	
@@ -80,7 +80,7 @@ wavelength_plot = cell2mat(out.mixed(1:end,23));%ch2;S1
            legend ('ch2;S1 - Temp 28°C');
            
  %% SIGNAL RECALCULATION (Differences)
-%CH1
+%CH2
 i=1;
 data = time_plot;
 data=datenum(data)*24*60*60;
@@ -89,7 +89,7 @@ data=datenum(data)*24*60*60;
     i=i+1;
 end
 diff_time_plot=data(1:(end-2),:); % differences repair( last value)
- disp([ 'je to tu CH1' ]) 
+ disp([ 'je to tu CH2' ]) 
            
  i=1;
 data = power_plot;
@@ -99,7 +99,7 @@ data = power_plot;
     i=i+1;
 end
 diff_power_plot=data(1:(end-2),:); % differences repair( last value)
- disp([ 'je to tu CH1' ]) 
+ disp([ 'je to tu CH2' ]) 
  
  
  i=1;
@@ -110,7 +110,7 @@ data = wavelength_plot;
     i=i+1;
 end
 diff_wavelength_plot=data(1:(end-2),:); % differences repair( last value)
- disp([ 'je to tu CH1' ]) 
+ disp([ 'je to tu CH2' ]) 
 
  % ch1;S1   - differences      
                                                                                                                     
@@ -136,14 +136,51 @@ diff_wavelength_plot=data(1:(end-2),:); % differences repair( last value)
         xlabel('datetime []')
            title(filename);   
            legend ('ch1;S1 - cycle_diff');
-          
+     %% variables save CH1;S1
+% %time_plot
+% std_time_plot = std(time_plot);
+% min_time_plot = min(time_plot);
+% max_time_plot = max(time_plot);
+% mean_time_plot = mean(time_plot);
+
+%power_plot
+std_power_plot = std(power_plot);
+min_power_plot = min(power_plot);
+max_power_plot = max(power_plot);
+mean_power_plot = mean(power_plot);
+
+%wavelength_plot
+std_wavelength_plot = std(wavelength_plot);
+min_wavelength_plot = min(wavelength_plot);
+max_wavelength_plot = max(wavelength_plot);
+mean_wavelength_plot = mean(wavelength_plot);
+
+%diff_time_plot
+std_diff_time_plot = std(diff_time_plot);
+min_diff_time_plot = min(diff_time_plot);
+max_diff_time_plot = max(diff_time_plot);
+mean_diff_time_plot = mean(diff_time_plot);
+
+%diff_power_plot
+std_diff_power_plot = std(diff_power_plot);
+min_diff_power_plot = min(diff_power_plot);
+max_diff_power_plot = max(diff_power_plot);
+mean_diff_power_plot = mean(diff_power_plot);
+
+%diff_wavelength_plot
+std_diff_wavelength_plot = std(diff_wavelength_plot);
+min_diff_wavelength_plot = min(diff_wavelength_plot);
+max_diff_wavelength_plot = max(diff_wavelength_plot);
+mean_diff_wavelength_plot = mean(diff_wavelength_plot);
+
+   variables_ch2S1= [length(data),std_power_plot,min_power_plot,max_power_plot,mean_power_plot,std_wavelength_plot,min_wavelength_plot,max_wavelength_plot,mean_wavelength_plot,std_diff_time_plot,min_diff_time_plot,max_diff_time_plot,mean_diff_time_plot,std_diff_power_plot,min_diff_power_plot,max_diff_power_plot,mean_diff_power_plot,std_diff_wavelength_plot,min_diff_wavelength_plot,max_diff_wavelength_plot,mean_diff_wavelength_plot];             
            
   %% ch1;S1         
-   time_plot = cell2mat(out.mixed(1:end,1));
+   time_plot = cell2mat(out.mixed(2:end,1));
     time_plot = datetime(time_plot,'InputFormat','yyyy/MM/dd HH:mm:ss'); % change of input format
-power_plot = cell2mat(out.mixed(1:end,11)); %ch1;S1
+power_plot = cell2mat(out.mixed(2:end,11)); %ch1;S1
     power_plot =str2num(power_plot(1:end,1:2));
-wavelength_plot = cell2mat(out.mixed(1:end,15));%ch1;S1
+wavelength_plot = cell2mat(out.mixed(2:end,15));%ch1;S1
                                                                                                                       
 %PLOTS        	    
                                                                     
@@ -160,7 +197,7 @@ wavelength_plot = cell2mat(out.mixed(1:end,15));%ch1;S1
         xlabel('datetime []')
            title(filename);   
            legend ('ch1;S1 - cycle');
-        
+
 %% SIGNAL RECALCULATION (Differences)
 %CH1
 i=1;
@@ -219,7 +256,44 @@ diff_wavelength_plot=data(1:(end-2),:); % differences repair( last value)
            title(filename);   
            legend ('ch1;S1 - cycle_diff');
 
-      
+      %% variables save CH1;S1
+%time_plot
+std_time_plot = std(time_plot)
+min_time_plot = min(time_plot)
+max_time_plot = max(time_plot)
+mean_time_plot = mean(time_plot)
+
+%power_plot
+std_power_plot = std(power_plot)
+min_power_plot = min(power_plot)
+max_power_plot = max(power_plot)
+mean_power_plot = mean(power_plot)
+
+%wavelength_plot
+std_wavelength_plot = std(wavelength_plot)
+min_wavelength_plot = min(wavelength_plot)
+max_wavelength_plot = max(wavelength_plot)
+mean_wavelength_plot = mean(wavelength_plot)
+
+%diff_time_plot
+std_diff_time_plot = std(diff_time_plot)
+min_diff_time_plot = min(diff_time_plot)
+max_diff_time_plot = max(diff_time_plot)
+mean_diff_time_plot = mean(diff_time_plot)
+
+%diff_power_plot
+std_diff_power_plot = std(diff_power_plot)
+min_diff_power_plot = min(diff_power_plot)
+max_diff_power_plot = max(diff_power_plot)
+mean_diff_power_plot = mean(diff_power_plot)
+
+%diff_wavelength_plot
+std_diff_wavelength_plot = std(diff_wavelength_plot)
+min_diff_wavelength_plot = min(diff_wavelength_plot)
+max_diff_wavelength_plot = max(diff_wavelength_plot)
+mean_diff_wavelength_plot = mean(diff_wavelength_plot)
+
+  variables_ch1S1= [length(data),std_power_plot,min_power_plot,max_power_plot,mean_power_plot,std_wavelength_plot,min_wavelength_plot,max_wavelength_plot,mean_wavelength_plot,std_diff_time_plot,min_diff_time_plot,max_diff_time_plot,mean_diff_time_plot,std_diff_power_plot,min_diff_power_plot,max_diff_power_plot,mean_diff_power_plot,std_diff_wavelength_plot,min_diff_wavelength_plot,max_diff_wavelength_plot,mean_diff_wavelength_plot];                      
 
 %% Saving of the pictures
 saving_vector = 1;
@@ -260,10 +334,10 @@ end
 
                   waitbar1 = waitbar(0.85, 'Saving variables', 'Units', 'normalized', 'Position', [0.4 0.2 0.22 0.06]); %position of waitbar
 %% SAVING VARIABLES
-                  %ve stejném poøadí jsou uloženy promìnné v txt(shora)
-% variables= [mean(data) max(data) min(data) std(data) fs window_size];
-%    save(['Variables_' filename '.txt'],'variables','-ascii','-double') %saves sampling frequency, mean timeStamp , standard deviation of timeStamp and statistical number of samples into txt.file
-%    disp('File containing sampling frequency has been saved in root folder.') 
+%                   ve stejném poøadí jsou uloženy promìnné v txt(shora)
+   save(['variables_ch1S1' filename '.txt'],'variables_ch1S1','-ascii','-double') % into txt.file
+   save(['variables_ch2S1' filename '.txt'],'variables_ch2S1','-ascii','-double') % into txt.file
+   disp('File(s) containing variables has(ve) been saved in the root folder.') 
                                                                                close(waitbar1)
                                                                                waitbar1 = waitbar(1.0, 'FINISH ', 'Units', 'normalized', 'Position', [0.4 0.2 0.22 0.06]); %position of waitbar
                                                                             pause(1)
