@@ -1,0 +1,450 @@
+% CREATED for simple verification of obtained signal. Changed from
+% SIMPLE_PLOT_TIME_20170120; where the goal is to have a script able to
+% take all files from dirrectory and save the graph with time according to
+% the sampling frequency for each file without the need to open each and
+% every file manualy.
+
+%% NAÈTÌNÍ DAT
+clc; 
+close all;
+clear;
+
+    
+%set(0,'DefaulttextInterpreter','none')   % default nonTeX text interpreter - Graph title appearance
+  set(groot, 'DefaultTextInterpreter', 'none')
+      set(groot, 'DefaultLegendInterpreter', 'none')
+       pwd_origin=pwd;                      
+ [filename,filepath]=uigetfile({'*.*','csv'},... % manual gie choice of folder (and files inside)
+                      'Select reference Data File ');
+                      cd(filepath);
+                      
+fileList = dir(filepath);                  
+fileList = fileList(~[fileList.isdir]); %remove directories
+[junk, sortorder] = sort([fileList.datenum]);
+fileList = fileList(sortorder); %list is now in ascending date order
+numfiles = numel(fileList);
+In = cell(numfiles,1);
+
+%% DATA INPUT
+for ii = 1:numfiles % data input cycle
+    
+    cd(filepath);
+%DATA CSV    
+            if (fileList(ii).bytes) == 108686 % jump the function file (having 108686 bytes exactly)
+                ii = ii+1;
+                    if ii>numfiles
+                        break
+                    else
+                    end
+            else
+            end
+source = txt2mat (fileList(ii).name);
+data=source(:,7);
+
+    %přepočítání času
+        %native
+        days=0;
+        hours=0;
+        minutes=0;
+        sec=0;
+        %END native
+%     days=source(:,1)*8.6e+10;
+%     hours=source(:,4)*3.6e+9;
+    minutes=source(:,5)*6e+7;
+    sec=source(:,6)*1e+6;
+    time_source=days+hours+minutes+sec;  % in format "ss.SSSSSS"
+    time_source=time_source/60/1e6; % time in minutes
+    %% SAMPLING FREQUENCY ESTIMATION
+%{
+ %     
+%      %SIGNAL RECALCULATION (Differences)
+%         data_rec=time_source';
+%         
+%          L=length(data_rec)/10;
+% %          L=1;
+%          while L < (0.9*length(data_rec)-1)
+%         
+%             data_rec(L)= data_rec(L+1)-data_rec(L);
+%             L=L+1;
+%          end
+% %         data_rec=data_rec(((length(data_rec)/10):(0.9*length(data_rec))))';
+%         data_rec=data_rec';
+%         data_rec=data_rec((length(data_rec)/10)+1:(0.9*length(data_rec))-10);
+%         fs = 1/(mean (data_rec)*1e6)
+%         figure()
+%         plot(data_rec)
+% 
+%         %END SAMPLING FREQUENCY ESTIMATION
+%}
+% end DATA CSV
+
+% % DATA BIN
+%{
+% fileID=fopen(fileList(ii).name,'r')
+% data=fread(fileID,[3,inf],'float' );
+% fclose(fileID)
+% data=data(3,1:end);
+%end DATA BIN
+
+% 
+% %RESAMPLE
+% fs_orig=fs;
+% p = 1; % cílová fs
+% data= resample(data,p,fs_orig);
+% fs = (p/fs_orig);
+% % %END RESAMPLE
+
+%  % SIGNAL RECALCULATION (Differences)
+% % data=data';
+% 
+%  L=1;
+%  while L < (length(data)-1)
+% 
+%     data(L)= data(L+1)-data(L);
+%     L=L+1;
+% end
+% data=data(1:(end-2),:); % differences repair( last value)
+% 
+% %  disp([ 'je to tu' ]) 
+% END SIGNAL RECALCULATION (Differences)
+%}
+ii %show file number
+filename = (fileList(ii).name) % show file name
+
+
+%
+%% PLOT GENERATION
+
+ h1=figure('Name','Measured signal', 'Units', 'normalized','Position', [0.01 0.3 0.98 0.61]);
+
+ disp([ ' ' ' ' ]) 
+ hold on
+ plot (time_source, data)
+% plot (data_total)
+        legend ('Measured signal');
+        ylabel('Singal intensity')
+        xlabel('Time [min]')
+%         xlabel('Samples [au]')
+        title(filename)
+         annotation('textbox', [0.15 0.85 0.19 0.05], 'interpreter','none','FitBoxToText','on', 'String', [' max: ' num2str(max(data)) ', min: ' num2str(min(data)) ', mean: ' num2str(mean(data)) ', stdev: ' num2str(std(data))  ]);
+%         annotation('textbox', [0.15 0.85 0.10 0.05], 'interpreter','none','FitBoxToText','on', 'String', [' Number of peaks:  ' num ' '],'Color', 'r');
+  hold off
+  %%SAVING PROCESS
+filename = filename(1:length(filename)-11);%'testing_file_name' % zkrácení názvu o pøípony a formáty
+
+waitbar_amount = ii/numfiles;
+waitbar1 = waitbar(waitbar_amount, 'saving process ', 'Units', 'normalized', 'Position', [0.4 0.2 0.22 0.06]); %position of waitbar 
+
+%                          saveas(h1,['h1_plot_',filename],'png')
+%                          saveas(h1,['h1_plot_',filename],'fig') 
+                         
+                            disp([,filename, ' has been saved']);
+   close(waitbar1)
+   
+   %% LABELS DEFINITION
+   prompt = {'Label X axes','Label Y axes'};
+            dlg_title = 'Parameters input';
+                    num_lines = 1;
+                    def = {'X axes','Y Axes'};% inside default values
+                    options.Resize='on';
+                    options.WindowStyle='modal';
+                    options.Interpreter='tex';
+                    answer=inputdlg(prompt,dlg_title,num_lines,...
+                                    def);%related to point definition - careful when changed
+
+
+                                Xlabel=char(answer(1,1)); 
+                                Ylabel=char(answer(2,1)); 
+                                
+
+         
+
+   waitbar1 = waitbar(1, 'Realtion finished', 'Units', 'normalized', 'Position', [0.4 0.2 0.22 0.06]);
+                         pause(1);
+                         close(waitbar1)
+close all
+
+%SAVING STATISTICS
+save_mean=(mean(data));
+save_std=(std(data));
+save_min=(min(data));
+save_max=(max(data));
+save_variables = [save_mean save_std save_min save_max];
+% save(['saved_statistics_' filename '.txt'],'save_variables','-ascii','-double');
+% save_data=data;
+% save(['saved_data_' filename '.txt'],'save_data','-ascii','-double');
+% END SAVING STATISTICS
+  
+%% DYNAMIC VARIABLE
+         
+eval(sprintf('time_vector_%d = (time_source);', ii));   %dynamická tvorba promìnné v cyklu
+eval(sprintf('signal_%d = (data);', ii));    %dynamická tvorba promìnné v cyklu
+eval(sprintf('Xlabel_%d = (Xlabel);', ii));    %dynamická tvorba promìnné v cyklu
+eval(sprintf('Ylabel_%d = (Ylabel);', ii));    %dynamická tvorba promìnné v cyklu
+
+
+end%input file end cycle
+
+
+   num_of_subplot=nan;
+   while (num_of_subplot~=0) 
+   %%VARIABLE SUBPLOT GENERATION
+   cd(pwd_origin);% return to the iriginal path
+   saving_vector = numberAllocator_subplot();
+   num_of_subplot=sum(saving_vector);
+ 
+   
+   %% PLOTTING SUBPLOT
+  
+   h2=figure('Name',filename, 'Units', 'normalized','Position', [0.01 0.3 0.98 0.61]);
+sequence = 0;
+    hold on
+%   waitbar(0.001);
+    %1  
+if saving_vector(1) == 1
+     sequence=sequence+1;
+%        waitbar1((int8(sequence/num_of_subplot)));
+     ah(1)= subplot(num_of_subplot,1,sequence);
+     plot (time_vector_1, signal_1); 
+     linkaxes(ah,'x');
+     
+     legend(fileList(1).name)
+     ylabel(Ylabel_1); %',num2str(i)]);
+     xlabel(Xlabel_1)
+                       disp(' Signal 1 plotted.') 
+        else    
+end
+        %2
+if saving_vector(2)== 1
+         
+    sequence=sequence+1;
+%      waitbar1((int8(sequence/num_of_subplot)));
+     ah(2)= subplot(num_of_subplot,1,sequence);
+     plot (time_vector_2, signal_2); 
+     linkaxes(ah,'x');
+
+     legend(fileList(2).name)
+     ylabel(Ylabel_1); %',num2str(i)]);
+     xlabel(Xlabel_2)
+     
+                       disp(' Signal 2 plotted.') 
+        else    
+end
+%3
+   if saving_vector(3) == 1
+    
+    sequence=sequence+1;
+%      waitbar1((int8(sequence/num_of_subplot)));
+     ah(3)= subplot(num_of_subplot,1,sequence);
+     plot (time_vector_3, signal_3); 
+     linkaxes(ah,'x');
+%    legend(['CH_',num2str(i)])
+       legend(fileList(3).name)
+     ylabel(Ylabel_1); %',num2str(i)]);
+     xlabel(Xlabel_3)
+                       disp(' Signal 3 plotted.') 
+        else    
+   end
+   %4
+   if saving_vector(4) == 1
+    
+    sequence=sequence+1;
+%      waitbar1((int8(sequence/num_of_subplot)));
+     ah(4)= subplot(num_of_subplot,1,sequence);
+     plot (time_vector_4, signal_4); 
+     linkaxes(ah,'x');
+      legend(fileList(4).name)
+     ylabel(Ylabel_1); %',num2str(i)]);
+     xlabel(Xlabel_4)
+                       disp(' Signal 4 plotted.') 
+        else    
+   end
+   
+   %5
+   if saving_vector(5) == 1
+    
+    sequence=sequence+1;
+%      waitbar1((int8(sequence/num_of_subplot)));
+     ah(5)= subplot(num_of_subplot,1,sequence);
+     plot (time_vector_5, signal_5); 
+     linkaxes(ah,'x');
+   legend(fileList(5).name)
+     ylabel(Ylabel_1); %',num2str(i)]);
+     xlabel(Xlabel_5)
+                       disp(' Signal 5 plotted.') 
+   else
+       
+   end
+  %6
+   if saving_vector(6) == 1
+    
+    sequence=sequence+1;
+%      waitbar1((int8(sequence/num_of_subplot)));
+     ah(6)= subplot(num_of_subplot,1,sequence);
+     plot (time_vector_6, signal_6); 
+     linkaxes(ah,'x');
+     legend(fileList(6).name)
+     ylabel(Ylabel_1); %',num2str(i)]);
+     xlabel(Xlabel_6)
+                       disp(' Signal 6 plotted.') 
+        else    
+   end
+          %7
+   if saving_vector(7) == 1
+    
+    sequence=sequence+1;
+%      waitbar1((int8(sequence/num_of_subplot)));
+     ah(7)= subplot(num_of_subplot,1,sequence);
+     plot (time_vector_7, signal_7); 
+     linkaxes(ah,'x');
+   legend(fileList(7).name)
+     ylabel(Ylabel_1); %',num2str(i)]);
+     xlabel(Xlabel_7)
+                       disp(' Signal 7 plotted.') 
+        else    
+   end
+          %8
+   if saving_vector(8) == 1
+     sequence=sequence+1;
+%      waitbar1((int8(sequence/num_of_subplot)));
+     ah(8)= subplot(num_of_subplot,1,sequence);
+     plot (time_vector_8, signal_8); 
+     linkaxes(ah,'x');
+     legend(fileList(8).name)
+     ylabel(Ylabel_1); %',num2str(i)]);
+     xlabel(Xlabel_8)
+                       disp(' Signal 8 plotted.') 
+        else    
+   end
+          %9
+   if saving_vector(9) == 1
+   
+    sequence=sequence+1;
+%     waitbar1((int8(sequence/num_of_subplot)));
+     ah(9)= subplot(num_of_subplot,1,sequence);
+     plot (time_vector_9, signal_9); 
+     linkaxes(ah,'x');
+     legend(fileList(9).name)
+     ylabel(Ylabel_1); %',num2str(i)]);
+     xlabel(Xlabel_9)
+                       disp(' Signal 6 plotted.') 
+        else    
+   end
+          %10
+   if saving_vector(10) == 1
+  
+    sequence=sequence+1;
+%     waitbar1((int8(sequence/num_of_subplot)));
+     ah(10)= subplot(num_of_subplot,1,sequence);
+     plot (time_vector_10, signal_10); 
+     linkaxes(ah,'x');
+   legend(fileList(10).name)
+     ylabel(Ylabel_1); %',num2str(i)]);
+     xlabel(Xlabel_10)
+                       disp(' Signal 6 plotted.') 
+        else    
+   end
+          %11
+   if saving_vector(11) == 1
+    
+    sequence=sequence+1;
+%      waitbar1((int8(sequence/num_of_subplot)));
+     ah(11)= subplot(num_of_subplot,1,sequence);
+     plot (time_vector_11, signal_11); 
+     linkaxes(ah,'x');
+     legend(fileList(11).name)
+     ylabel(Ylabel_1); %',num2str(i)]);
+     xlabel(Xlabel_11)
+                       disp(' Signal 11 plotted.') 
+        else    
+   end
+          %12
+   if saving_vector(12) == 1
+    
+    sequence=sequence+1;
+%      waitbar1((int8(sequence/num_of_subplot)));
+     ah(12)= subplot(num_of_subplot,1,sequence);
+     plot (time_vector_12, signal_12); 
+     linkaxes(ah,'x');
+     legend(fileList(12).name)
+     ylabel(Ylabel_1); %',num2str(i)]);
+     xlabel(Xlabel_12)
+                       disp(' Signal 12 plotted.') 
+        else    
+   end
+        
+     %13
+   if saving_vector(13) == 1
+    
+    sequence=sequence+1;
+%      waitbar1((int8(sequence/num_of_subplot)));
+     ah(13)= subplot(num_of_subplot,1,sequence);
+     plot (time_vector_13, signal_13); 
+     linkaxes(ah,'x');
+     legend(fileList(13).name)
+     ylabel(Ylabel_1); %',num2str(i)]);
+     xlabel(Xlabel_13)
+                       disp(' Signal 13 plotted.') 
+        else    
+   end
+          %14
+   if saving_vector(14) == 1
+     sequence=sequence+1;
+%    waitbar1((int8(sequence/num_of_subplot)));
+   ah(14)= subplot(num_of_subplot,1,sequence);
+     plot (time_vector_14, signal_14); 
+     linkaxes(ah,'x');
+     legend(fileList(14).name)
+     ylabel(Ylabel_1); %',num2str(i)]);
+     xlabel(Xlabel_14)
+                       disp(' Signal 14 plotted.') 
+        else    
+   end
+          %15
+   if saving_vector(15) == 1
+    
+    sequence=sequence+1;
+%      waitbar1((int8(sequence/num_of_subplot)));
+     ah(15)= subplot(num_of_subplot,1,sequence);
+     plot (time_vector_15, signal_15); 
+     linkaxes(ah,'x');
+     legend(fileList(15).name)
+     ylabel(Ylabel_1); %',num2str(i)]);
+     xlabel(Xlabel_15)
+                       disp(' Signal 15 plotted.') 
+        else    
+   end
+          %16
+   if saving_vector(16) == 1
+    sequence=sequence+1;
+%      waitbar1((int8(sequence/num_of_subplot)));
+     ah(16)= subplot(num_of_subplot,1,sequence);
+     plot (time_vector_16, signal_16); 
+     linkaxes(ah,'x');
+     legend(fileList(16).name)
+     ylabel(Ylabel_1); %',num2str(i)]);
+     xlabel(Xlabel_16)
+                       disp(' Signal 16 plotted.') 
+   else
+      
+   end
+   if (num_of_subplot == 0)
+        close(h2);                 
+%        break
+            
+   end
+
+  
+hold off
+pause();
+
+ end
+
+waitbar1 = waitbar(1, 'Realtion finished', 'Units', 'normalized', 'Position', [0.4 0.2 0.22 0.06]);
+                         pause(1);
+                         
+% end
+disp('Relation has been finished - go get a coffee ;) ');
+
+
+close(waitbar1)           
