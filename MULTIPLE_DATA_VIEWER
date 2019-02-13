@@ -38,10 +38,20 @@ for ii = 1:numfiles % data input cycle
                     end
             else
             end
+            
+            
+   if (fileList(ii).bytes) == 207785862 % different procesing for displacement csv file from STANDA 112-118 
+                source = txt2mat (fileList(ii).name);
+                data=source(:,1);
+                data = data/8000; % recalculated to milimeters
+                time_source = source(:,20);
+                time_source = time_source/(60*1000); % recalculated to minutes
+   else
+           
 source = txt2mat (fileList(ii).name);
-data=source(:,7);
+data=source(:,1);
 
-    %přepočítání času
+    %p?epo?ítání ?asu
         %native
         days=0;
         hours=0;
@@ -50,10 +60,14 @@ data=source(:,7);
         %END native
 %     days=source(:,1)*8.6e+10;
 %     hours=source(:,4)*3.6e+9;
-    minutes=source(:,5)*6e+7;
-    sec=source(:,6)*1e+6;
-    time_source=days+hours+minutes+sec;  % in format "ss.SSSSSS"
-    time_source=time_source/60/1e6; % time in minutes
+%     minutes=source(:,5)*6e+7;
+%     sec=source(:,6)*1e+6;
+%     time_source=days+hours+minutes+sec;  % in format "ss.SSSSSS"
+%     time_source=time_source/60/1e6; % time in minutes
+time_source = [1:1:length(data)]; % time source generation by fs=1;
+time_source =time_source /60;
+
+ end
     %% SAMPLING FREQUENCY ESTIMATION
 %{
  %     
@@ -145,7 +159,7 @@ waitbar1 = waitbar(waitbar_amount, 'saving process ', 'Units', 'normalized', 'Po
    prompt = {'Label X axes','Label Y axes'};
             dlg_title = 'Parameters input';
                     num_lines = 1;
-                    def = {'X axes','Y Axes'};% inside default values
+                    def = {'Time [min]','Y Axes'};% inside default values
                     options.Resize='on';
                     options.WindowStyle='modal';
                     options.Interpreter='tex';
@@ -224,7 +238,7 @@ if saving_vector(2)== 1
      linkaxes(ah,'x');
 
      legend(fileList(2).name)
-     ylabel(Ylabel_1); %',num2str(i)]);
+     ylabel(Ylabel_2); %',num2str(i)]);
      xlabel(Xlabel_2)
      
                        disp(' Signal 2 plotted.') 
@@ -240,7 +254,7 @@ end
      linkaxes(ah,'x');
 %    legend(['CH_',num2str(i)])
        legend(fileList(3).name)
-     ylabel(Ylabel_1); %',num2str(i)]);
+     ylabel(Ylabel_3); %',num2str(i)]);
      xlabel(Xlabel_3)
                        disp(' Signal 3 plotted.') 
         else    
@@ -254,7 +268,7 @@ end
      plot (time_vector_4, signal_4); 
      linkaxes(ah,'x');
       legend(fileList(4).name)
-     ylabel(Ylabel_1); %',num2str(i)]);
+     ylabel(Ylabel_4); %',num2str(i)]);
      xlabel(Xlabel_4)
                        disp(' Signal 4 plotted.') 
         else    
@@ -269,7 +283,7 @@ end
      plot (time_vector_5, signal_5); 
      linkaxes(ah,'x');
    legend(fileList(5).name)
-     ylabel(Ylabel_1); %',num2str(i)]);
+     ylabel(Ylabel_5); %',num2str(i)]);
      xlabel(Xlabel_5)
                        disp(' Signal 5 plotted.') 
    else
@@ -284,7 +298,7 @@ end
      plot (time_vector_6, signal_6); 
      linkaxes(ah,'x');
      legend(fileList(6).name)
-     ylabel(Ylabel_1); %',num2str(i)]);
+     ylabel(Ylabel_6); %',num2str(i)]);
      xlabel(Xlabel_6)
                        disp(' Signal 6 plotted.') 
         else    
@@ -298,7 +312,7 @@ end
      plot (time_vector_7, signal_7); 
      linkaxes(ah,'x');
    legend(fileList(7).name)
-     ylabel(Ylabel_1); %',num2str(i)]);
+     ylabel(Ylabel_7); %',num2str(i)]);
      xlabel(Xlabel_7)
                        disp(' Signal 7 plotted.') 
         else    
@@ -311,7 +325,7 @@ end
      plot (time_vector_8, signal_8); 
      linkaxes(ah,'x');
      legend(fileList(8).name)
-     ylabel(Ylabel_1); %',num2str(i)]);
+     ylabel(Ylabel_8); %',num2str(i)]);
      xlabel(Xlabel_8)
                        disp(' Signal 8 plotted.') 
         else    
@@ -325,7 +339,7 @@ end
      plot (time_vector_9, signal_9); 
      linkaxes(ah,'x');
      legend(fileList(9).name)
-     ylabel(Ylabel_1); %',num2str(i)]);
+     ylabel(Ylabel_9); %',num2str(i)]);
      xlabel(Xlabel_9)
                        disp(' Signal 6 plotted.') 
         else    
@@ -339,7 +353,7 @@ end
      plot (time_vector_10, signal_10); 
      linkaxes(ah,'x');
    legend(fileList(10).name)
-     ylabel(Ylabel_1); %',num2str(i)]);
+     ylabel(Ylabel_10); %',num2str(i)]);
      xlabel(Xlabel_10)
                        disp(' Signal 6 plotted.') 
         else    
@@ -353,7 +367,7 @@ end
      plot (time_vector_11, signal_11); 
      linkaxes(ah,'x');
      legend(fileList(11).name)
-     ylabel(Ylabel_1); %',num2str(i)]);
+     ylabel(Ylabel_11); %',num2str(i)]);
      xlabel(Xlabel_11)
                        disp(' Signal 11 plotted.') 
         else    
@@ -367,7 +381,7 @@ end
      plot (time_vector_12, signal_12); 
      linkaxes(ah,'x');
      legend(fileList(12).name)
-     ylabel(Ylabel_1); %',num2str(i)]);
+     ylabel(Ylabel_12); %',num2str(i)]);
      xlabel(Xlabel_12)
                        disp(' Signal 12 plotted.') 
         else    
@@ -382,7 +396,7 @@ end
      plot (time_vector_13, signal_13); 
      linkaxes(ah,'x');
      legend(fileList(13).name)
-     ylabel(Ylabel_1); %',num2str(i)]);
+     ylabel(Ylabel_13); %',num2str(i)]);
      xlabel(Xlabel_13)
                        disp(' Signal 13 plotted.') 
         else    
@@ -395,7 +409,7 @@ end
      plot (time_vector_14, signal_14); 
      linkaxes(ah,'x');
      legend(fileList(14).name)
-     ylabel(Ylabel_1); %',num2str(i)]);
+     ylabel(Ylabel_14); %',num2str(i)]);
      xlabel(Xlabel_14)
                        disp(' Signal 14 plotted.') 
         else    
@@ -409,7 +423,7 @@ end
      plot (time_vector_15, signal_15); 
      linkaxes(ah,'x');
      legend(fileList(15).name)
-     ylabel(Ylabel_1); %',num2str(i)]);
+     ylabel(Ylabel_15); %',num2str(i)]);
      xlabel(Xlabel_15)
                        disp(' Signal 15 plotted.') 
         else    
@@ -422,7 +436,7 @@ end
      plot (time_vector_16, signal_16); 
      linkaxes(ah,'x');
      legend(fileList(16).name)
-     ylabel(Ylabel_1); %',num2str(i)]);
+     ylabel(Ylabel_16); %',num2str(i)]);
      xlabel(Xlabel_16)
                        disp(' Signal 16 plotted.') 
    else
