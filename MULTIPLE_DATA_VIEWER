@@ -22,6 +22,9 @@ fileList = dir(filepath);
 fileList = fileList(~[fileList.isdir]); %remove directories
 [junk, sortorder] = sort([fileList.datenum]);
 fileList = fileList(sortorder); %list is now in ascending date order
+    Etxt2mat_remove = [fileList.isdir];
+    Etxt2mat_remove(1)=1; %removal mask for txt2mat file name in the struct
+    fileList = fileList(~Etxt2mat_remove); %remove by the mask
 numfiles = numel(fileList);
 In = cell(numfiles,1);
 
@@ -30,16 +33,17 @@ for ii = 1:numfiles % data input cycle
     
     cd(filepath);
 %DATA CSV    
-            if (fileList(ii).bytes) == 108686 % jump the function file (having 108686 bytes exactly)
-                ii = ii+1;
-                    if ii>numfiles
-                        break
-                    else
-                    end
-            else
-            end
+%             if (fileList(ii).bytes) == 108686 % jump the function file (having 108686 bytes exactly)
+%                 ii = ii+1;
+%                     if ii>numfiles
+%                         break
+%                     else
+%                     end
+%             else
+%             end
             
-            
+%{
+     % Standa motor import     ( ADD END at the end of the input sequence  
    if (fileList(ii).bytes) == 207785862 % different procesing for displacement csv file from STANDA 112-118 
                 source = txt2mat (fileList(ii).name);
                 data=source(:,1);
@@ -47,27 +51,33 @@ for ii = 1:numfiles % data input cycle
                 time_source = source(:,20);
                 time_source = time_source/(60*1000); % recalculated to minutes
    else
-           
+ %}        
 source = txt2mat (fileList(ii).name);
-data=source(:,1);
+data=source(:,2);
+                % dirrect input
+                time_source =source(:,1);
+                time_source =time_source /60; % in minutes
+                % END dirrect imput
 
-    %p?epo?ítání ?asu
-        %native
-        days=0;
-        hours=0;
-        minutes=0;
-        sec=0;
-        %END native
-%     days=source(:,1)*8.6e+10;
-%     hours=source(:,4)*3.6e+9;
-%     minutes=source(:,5)*6e+7;
-%     sec=source(:,6)*1e+6;
-%     time_source=days+hours+minutes+sec;  % in format "ss.SSSSSS"
-%     time_source=time_source/60/1e6; % time in minutes
-time_source = [1:1:length(data)]; % time source generation by fs=1;
-time_source =time_source /60;
+                % RECONSTRUCTED TIME
+                            %prepocitavani casu
+                                %native
+                                days=0;
+                                hours=0;
+                                minutes=0;
+                                sec=0;
+                                %END native
+                        %     days=source(:,1)*8.6e+10;
+                        %     hours=source(:,4)*3.6e+9;
+                        %     minutes=source(:,5)*6e+7;
+                        %     sec=source(:,6)*1e+6;
+                        %     time_source=days+hours+minutes+sec;  % in format "ss.SSSSSS"
+                        %     time_source=time_source/60/1e6; % time in minutes
 
- end
+                        % time_source = [1:1:length(data)]; % time source generation by fs=1;
+                        % time_source =time_source /60; % in minutes
+                          %END RECONSTRUCTED TIME
+%  end % goes to    % Standa motor import   
     %% SAMPLING FREQUENCY ESTIMATION
 %{
  %     
@@ -144,7 +154,7 @@ filename = (fileList(ii).name) % show file name
 %         annotation('textbox', [0.15 0.85 0.10 0.05], 'interpreter','none','FitBoxToText','on', 'String', [' Number of peaks:  ' num ' '],'Color', 'r');
   hold off
   %%SAVING PROCESS
-filename = filename(1:length(filename)-11);%'testing_file_name' % zkrácení názvu o pøípony a formáty
+filename = filename(1:length(filename)-4);%'testing_file_name' % zkrácení názvu o pøípony a formáty
 
 waitbar_amount = ii/numfiles;
 waitbar1 = waitbar(waitbar_amount, 'saving process ', 'Units', 'normalized', 'Position', [0.4 0.2 0.22 0.06]); %position of waitbar 
@@ -199,6 +209,14 @@ eval(sprintf('Ylabel_%d = (Ylabel);', ii));    %dynamická tvorba promìnné v c
 
 end%input file end cycle
 
+        % DISPLAY OF THE FILE NAMES
+           disp('List of files');
+        for fln=1:numfiles % postupne bude i=1, i=2 a i=3
+                    description = strcat(' ',num2str(fln),'--',fileList(fln).name);
+                disp(description)
+        end
+           %END DISPLAY OF THE FILE NAMES
+
 
    num_of_subplot=nan;
    while (num_of_subplot~=0) 
@@ -207,7 +225,7 @@ end%input file end cycle
    saving_vector = numberAllocator_subplot();
    num_of_subplot=sum(saving_vector);
  
-   
+ 
    %% PLOTTING SUBPLOT
   
    h2=figure('Name',filename, 'Units', 'normalized','Position', [0.01 0.3 0.98 0.61]);
@@ -225,7 +243,8 @@ if saving_vector(1) == 1
      legend(fileList(1).name)
      ylabel(Ylabel_1); %',num2str(i)]);
      xlabel(Xlabel_1)
-                       disp(' Signal 1 plotted.') 
+                        comentdisp = ['FILE',num2str(sequence),' -- ',fileList(sequence).name];
+                        disp(comentdisp)
         else    
 end
         %2
@@ -241,7 +260,9 @@ if saving_vector(2)== 1
      ylabel(Ylabel_2); %',num2str(i)]);
      xlabel(Xlabel_2)
      
-                       disp(' Signal 2 plotted.') 
+                       
+                        comentdisp = ['FILE',num2str(sequence),' -- ',fileList(sequence).name];
+                        disp(comentdisp)
         else    
 end
 %3
@@ -256,7 +277,8 @@ end
        legend(fileList(3).name)
      ylabel(Ylabel_3); %',num2str(i)]);
      xlabel(Xlabel_3)
-                       disp(' Signal 3 plotted.') 
+                       comentdisp = ['FILE',num2str(sequence),' -- ',fileList(sequence).name];
+                        disp(comentdisp)
         else    
    end
    %4
@@ -270,7 +292,8 @@ end
       legend(fileList(4).name)
      ylabel(Ylabel_4); %',num2str(i)]);
      xlabel(Xlabel_4)
-                       disp(' Signal 4 plotted.') 
+                        comentdisp = ['FILE',num2str(sequence),' -- ',fileList(sequence).name];
+                        disp(comentdisp)
         else    
    end
    
@@ -285,7 +308,8 @@ end
    legend(fileList(5).name)
      ylabel(Ylabel_5); %',num2str(i)]);
      xlabel(Xlabel_5)
-                       disp(' Signal 5 plotted.') 
+                        comentdisp = ['FILE',num2str(sequence),' -- ',fileList(sequence).name];
+                        disp(comentdisp)
    else
        
    end
@@ -300,7 +324,8 @@ end
      legend(fileList(6).name)
      ylabel(Ylabel_6); %',num2str(i)]);
      xlabel(Xlabel_6)
-                       disp(' Signal 6 plotted.') 
+                        comentdisp = ['FILE',num2str(sequence),' -- ',fileList(sequence).name];
+                        disp(comentdisp)
         else    
    end
           %7
@@ -314,7 +339,8 @@ end
    legend(fileList(7).name)
      ylabel(Ylabel_7); %',num2str(i)]);
      xlabel(Xlabel_7)
-                       disp(' Signal 7 plotted.') 
+                        comentdisp = ['FILE',num2str(sequence),' -- ',fileList(sequence).name];
+                        disp(comentdisp)
         else    
    end
           %8
@@ -327,8 +353,8 @@ end
      legend(fileList(8).name)
      ylabel(Ylabel_8); %',num2str(i)]);
      xlabel(Xlabel_8)
-                       disp(' Signal 8 plotted.') 
-        else    
+                        comentdisp = ['FILE',num2str(sequence),' -- ',fileList(sequence).name];
+                        disp(comentdisp)
    end
           %9
    if saving_vector(9) == 1
@@ -341,7 +367,8 @@ end
      legend(fileList(9).name)
      ylabel(Ylabel_9); %',num2str(i)]);
      xlabel(Xlabel_9)
-                       disp(' Signal 6 plotted.') 
+                        comentdisp = ['FILE',num2str(sequence),' -- ',fileList(sequence).name];
+                        disp(comentdisp)
         else    
    end
           %10
@@ -355,7 +382,8 @@ end
    legend(fileList(10).name)
      ylabel(Ylabel_10); %',num2str(i)]);
      xlabel(Xlabel_10)
-                       disp(' Signal 6 plotted.') 
+                        comentdisp = ['FILE',num2str(sequence),' -- ',fileList(sequence).name];
+                        disp(comentdisp)
         else    
    end
           %11
@@ -369,7 +397,8 @@ end
      legend(fileList(11).name)
      ylabel(Ylabel_11); %',num2str(i)]);
      xlabel(Xlabel_11)
-                       disp(' Signal 11 plotted.') 
+                        comentdisp = ['FILE',num2str(sequence),' -- ',fileList(sequence).name];
+                        disp(comentdisp)
         else    
    end
           %12
@@ -383,7 +412,8 @@ end
      legend(fileList(12).name)
      ylabel(Ylabel_12); %',num2str(i)]);
      xlabel(Xlabel_12)
-                       disp(' Signal 12 plotted.') 
+                        comentdisp = ['FILE',num2str(sequence),' -- ',fileList(sequence).name];
+                        disp(comentdisp)
         else    
    end
         
@@ -398,7 +428,8 @@ end
      legend(fileList(13).name)
      ylabel(Ylabel_13); %',num2str(i)]);
      xlabel(Xlabel_13)
-                       disp(' Signal 13 plotted.') 
+                        comentdisp = ['FILE',num2str(sequence),' -- ',fileList(sequence).name];
+                        disp(comentdisp)
         else    
    end
           %14
@@ -411,7 +442,8 @@ end
      legend(fileList(14).name)
      ylabel(Ylabel_14); %',num2str(i)]);
      xlabel(Xlabel_14)
-                       disp(' Signal 14 plotted.') 
+                        comentdisp = ['FILE',num2str(sequence),' -- ',fileList(sequence).name];
+                        disp(comentdisp)
         else    
    end
           %15
@@ -425,7 +457,8 @@ end
      legend(fileList(15).name)
      ylabel(Ylabel_15); %',num2str(i)]);
      xlabel(Xlabel_15)
-                       disp(' Signal 15 plotted.') 
+                        comentdisp = ['FILE',num2str(sequence),' -- ',fileList(sequence).name];
+                        disp(comentdisp)
         else    
    end
           %16
@@ -438,7 +471,8 @@ end
      legend(fileList(16).name)
      ylabel(Ylabel_16); %',num2str(i)]);
      xlabel(Xlabel_16)
-                       disp(' Signal 16 plotted.') 
+                        comentdisp = ['FILE',num2str(sequence),' -- ',fileList(sequence).name];
+                        disp(comentdisp)
    else
       
    end
@@ -450,6 +484,16 @@ end
 
   
 hold off
+disp('PUSH A BUTTON TO CONTINUE');
+pause();  
+% DISPLAY OF THE FILE NAMES
+   disp('List of files');
+for fln=1:numfiles % postupne bude i=1, i=2 a i=3
+            description = strcat(' ',num2str(fln),'--',fileList(fln).name);
+        disp(description)
+end
+   %END DISPLAY OF THE FILE NAMES
+   
 pause();
 
  end
