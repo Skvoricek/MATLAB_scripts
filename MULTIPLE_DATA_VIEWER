@@ -183,7 +183,7 @@ waitbar1 = waitbar(waitbar_amount, 'saving process ', 'Units', 'normalized', 'Po
 
          
 
-   waitbar1 = waitbar(1, 'Realtion finished', 'Units', 'normalized', 'Position', [0.4 0.2 0.22 0.06]);
+   waitbar1 = waitbar(1, 'Insertion finished', 'Units', 'normalized', 'Position', [0.4 0.2 0.22 0.06]);
                          pause(1);
                          close(waitbar1)
 close all
@@ -494,7 +494,45 @@ for fln=1:numfiles % postupne bude i=1, i=2 a i=3
 end
    %END DISPLAY OF THE FILE NAMES
    
+% pause();
+disp('------------------PLOT SIGNAL OVER THE SIGNAL------------------');
+disp('PUSH A BUTTON TO CONTINUE');
 pause();
+
+%% SIGNALS DEFINITION
+   prompt = {'Signal on X ','Signal on Y'};
+            dlg_title = 'Parameters input';
+                    num_lines = 1;
+                    def = {'1','2'};% inside default values
+                    options.Resize='on';
+                    options.WindowStyle='modal';
+                    options.Interpreter='tex';
+                    answer=inputdlg(prompt,dlg_title,num_lines,...
+                                    def);%related to point definition - careful when changed
+
+
+                                Xsignal_num=str2double(answer(1,1)); 
+                                Ysignal_num=str2double(answer(2,1)); 
+                                
+Xsignal = strcat(' signal_',num2str(Xsignal_num));
+Ysignal = strcat(' signal_',num2str(Ysignal_num));
+
+h3=figure('Name','Cross-signal dependence', 'Units', 'normalized','Position', [0.01 0.3 0.98 0.61]);
+% plot (Ysignal, Xsignal)
+eval(['xplot=(',Xsignal,');']);
+eval(['yplot=(',Ysignal,');']);
+plot (yplot, xplot)
+        legend ('Cross_dependence');
+        ylabel(fileList(Ysignal_num).name)
+        xlabel(fileList(Xsignal_num).name)
+%         xlabel('Samples [au]')
+        title('Cross_dependence')
+%          annotation('textbox', [0.15 0.85 0.19 0.05], 'interpreter','none','FitBoxToText','on', 'String', [' max: ' num2str(max(data)) ', min: ' num2str(min(data)) ', mean: ' num2str(mean(data)) ', stdev: ' num2str(std(data))  ]);
+  hold off
+                                
+    pause();
+    disp('PUSH A BUTTON TO CONTINUE');
+
 
  end
 
