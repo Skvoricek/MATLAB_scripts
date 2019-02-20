@@ -521,7 +521,7 @@ h3=figure('Name','Cross-signal dependence', 'Units', 'normalized','Position', [0
 % plot (Ysignal, Xsignal)
 eval(['xplot=(',Xsignal,');']);
 eval(['yplot=(',Ysignal,');']);
-plot (yplot, xplot)
+plot (xplot, yplot)
         legend ('Cross_dependence');
         ylabel(fileList(Ysignal_num).name)
         xlabel(fileList(Xsignal_num).name)
