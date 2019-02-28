@@ -169,7 +169,7 @@ waitbar1 = waitbar(waitbar_amount, 'saving process ', 'Units', 'normalized', 'Po
    prompt = {'Label X axes','Label Y axes'};
             dlg_title = 'Parameters input';
                     num_lines = 1;
-                    def = {'Time [min]','Y Axes'};% inside default values
+                    def = {'Time [min]','Wavelength [nm]'};% inside default values
                     options.Resize='on';
                     options.WindowStyle='modal';
                     options.Interpreter='tex';
@@ -517,11 +517,24 @@ pause();
 Xsignal = strcat(' signal_',num2str(Xsignal_num));
 Ysignal = strcat(' signal_',num2str(Ysignal_num));
 
-h3=figure('Name','Cross-signal dependence', 'Units', 'normalized','Position', [0.01 0.3 0.98 0.61]);
+h3=figure('Name','Cross-signal dependence', 'Units', 'normalized','Position', [0.01 0.1 0.4 0.6]); %sqare graph
 % plot (Ysignal, Xsignal)
 eval(['xplot=(',Xsignal,');']);
 eval(['yplot=(',Ysignal,');']);
 plot (xplot, yplot)
+       %fixed axxes limitation
+xxlim = -2;
+yylim = -2;
+       if      min(xplot) >=xxlim;
+                   xlim([-2 3])
+           
+       else
+       end
+       if      min(yplot) >=yylim;
+                    ylim([-2 3])
+       else       
+       end
+        %end fixed axxes limitation
         legend ('Cross_dependence');
         ylabel(fileList(Ysignal_num).name)
         xlabel(fileList(Xsignal_num).name)
